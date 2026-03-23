@@ -1,0 +1,18 @@
+{
+  "siblings": {
+    "motor-adminfrontend-zeitraumdev": {
+      "path": "../motor-adminfrontend-zeitraumdev",
+      "containerPath": "/siblings/motor-adminfrontend-zeitraumdev",
+      "packages": {
+        "@zrmdev/ui-builder": "layers/motor-ui-builder",
+        "@zrmdev/ui-components": "layers/motor-ui-components",
+        "@zrmdev/ui-content-type": "layers/motor-ui-content-type",
+        "@zrmdev/ui-assistant": "layers/motor-ui-assistant",
+        "@zrmdev/ui-scoring": "layers/motor-ui-scoring"
+      }
+    }
+  },
+  "docker": {
+    "container": "energis-stack-adminfrontend-new-node-1"
+  }
+}

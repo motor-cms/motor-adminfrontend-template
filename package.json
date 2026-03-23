@@ -1,0 +1,15 @@
+{
+  "name": "motor-adminfrontend-template",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "test": "vitest",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish"
+  }
+}
