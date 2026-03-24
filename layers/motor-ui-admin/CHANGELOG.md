@@ -1,5 +1,13 @@
 # @motor-cms/ui-admin
 
+## 1.0.3
+
+### Patch Changes
+
+- a068c1e: chore: CI workflow improvements and motor-release script
+- Updated dependencies [a068c1e]
+  - @motor-cms/ui-core@1.0.3
+
 ## 1.0.2
 
 ### Patch Changes
