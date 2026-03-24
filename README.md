@@ -1,32 +1,48 @@
-# Motor CMS Admin Frontend Template (Tier 1 - OSS)
+# Motor CMS Admin Frontend Template
 
-Core, Admin, and Media layers for the Motor CMS admin frontend.
+Open-source Tier 1 layers for the Motor CMS admin frontend.
 
-## Layers
+## Packages
 
-| Package | Layer | Description |
-|---------|-------|-------------|
-| `@motor-cms/ui-core` | `layers/motor-ui-core` | Shared types, utilities, stores, and base components |
-| `@motor-cms/ui-admin` | `layers/motor-ui-admin` | Admin panel layout, navigation, and CRUD |
-| `@motor-cms/ui-media` | `layers/motor-ui-media` | Media library, file picker, image cropping |
+| Package | Description |
+|---------|-------------|
+| `@motor-cms/ui-core` | Core infrastructure — grid, form, auth, i18n, stores, composables |
+| `@motor-cms/ui-admin` | Admin UI — CRUD pages, rich text editor, navigation management |
+| `@motor-cms/ui-media` | Media library — file browser, upload, image crop |
 
-## Prerequisites
-
-- Node.js
-- pnpm
-- tsx (global): `npm install -g tsx`
-
-## Development
+## Quick Start
 
 ```bash
 pnpm install
-pnpm dev
+pnpm dev        # starts playground dev server
+pnpm test       # runs all unit tests
+pnpm typecheck  # TypeScript check
 ```
 
-## Cross-tier linking
+## Usage
+
+Install the layers in your Nuxt project:
 
 ```bash
-./motor-dev link    # Link sibling repos for local development
-./motor-dev unlink  # Restore published packages
-./motor-dev status  # Show current link state
+pnpm add @motor-cms/ui-core @motor-cms/ui-admin @motor-cms/ui-media
 ```
+
+Extend them in your `nuxt.config.ts`:
+
+```ts
+export default defineNuxtConfig({
+  extends: [
+    '@motor-cms/ui-core',
+    '@motor-cms/ui-admin',
+    '@motor-cms/ui-media'
+  ]
+})
+```
+
+## Development
+
+See [AGENT.md](./AGENT.md) for detailed development instructions.
+
+## License
+
+MIT
