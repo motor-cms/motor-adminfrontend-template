@@ -5,6 +5,7 @@ const __layerDir = dirname(fileURLToPath(import.meta.url))
 
 export default defineNuxtConfig({
   modules: [
+    '@nuxt/ui',
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
     'nuxt-auth-sanctum',

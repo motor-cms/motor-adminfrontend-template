@@ -1,12 +1,13 @@
-name: Release
+name: Release (Pre-release)
 
 on:
   push:
-    branches: [production, staging, develop]
+    branches: [staging, develop]
+  workflow_dispatch:
 
 jobs:
-  release:
-    name: Version & Publish
+  prerelease:
+    name: Publish Pre-release
     runs-on: ubuntu-latest
 
     steps:
@@ -31,70 +32,63 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+      - name: Check for changesets
+        id: changesets
+        run: |
+          CHANGESETS=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null | head -1)
+          if [ -n "$CHANGESETS" ]; then
+            echo "has_changesets=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changesets=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip if no changesets
+        if: steps.changesets.outputs.has_changesets == 'false'
+        run: echo "No changesets to publish. Skipping."
+
       - name: Configure git
+        if: steps.changesets.outputs.has_changesets == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Exit pre-release mode
-        if: github.ref_name == 'production'
+      - name: Determine pre-release tag
+        if: steps.changesets.outputs.has_changesets == 'true'
+        id: tag
         run: |
+          if [ "${{ github.ref_name }}" = "staging" ]; then
+            echo "tag=rc" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=alpha" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Enter pre-release mode
+        if: steps.changesets.outputs.has_changesets == 'true'
+        run: |
+          # Exit any existing pre-release mode first
           if [ -f .changeset/pre.json ]; then
             pnpm changeset pre exit
           fi
+          pnpm changeset pre enter ${{ steps.tag.outputs.tag }}
 
-      - name: Version packages (production)
-        if: github.ref_name == 'production'
+      - name: Version packages
+        if: steps.changesets.outputs.has_changesets == 'true'
         run: pnpm changeset version
 
-      - name: Publish to npm (production)
-        if: github.ref_name == 'production'
+      - name: Publish to npm
+        if: steps.changesets.outputs.has_changesets == 'true'
         run: pnpm changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Enter RC pre-release mode
-        if: github.ref_name == 'staging'
+      - name: Commit version updates
+        if: steps.changesets.outputs.has_changesets == 'true'
         run: |
-          if [ -f .changeset/pre.json ]; then
-            pnpm changeset pre exit
-          fi
-          pnpm changeset pre enter rc
-
-      - name: Version packages (staging)
-        if: github.ref_name == 'staging'
-        run: pnpm changeset version
-
-      - name: Publish to npm (staging)
-        if: github.ref_name == 'staging'
-        run: pnpm changeset publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Enter alpha pre-release mode
-        if: github.ref_name == 'develop'
-        run: |
-          if [ -f .changeset/pre.json ]; then
-            pnpm changeset pre exit
-          fi
-          pnpm changeset pre enter alpha
-
-      - name: Version packages (develop)
-        if: github.ref_name == 'develop'
-        run: pnpm changeset version
-
-      - name: Publish to npm (develop)
-        if: github.ref_name == 'develop'
-        run: pnpm changeset publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Commit and push version updates
-        run: |
+          pnpm install --lockfile-only
           git add -A
           if git diff --cached --quiet; then
             echo "No version changes to commit"
           else
-            git commit -m "chore: version packages"
+            git commit -m "chore: version packages (${{ steps.tag.outputs.tag }})"
             git push
           fi
