@@ -2,11 +2,9 @@
   "mode": "pre",
   "tag": "alpha",
   "initialVersions": {
-    "@motor-cms/ui-admin": "1.0.1-alpha.1",
-    "@motor-cms/ui-core": "1.0.1-alpha.1",
-    "@motor-cms/ui-media": "1.0.1-alpha.1"
+    "@motor-cms/ui-admin": "1.0.3",
+    "@motor-cms/ui-core": "1.0.3",
+    "@motor-cms/ui-media": "1.0.3"
   },
-  "changesets": [
-    "test-renovate"
-  ]
+  "changesets": []
 }
