@@ -6,5 +6,8 @@
     "@motor-cms/ui-core": "1.0.3",
     "@motor-cms/ui-media": "1.0.3"
   },
-  "changesets": []
+  "changesets": [
+    "fix-i18n-cache-storage",
+    "test-renovate"
+  ]
 }
