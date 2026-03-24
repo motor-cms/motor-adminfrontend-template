@@ -1,12 +1,13 @@
 {
   "mode": "pre",
-  "tag": "alpha",
+  "tag": "rc",
   "initialVersions": {
-    "@motor-cms/ui-admin": "1.0.0",
-    "@motor-cms/ui-core": "1.0.0",
-    "@motor-cms/ui-media": "1.0.0"
+    "@motor-cms/ui-admin": "1.0.1-alpha.0",
+    "@motor-cms/ui-core": "1.0.1-alpha.0",
+    "@motor-cms/ui-media": "1.0.1-alpha.0"
   },
   "changesets": [
-    "initial-release"
+    "initial-release",
+    "test-renovate"
   ]
 }
