@@ -1,6 +1,6 @@
 # @motor-cms/ui-core
 
-## 1.0.1-rc.0
+## 1.0.1-alpha.0
 
 ### Patch Changes
 
