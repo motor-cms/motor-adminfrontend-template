@@ -37,7 +37,7 @@ watchDebounced(
           onSelect() {
             router.push(item.to)
           }
-        }))
+        }) satisfies CommandPaletteItem)
       }))
       totalResults.value = result.total
     } catch {

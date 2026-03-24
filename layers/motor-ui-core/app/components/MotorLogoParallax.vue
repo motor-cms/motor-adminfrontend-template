@@ -70,8 +70,8 @@ function animate() {
   rafId = requestAnimationFrame(animate)
 }
 
-function setCardRef(el: HTMLElement | null, i: number) {
-  if (el) cards.value[i] = el
+function setCardRef(el: Element | ComponentPublicInstance | null, i: number) {
+  if (el instanceof HTMLElement) cards.value[i] = el
 }
 
 onMounted(() => {
