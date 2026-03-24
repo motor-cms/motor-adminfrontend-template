@@ -70,6 +70,13 @@ jobs:
             pnpm changeset pre exit
           fi
           pnpm changeset pre enter ${{ steps.tag.outputs.tag }}
+          # Clear consumed changesets so they get re-processed with the new tag
+          node -e "
+            const f = '.changeset/pre.json';
+            const p = JSON.parse(require('fs').readFileSync(f, 'utf8'));
+            p.changesets = [];
+            require('fs').writeFileSync(f, JSON.stringify(p, null, 2) + '\n');
+          "
 
       - name: Version packages
         if: steps.changesets.outputs.has_changesets == 'true'
