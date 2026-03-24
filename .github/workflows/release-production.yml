@@ -31,19 +31,12 @@ jobs:
       - name: Run tests
         run: pnpm test
 
-      - name: Check for changesets
-        id: changesets
-        run: |
-          # Check if there are any changeset files to consume
-          CHANGESETS=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null | head -1)
-          if [ -n "$CHANGESETS" ]; then
-            echo "has_changesets=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_changesets=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Create Version Packages PR
-        if: steps.changesets.outputs.has_changesets == 'true'
+      # Changesets action:
+      # - If changeset files exist: creates a "Version Packages" PR
+      #   with version bump + changelog. Merging that PR publishes to npm.
+      # - If no changeset files but versions are bumped (the PR was just merged):
+      #   publishes to npm.
+      - name: Changesets
         uses: changesets/action@v1
         with:
           publish: pnpm changeset publish

@@ -15,6 +15,15 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
       - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
@@ -25,13 +34,43 @@ jobs:
         if: github.ref_name == 'production'
         run: |
           git checkout staging
-          git merge --ff-only origin/production 2>&1 && FF=true || FF=false
+          git merge origin/production --no-edit 2>&1 && MERGED=true || MERGED=false
 
-          if [ "$FF" = "true" ]; then
+          if [ "$MERGED" = "true" ]; then
             git push origin staging
             echo "result=merged" >> "$GITHUB_OUTPUT"
           else
-            echo "result=conflict" >> "$GITHUB_OUTPUT"
+            # Auto-resolve version file conflicts: keep staging's versions
+            VERSION_FILES="layers/*/package.json package.json pnpm-lock.yaml .changeset/pre.json CHANGELOG.md"
+            HAS_VERSION_CONFLICT=false
+
+            for pattern in $VERSION_FILES; do
+              for file in $pattern; do
+                if git diff --name-only --diff-filter=U | grep -q "^${file}$"; then
+                  echo "Auto-resolving conflict in $file (keeping ours)"
+                  git checkout --ours "$file"
+                  git add "$file"
+                  HAS_VERSION_CONFLICT=true
+                fi
+              done
+            done
+
+            # Check if there are still unresolved conflicts (code conflicts)
+            REMAINING=$(git diff --name-only --diff-filter=U | head -1)
+            if [ -n "$REMAINING" ]; then
+              echo "result=conflict" >> "$GITHUB_OUTPUT"
+              git merge --abort
+            elif [ "$HAS_VERSION_CONFLICT" = "true" ]; then
+              # All conflicts were version files — auto-resolved
+              pnpm install --lockfile-only 2>/dev/null || true
+              git add pnpm-lock.yaml 2>/dev/null || true
+              git commit --no-edit
+              git push origin staging
+              echo "result=merged" >> "$GITHUB_OUTPUT"
+            else
+              echo "result=conflict" >> "$GITHUB_OUTPUT"
+              git merge --abort
+            fi
           fi
 
       - name: Open PR on production → staging conflict
@@ -41,7 +80,7 @@ jobs:
           if [ -z "$EXISTING" ]; then
             gh pr create --base staging --head production \
               --title "Merge production → staging" \
-              --body "Automatic merge-down could not fast-forward. Please resolve conflicts and merge manually."
+              --body "Automatic merge-down could not fast-forward. Version conflicts were auto-resolved but code conflicts remain. Please resolve and merge manually."
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -52,13 +91,41 @@ jobs:
         run: |
           git fetch origin staging develop
           git checkout develop
-          git merge --ff-only origin/staging 2>&1 && FF=true || FF=false
+          git merge origin/staging --no-edit 2>&1 && MERGED=true || MERGED=false
 
-          if [ "$FF" = "true" ]; then
+          if [ "$MERGED" = "true" ]; then
             git push origin develop
             echo "result=merged" >> "$GITHUB_OUTPUT"
           else
-            echo "result=conflict" >> "$GITHUB_OUTPUT"
+            # Auto-resolve version file conflicts: keep develop's versions
+            VERSION_FILES="layers/*/package.json package.json pnpm-lock.yaml .changeset/pre.json CHANGELOG.md"
+            HAS_VERSION_CONFLICT=false
+
+            for pattern in $VERSION_FILES; do
+              for file in $pattern; do
+                if git diff --name-only --diff-filter=U | grep -q "^${file}$"; then
+                  echo "Auto-resolving conflict in $file (keeping ours)"
+                  git checkout --ours "$file"
+                  git add "$file"
+                  HAS_VERSION_CONFLICT=true
+                fi
+              done
+            done
+
+            REMAINING=$(git diff --name-only --diff-filter=U | head -1)
+            if [ -n "$REMAINING" ]; then
+              echo "result=conflict" >> "$GITHUB_OUTPUT"
+              git merge --abort
+            elif [ "$HAS_VERSION_CONFLICT" = "true" ]; then
+              pnpm install --lockfile-only 2>/dev/null || true
+              git add pnpm-lock.yaml 2>/dev/null || true
+              git commit --no-edit
+              git push origin develop
+              echo "result=merged" >> "$GITHUB_OUTPUT"
+            else
+              echo "result=conflict" >> "$GITHUB_OUTPUT"
+              git merge --abort
+            fi
           fi
 
       - name: Open PR on staging → develop conflict
@@ -68,7 +135,7 @@ jobs:
           if [ -z "$EXISTING" ]; then
             gh pr create --base develop --head staging \
               --title "Merge staging → develop" \
-              --body "Automatic merge-down could not fast-forward. Please resolve conflicts and merge manually."
+              --body "Automatic merge-down could not fast-forward. Version conflicts were auto-resolved but code conflicts remain. Please resolve and merge manually."
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

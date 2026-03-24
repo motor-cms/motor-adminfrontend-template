@@ -1,16 +1,19 @@
-name: Release
+name: Release (Pre-release)
 
 on:
   push:
     branches: [staging, develop]
 
 jobs:
-  snapshot:
-    name: Snapshot Publish
+  prerelease:
+    name: Publish Pre-release
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: pnpm/action-setup@v4
         with:
@@ -28,7 +31,28 @@ jobs:
       - name: Run tests
         run: pnpm test
 
-      - name: Determine snapshot tag
+      - name: Check for changesets
+        id: changesets
+        run: |
+          CHANGESETS=$(find .changeset -name '*.md' ! -name 'README.md' 2>/dev/null | head -1)
+          if [ -n "$CHANGESETS" ]; then
+            echo "has_changesets=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changesets=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip if no changesets
+        if: steps.changesets.outputs.has_changesets == 'false'
+        run: echo "No changesets to publish. Skipping."
+
+      - name: Configure git
+        if: steps.changesets.outputs.has_changesets == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine pre-release tag
+        if: steps.changesets.outputs.has_changesets == 'true'
         id: tag
         run: |
           if [ "${{ github.ref_name }}" = "staging" ]; then
@@ -37,11 +61,33 @@ jobs:
             echo "tag=alpha" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Publish snapshot
+      - name: Enter pre-release mode
+        if: steps.changesets.outputs.has_changesets == 'true'
         run: |
-          pnpm changeset version --snapshot ${{ steps.tag.outputs.tag }}
-          pnpm changeset publish --tag ${{ steps.tag.outputs.tag }}
+          # Exit any existing pre-release mode first
+          if [ -f .changeset/pre.json ]; then
+            pnpm changeset pre exit
+          fi
+          pnpm changeset pre enter ${{ steps.tag.outputs.tag }}
+
+      - name: Version packages
+        if: steps.changesets.outputs.has_changesets == 'true'
+        run: pnpm changeset version
+
+      - name: Publish to npm
+        if: steps.changesets.outputs.has_changesets == 'true'
+        run: pnpm changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        # No commit — snapshots don't modify the branch.
-        # This prevents merge conflicts in git-flow merge-down.
+
+      - name: Commit version updates
+        if: steps.changesets.outputs.has_changesets == 'true'
+        run: |
+          pnpm install --lockfile-only
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No version changes to commit"
+          else
+            git commit -m "chore: version packages (${{ steps.tag.outputs.tag }})"
+            git push
+          fi
