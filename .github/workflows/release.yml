@@ -2,18 +2,15 @@ name: Release
 
 on:
   push:
-    branches: [production, staging, develop]
+    branches: [staging, develop]
 
 jobs:
-  release:
-    name: Version & Publish
+  snapshot:
+    name: Snapshot Publish
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: pnpm/action-setup@v4
         with:
@@ -31,70 +28,20 @@ jobs:
       - name: Run tests
         run: pnpm test
 
-      - name: Configure git
+      - name: Determine snapshot tag
+        id: tag
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Exit pre-release mode
-        if: github.ref_name == 'production'
-        run: |
-          if [ -f .changeset/pre.json ]; then
-            pnpm changeset pre exit
-          fi
-
-      - name: Version packages (production)
-        if: github.ref_name == 'production'
-        run: pnpm changeset version
-
-      - name: Publish to npm (production)
-        if: github.ref_name == 'production'
-        run: pnpm changeset publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Enter RC pre-release mode
-        if: github.ref_name == 'staging'
-        run: |
-          if [ -f .changeset/pre.json ]; then
-            pnpm changeset pre exit
-          fi
-          pnpm changeset pre enter rc
-
-      - name: Version packages (staging)
-        if: github.ref_name == 'staging'
-        run: pnpm changeset version
-
-      - name: Publish to npm (staging)
-        if: github.ref_name == 'staging'
-        run: pnpm changeset publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Enter alpha pre-release mode
-        if: github.ref_name == 'develop'
-        run: |
-          if [ -f .changeset/pre.json ]; then
-            pnpm changeset pre exit
-          fi
-          pnpm changeset pre enter alpha
-
-      - name: Version packages (develop)
-        if: github.ref_name == 'develop'
-        run: pnpm changeset version
-
-      - name: Publish to npm (develop)
-        if: github.ref_name == 'develop'
-        run: pnpm changeset publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Commit and push version updates
-        run: |
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No version changes to commit"
+          if [ "${{ github.ref_name }}" = "staging" ]; then
+            echo "tag=rc" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "chore: version packages"
-            git push
+            echo "tag=alpha" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Publish snapshot
+        run: |
+          pnpm changeset version --snapshot ${{ steps.tag.outputs.tag }}
+          pnpm changeset publish --tag ${{ steps.tag.outputs.tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # No commit — snapshots don't modify the branch.
+        # This prevents merge conflicts in git-flow merge-down.
