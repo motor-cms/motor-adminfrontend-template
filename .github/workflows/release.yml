@@ -3,6 +3,7 @@ name: Release (Pre-release)
 on:
   push:
     branches: [staging, develop]
+  workflow_dispatch:
 
 jobs:
   prerelease:
