@@ -1,9 +1,14 @@
 {
   "name": "@motor-cms/ui-media",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "type": "module",
   "main": "./nuxt.config.ts",
-  "files": ["app", "server", "public", "nuxt.config.ts"],
+  "files": [
+    "app",
+    "server",
+    "public",
+    "nuxt.config.ts"
+  ],
   "dependencies": {
     "@motor-cms/ui-core": "workspace:*",
     "@vueuse/core": "^14.0.0"
