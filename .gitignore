@@ -1,16 +1,42 @@
+# Nuxt dev/build outputs
 .output
 .data
 .nuxt
 .nitro
 .cache
 dist
+
+# Node dependencies
 node_modules
+
+# npm lock file (project uses pnpm)
 package-lock.json
+
+# pnpm store
 .pnpm-store/
+
+# Logs
+logs
 *.log
+
+# Misc
 .DS_Store
+.fleet
+.idea
+
+# Local env files
 .env
 .env.*
 !.env.example
+
+# Test coverage
 coverage/
+
+# Playwright auth state
+e2e/.auth/
+
+# Local package symlinks
+packages/
+
+# motor-dev state (local linking)
 .motor-dev.state.json

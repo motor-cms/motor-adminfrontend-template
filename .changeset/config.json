@@ -3,11 +3,8 @@
   "changelog": "@changesets/cli/changelog",
   "commit": false,
   "fixed": [
-    ["@motor-cms/*"]
+    ["@motor-cms/ui-core", "@motor-cms/ui-admin", "@motor-cms/ui-media"]
   ],
-  "linked": [],
   "access": "public",
-  "baseBranch": "main",
-  "updateInternalDependencies": "patch",
-  "ignore": []
+  "baseBranch": "develop"
 }
