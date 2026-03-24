@@ -100,14 +100,15 @@ export default defineNuxtModule({
       return messages
     }
 
-    // Write merged files into buildDir so this works even when the layer is
-    // installed as an npm package (node_modules is read-only).
-    const mergedDir = join(nuxt.options.buildDir, 'i18n-merged')
+    // Write merged files to a cache directory outside buildDir.
+    // buildDir (.nuxt/) gets cleaned between prepare and build, so writing there
+    // causes ENOENT errors during Docker builds. node_modules/.cache/ survives cleanup.
+    const mergedDir = join(nuxt.options.rootDir, 'node_modules', '.cache', 'i18n-merged')
     nuxt.options.alias['#i18n-merged'] = mergedDir
-    mkdirSync(mergedDir, { recursive: true })
 
     const locales = ['de', 'en']
 
+    mkdirSync(mergedDir, { recursive: true })
     for (const locale of locales) {
       const messages = await mergeLangFilesForLocale(locale)
       const outputPath = join(mergedDir, `${locale}.json`)
