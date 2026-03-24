@@ -1,0 +1,74 @@
+name: Merge Down
+
+on:
+  push:
+    branches: [production, staging]
+
+jobs:
+  merge-down:
+    name: Cascade merge
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge production → staging
+        id: to-staging
+        if: github.ref_name == 'production'
+        run: |
+          git checkout staging
+          git merge --ff-only origin/production 2>&1 && FF=true || FF=false
+
+          if [ "$FF" = "true" ]; then
+            git push origin staging
+            echo "result=merged" >> "$GITHUB_OUTPUT"
+          else
+            echo "result=conflict" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open PR on production → staging conflict
+        if: github.ref_name == 'production' && steps.to-staging.outputs.result == 'conflict'
+        run: |
+          EXISTING=$(gh pr list --base staging --head production --json number --jq '.[0].number')
+          if [ -z "$EXISTING" ]; then
+            gh pr create --base staging --head production \
+              --title "Merge production → staging" \
+              --body "Automatic merge-down could not fast-forward. Please resolve conflicts and merge manually."
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge staging → develop
+        id: to-develop
+        if: always() && (github.ref_name == 'staging' || steps.to-staging.outputs.result == 'merged')
+        run: |
+          git fetch origin staging develop
+          git checkout develop
+          git merge --ff-only origin/staging 2>&1 && FF=true || FF=false
+
+          if [ "$FF" = "true" ]; then
+            git push origin develop
+            echo "result=merged" >> "$GITHUB_OUTPUT"
+          else
+            echo "result=conflict" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open PR on staging → develop conflict
+        if: always() && steps.to-develop.outputs.result == 'conflict'
+        run: |
+          EXISTING=$(gh pr list --base develop --head staging --json number --jq '.[0].number')
+          if [ -z "$EXISTING" ]; then
+            gh pr create --base develop --head staging \
+              --title "Merge staging → develop" \
+              --body "Automatic merge-down could not fast-forward. Please resolve conflicts and merge manually."
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,71 @@
+name: Changeset Check
+
+on:
+  pull_request:
+    branches: [develop, staging, production]
+
+jobs:
+  changeset-check:
+    name: Check for changeset
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for changeset files
+        id: check
+        run: |
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+
+          CODE_CHANGED=false
+          for file in $CHANGED_FILES; do
+            case "$file" in
+              layers/*/app/*|layers/*/server/*) CODE_CHANGED=true ;;
+            esac
+          done
+
+          HAS_CHANGESET=false
+          for file in $CHANGED_FILES; do
+            case "$file" in
+              .changeset/*.md)
+                if [ "$file" != ".changeset/README.md" ]; then
+                  HAS_CHANGESET=true
+                fi
+                ;;
+            esac
+          done
+
+          echo "code_changed=$CODE_CHANGED" >> "$GITHUB_OUTPUT"
+          echo "has_changeset=$HAS_CHANGESET" >> "$GITHUB_OUTPUT"
+
+      - name: Post reminder comment
+        if: steps.check.outputs.code_changed == 'true' && steps.check.outputs.has_changeset == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const hasReminder = comments.data.some(c =>
+              c.body.includes('<!-- changeset-check -->')
+            );
+            if (hasReminder) return;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `<!-- changeset-check -->
+            ⚠️ **No changeset found.** This PR modifies code under \`layers/\` but has no changeset file.
+
+            If this change should be released, run:
+            \`\`\`
+            pnpm changeset
+            \`\`\`
+
+            If this is a docs/CI/test-only change that doesn't need a release, you can ignore this message.`
+            });
