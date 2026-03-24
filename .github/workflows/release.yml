@@ -67,7 +67,7 @@ jobs:
 
       - name: Publish to npm (staging)
         if: github.ref_name == 'staging'
-        run: pnpm changeset publish --tag staging
+        run: pnpm changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -85,7 +85,7 @@ jobs:
 
       - name: Publish to npm (develop)
         if: github.ref_name == 'develop'
-        run: pnpm changeset publish --tag alpha
+        run: pnpm changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
