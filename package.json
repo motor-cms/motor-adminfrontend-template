@@ -19,6 +19,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.30.0",
     "@nuxt/test-utils": "^4.0.0",
+    "@types/sortablejs": "^1.15.9",
     "@vitest/coverage-v8": "^4.1.0",
     "@vue/test-utils": "^2.4.6",
     "happy-dom": "^20.0.10",
