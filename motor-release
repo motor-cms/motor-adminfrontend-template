@@ -1,0 +1,84 @@
+#!/bin/sh
+# Trigger a release workflow on the current branch via GitHub Actions.
+#
+# Usage:
+#   ./motor-release              Trigger release on current branch
+#   ./motor-release --status     Show recent release workflow runs
+
+set -e
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+CYAN='\033[0;36m'
+DIM='\033[2m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+REPO=$(gh repo view --json nameWithOwner --jq '.nameWithOwner' 2>/dev/null)
+
+if [ -z "$REPO" ]; then
+  echo "${RED}✖${NC} Could not determine GitHub repo. Are you in a git repo with a GitHub remote?"
+  exit 1
+fi
+
+if [ "$1" = "--status" ]; then
+  echo "${BOLD}Recent release runs on ${CYAN}${BRANCH}${NC}:"
+  gh run list --repo "$REPO" --branch "$BRANCH" --workflow release.yml --limit 5 2>/dev/null || true
+  gh run list --repo "$REPO" --branch "$BRANCH" --workflow release-production.yml --limit 5 2>/dev/null || true
+  exit 0
+fi
+
+# Determine which workflow to trigger
+case "$BRANCH" in
+  production)
+    WORKFLOW="release-production.yml"
+    echo "${BOLD}Branch:${NC}   ${CYAN}${BRANCH}${NC}"
+    echo "${BOLD}Action:${NC}   Creates a ${CYAN}Version Packages PR${NC} (merge it to publish stable release)"
+    ;;
+  staging)
+    WORKFLOW="release.yml"
+    echo "${BOLD}Branch:${NC}   ${CYAN}${BRANCH}${NC}"
+    echo "${BOLD}Action:${NC}   Publishes ${CYAN}RC pre-release${NC} to npm"
+    ;;
+  develop)
+    WORKFLOW="release.yml"
+    echo "${BOLD}Branch:${NC}   ${CYAN}${BRANCH}${NC}"
+    echo "${BOLD}Action:${NC}   Publishes ${CYAN}alpha pre-release${NC} to npm"
+    ;;
+  *)
+    echo "${YELLOW}⚠${NC} Branch '${BRANCH}' is not a release branch (production/staging/develop)."
+    echo "  Switch to a release branch first."
+    exit 1
+    ;;
+esac
+
+# Check for uncommitted changes
+if [ -n "$(git status --porcelain)" ]; then
+  echo "${YELLOW}⚠${NC} You have uncommitted changes. Commit and push first."
+  exit 1
+fi
+
+# Check for unpushed commits
+UNPUSHED=$(git log @{u}..HEAD --oneline 2>/dev/null | head -1)
+if [ -n "$UNPUSHED" ]; then
+  echo "${YELLOW}⚠${NC} You have unpushed commits. Push first."
+  exit 1
+fi
+
+echo ""
+printf "Trigger release? (y/n) "
+read -r CONFIRM
+if [ "$CONFIRM" != "y" ]; then
+  echo "Aborted."
+  exit 0
+fi
+
+echo "\nTriggering ${CYAN}${WORKFLOW}${NC} on ${CYAN}${BRANCH}${NC}..."
+gh workflow run "$WORKFLOW" --repo "$REPO" --ref "$BRANCH"
+
+echo "${GREEN}Done.${NC} Watch progress with:"
+echo "  ${CYAN}./motor-release --status${NC}"
+echo "  ${DIM}or: gh run watch --repo ${REPO}${NC}"
