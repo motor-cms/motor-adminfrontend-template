@@ -1,0 +1,22 @@
+{
+  "users": "Users",
+  "user": "User",
+  "title": "Users",
+  "subtitle": "Manage system users",
+  "add": "Add User",
+  "avatar": "",
+  "clients": "Clients",
+  "roles": "Roles",
+  "permissions": "Permissions",
+  "create_title": "Create User",
+  "edit_title": "Edit User",
+  "created_success": "User was created successfully",
+  "updated_success": "User was updated successfully",
+  "password": "Password",
+  "password_description": "Leave blank to keep current password",
+  "change_password": "Change Password",
+  "password_confirmation": "Confirm Password",
+  "password_mismatch": "Passwords do not match",
+  "group_security": "Security",
+  "group_access": "Access"
+}

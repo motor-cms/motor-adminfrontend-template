@@ -1,0 +1,11 @@
+{
+  "page_not_found": "Seite nicht gefunden",
+  "something_went_wrong": "Etwas ist schiefgelaufen",
+  "page_not_found_description": "Die gesuchte Seite existiert nicht oder Sie haben keinen Zugriff darauf.",
+  "back_to_dashboard": "Zurück zum Dashboard",
+  "access_denied": "Zugriff verweigert",
+  "no_permission": "Sie haben keine Berechtigung, diese Aktion auszuführen.",
+  "create_failed": "Erstellen fehlgeschlagen",
+  "update_failed": "Aktualisieren fehlgeschlagen",
+  "delete_failed": "Löschen fehlgeschlagen"
+}

@@ -1,0 +1,14 @@
+{
+  "category_trees": "Kategoriebäume",
+  "category_tree": "Kategoriebaum",
+  "title": "Kategoriebäume",
+  "subtitle": "Kategoriebäume und ihre Kategorien verwalten",
+  "add": "Kategoriebaum hinzufügen",
+  "create_title": "Kategoriebaum erstellen",
+  "edit_title": "Kategoriebaum bearbeiten",
+  "created_success": "Kategoriebaum wurde erfolgreich erstellt",
+  "updated_success": "Kategoriebaum wurde erfolgreich aktualisiert",
+  "children": "Kinder",
+  "children_title": "Kategorien in \"{name}\"",
+  "children_subtitle": "Kategorien in diesem Baum verwalten"
+}

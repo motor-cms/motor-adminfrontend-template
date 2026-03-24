@@ -1,0 +1,16 @@
+{
+  "languages": "Languages",
+  "language": "Language",
+  "title": "Languages",
+  "subtitle": "Manage system languages",
+  "add": "Add Language",
+  "code": "Code",
+  "english_name": "English Name",
+  "native_name": "Native Name",
+  "create_title": "Create Language",
+  "edit_title": "Edit Language",
+  "created_success": "Language created successfully.",
+  "updated_success": "Language updated successfully.",
+  "iso_639_1": "ISO 639-1 Code",
+  "iso_639_1_description": "Two-letter language code (e.g. en, de, fr)"
+}

@@ -1,0 +1,14 @@
+{
+  "config_variables": "Konfigurationsvariablen",
+  "title": "Konfigurationsvariablen",
+  "subtitle": "Konfigurationsvariablen verwalten",
+  "add": "Konfigurationsvariable hinzufügen",
+  "package": "Paket",
+  "group": "Gruppe",
+  "value": "Wert",
+  "is_invisible": "Versteckt",
+  "create_title": "Konfigurationsvariable erstellen",
+  "edit_title": "Konfigurationsvariable bearbeiten",
+  "created_success": "Konfigurationsvariable erfolgreich erstellt.",
+  "updated_success": "Konfigurationsvariable erfolgreich aktualisiert."
+}

@@ -1,0 +1,236 @@
+<script setup lang="ts">
+import { fileFormMeta } from '../../../../types/generated/form-meta'
+import { fileEditFormConfig, fileSelectOptionConfigs } from '@motor-cms/ui-core/app/types/config/file'
+
+definePageMeta({ layout: 'default', permission: 'files.write' })
+
+const route = useRoute()
+const { t } = useI18n()
+const client = useSanctumClient()
+const { success, error: notifyError } = useNotify()
+const router = useRouter()
+
+const { fields, schema, groups, state, loading, fetching, fetchError, formRef, selectOptions, selectOptionsLoading, deleteRecord, deleting } = await useEntityForm({
+  apiEndpoint: '/api/v2/files',
+  routePrefix: '/motor-media/files',
+  translationPrefix: 'motor-media.files',
+  formMeta: fileFormMeta,
+  formConfig: fileEditFormConfig,
+  mode: 'edit',
+  id: route.params.id as string,
+  selectOptionConfigs: fileSelectOptionConfigs
+})
+
+const fileId = route.params.id as string
+const replacementFile = ref<File | null>(null)
+
+const usageModalOpen = ref(false)
+const usageEndpoint = computed(() => `/api/v2/files/${fileId}/usage`)
+
+// Reuse the record already fetched by useEntityForm (no duplicate request)
+const { data: fileRecord } = useNuxtData<{ data: Record<string, unknown> }>(
+  `entity-form-/api/v2/files-${fileId}`
+)
+
+const currentFile = computed(() => {
+  const file = fileRecord.value?.data?.file as { url?: string, file_name?: string, mime_type?: string } | null
+  return file ?? null
+})
+
+const selectedCategories = ref<number[]>([])
+
+watch(fileRecord, (res) => {
+  if (res?.data) {
+    const cats = res.data.categories as Array<{ id: number }> | null
+    if (cats) {
+      selectedCategories.value = cats.map(c => c.id)
+    }
+  }
+}, { immediate: true })
+
+function onFileChange(event: Event) {
+  const input = event.target as HTMLInputElement
+  if (input.files?.[0]) {
+    replacementFile.value = input.files[0]
+  }
+}
+
+async function submitFile(eventData: Record<string, unknown>): Promise<void> {
+  const body: Record<string, unknown> = { ...eventData, categories: selectedCategories.value }
+  if (replacementFile.value) {
+    body.file = await fileToDataUrl(replacementFile.value)
+  }
+  await client(`/api/v2/files/${fileId}`, { method: 'PATCH', body })
+  success(t('motor-media.files.edit_title'), t('motor-media.files.updated_success'))
+}
+
+function handleSubmitError(err: unknown) {
+  const fetchErr = err as { response?: { status?: number, _data?: { message?: string, errors?: Record<string, string[]> } } }
+  if (fetchErr.response?.status === 422 && fetchErr.response._data?.errors) {
+    const serverErrors = fetchErr.response._data.errors
+    const formErrors = Object.entries(serverErrors).map(([path, messages]) => ({
+      path,
+      message: messages[0] ?? ''
+    }))
+    formRef.value?.setErrors(formErrors)
+
+    const count = formErrors.length
+    const summary = count === 1
+      ? formErrors[0]!.message
+      : t('motor-core.global.validation_errors', { count })
+    notifyError(t('motor-core.global.validation_failed'), summary)
+
+    nextTick(() => {
+      const errorEl = document.querySelector('[class*="error"]')
+      errorEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    })
+  } else {
+    const message = err instanceof Error ? err.message : 'Failed to update file'
+    notifyError(t('motor-media.files.edit_title'), message)
+  }
+}
+
+async function onSubmit(event: { data: Record<string, unknown> }) {
+  loading.value = true
+  try {
+    await submitFile(event.data)
+    router.push('/motor-media/files')
+  } catch (err: unknown) {
+    handleSubmitError(err)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function onSaveAndNew(event: { data: Record<string, unknown> }) {
+  loading.value = true
+  try {
+    await submitFile(event.data)
+    router.push('/motor-media/files/create')
+  } catch (err: unknown) {
+    handleSubmitError(err)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function onSaveAndContinue(event: { data: Record<string, unknown> }) {
+  loading.value = true
+  try {
+    await submitFile(event.data)
+    nextTick(() => formRef.value?.captureSnapshot())
+  } catch (err: unknown) {
+    handleSubmitError(err)
+  } finally {
+    loading.value = false
+  }
+}
+</script>
+
+<template>
+  <div>
+    <FormPage
+      :title="t('motor-media.files.edit_title')"
+      back-route="/motor-media/files"
+      :loading="fetching"
+      :error="fetchError"
+    >
+      <FormBase
+        ref="formRef"
+        v-model:state="state"
+        :fields="fields"
+        :schema="schema"
+        :groups="groups"
+        :select-options="selectOptions"
+        :select-options-loading="selectOptionsLoading"
+        :loading="loading"
+        :delete-record="deleteRecord"
+        :deleting="deleting"
+        cancel-route="/motor-media/files"
+        show-save-and-continue
+        show-save-and-new
+        @submit="onSubmit"
+        @save-and-continue="onSaveAndContinue"
+        @save-and-new="onSaveAndNew"
+      >
+        <template #after-fields>
+          <UPageCard :title="t('motor-media.files.group_categories')">
+            <FormInputsCategoryTreeInput
+              v-model="selectedCategories"
+              scope="media"
+            />
+          </UPageCard>
+
+          <UPageCard :title="t('motor-media.files.usage_title')">
+            <UButton
+              :label="t('motor-media.files.usage_title')"
+              icon="i-lucide-network"
+              variant="outline"
+              @click="usageModalOpen = true"
+            />
+          </UPageCard>
+
+          <UPageCard :title="t('motor-media.files.current_file')">
+            <div class="space-y-4">
+              <!-- Current file preview -->
+              <div
+                v-if="currentFile?.url"
+                class="flex items-center gap-4"
+              >
+                <img
+                  v-if="currentFile.mime_type?.startsWith('image/')"
+                  :src="currentFile.url"
+                  :alt="currentFile.file_name ?? ''"
+                  class="max-h-40 rounded object-contain"
+                >
+                <div
+                  v-else
+                  class="flex items-center gap-2"
+                >
+                  <UIcon
+                    name="i-lucide-file"
+                    class="size-8 text-muted"
+                  />
+                  <span class="text-sm">{{ currentFile.file_name }}</span>
+                </div>
+                <UButton
+                  icon="i-lucide-download"
+                  variant="outline"
+                  size="sm"
+                  :to="currentFile.url"
+                  target="_blank"
+                />
+              </div>
+
+              <!-- Replacement file input -->
+              <div class="space-y-2">
+                <UFormField
+                  name="replacement_file"
+                  :label="t('motor-media.files.replace_file')"
+                >
+                  <UInput
+                    type="file"
+                    class="w-full"
+                    @change="onFileChange"
+                  />
+                </UFormField>
+                <p
+                  v-if="replacementFile"
+                  class="text-sm text-muted"
+                >
+                  {{ replacementFile.name }} ({{ (replacementFile.size / 1024).toFixed(1) }} KB)
+                </p>
+              </div>
+            </div>
+          </UPageCard>
+        </template>
+      </FormBase>
+    </FormPage>
+
+    <EntityUsageModal
+      v-model:open="usageModalOpen"
+      :endpoint="usageEndpoint"
+      :title="t('motor-media.files.usage_title')"
+    />
+  </div>
+</template>

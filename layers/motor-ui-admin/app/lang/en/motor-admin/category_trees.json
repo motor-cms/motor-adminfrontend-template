@@ -1,0 +1,14 @@
+{
+  "category_trees": "Category Trees",
+  "category_tree": "Category Tree",
+  "title": "Category Trees",
+  "subtitle": "Manage category trees and their categories",
+  "add": "Add Category Tree",
+  "create_title": "Create Category Tree",
+  "edit_title": "Edit Category Tree",
+  "created_success": "Category tree was created successfully",
+  "updated_success": "Category tree was updated successfully",
+  "children": "Children",
+  "children_title": "Categories in \"{name}\"",
+  "children_subtitle": "Manage categories within this tree"
+}

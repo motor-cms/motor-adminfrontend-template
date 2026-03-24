@@ -1,0 +1,19 @@
+{
+  "title": "Keyboard Shortcuts",
+  "hold_hint": "Hold",
+  "then": "then",
+  "click": "Click",
+  "global": "Global",
+  "form": "Form",
+  "grid": "Table",
+  "media": "Media",
+  "search": "Open search",
+  "go_home": "Go to dashboard",
+  "go_settings": "Go to settings",
+  "save": "Save",
+  "save_and_new": "Save and create new",
+  "prev_page": "Previous page",
+  "next_page": "Next page",
+  "create_new": "Create new",
+  "select_multiple": "Select multiple"
+}

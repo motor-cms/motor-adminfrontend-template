@@ -1,0 +1,14 @@
+{
+  "config_variables": "Config Variables",
+  "title": "Config Variables",
+  "subtitle": "Manage configuration variables",
+  "add": "Add Config Variable",
+  "package": "Package",
+  "group": "Group",
+  "value": "Value",
+  "is_invisible": "Hidden",
+  "create_title": "Create Config Variable",
+  "edit_title": "Edit Config Variable",
+  "created_success": "Config variable created successfully.",
+  "updated_success": "Config variable updated successfully."
+}

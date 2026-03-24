@@ -1,0 +1,59 @@
+{
+  "name": "@motor-cms/ui-core",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./nuxt.config.ts",
+  "files": [
+    "app",
+    "server",
+    "public",
+    "nuxt.config.ts"
+  ],
+  "exports": {
+    ".": "./nuxt.config.ts",
+    "./app/types/auth": "./app/types/auth.ts",
+    "./app/types/form": "./app/types/form.ts",
+    "./app/types/grid": "./app/types/grid.ts",
+    "./app/types/search": "./app/types/search.ts",
+    "./app/types/tree": "./app/types/tree.ts",
+    "./app/types/generated/api": "./app/types/generated/api.d.ts",
+    "./app/types/generated/form-meta": "./app/types/generated/form-meta.ts",
+    "./app/types/generated/grid-meta": "./app/types/generated/grid-meta.ts",
+    "./app/types/config/ai-system-prompt": "./app/types/config/ai-system-prompt.ts",
+    "./app/types/config/category": "./app/types/config/category.ts",
+    "./app/types/config/category-tree": "./app/types/config/category-tree.ts",
+    "./app/types/config/clickpath": "./app/types/config/clickpath.ts",
+    "./app/types/config/client": "./app/types/config/client.ts",
+    "./app/types/config/config-variable": "./app/types/config/config-variable.ts",
+    "./app/types/config/custom-content-type": "./app/types/config/custom-content-type.ts",
+    "./app/types/config/domain": "./app/types/config/domain.ts",
+    "./app/types/config/email-template": "./app/types/config/email-template.ts",
+    "./app/types/config/file": "./app/types/config/file.ts",
+    "./app/types/config/language": "./app/types/config/language.ts",
+    "./app/types/config/navigation-item": "./app/types/config/navigation-item.ts",
+    "./app/types/config/navigation-tree": "./app/types/config/navigation-tree.ts",
+    "./app/types/config/permission-group": "./app/types/config/permission-group.ts",
+    "./app/types/config/role": "./app/types/config/role.ts",
+    "./app/types/config/search-config": "./app/types/config/search-config.ts",
+    "./app/types/config/seo-redirect": "./app/types/config/seo-redirect.ts",
+    "./app/types/config/topic": "./app/types/config/topic.ts",
+    "./app/types/config/user": "./app/types/config/user.ts",
+    "./app/utils/uuid": "./app/utils/uuid.ts"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.0",
+    "@nuxt/ui": "^4.5.0",
+    "@nuxtjs/i18n": "^10.0.0",
+    "@pinia/nuxt": "^0.11.0",
+    "@vueuse/core": "^14.0.0",
+    "nuxt-auth-sanctum": "^2.0.0",
+    "pinia": "^3.0.0",
+    "pinia-plugin-persistedstate": "^4.0.0",
+    "sortablejs": "^1.15.0",
+    "zod": "^4.0.0"
+  },
+  "peerDependencies": {
+    "nuxt": "^4.0.0",
+    "vue": "^3.5.0"
+  }
+}

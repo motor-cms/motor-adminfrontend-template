@@ -1,0 +1,12 @@
+{
+  "categories": "Categories",
+  "category": "Category",
+  "title": "Categories",
+  "add": "Add Category",
+  "create_title": "Create Category",
+  "edit_title": "Edit Category",
+  "created_success": "Category was created successfully",
+  "updated_success": "Category was updated successfully",
+  "parent": "Parent Category",
+  "root": "Root (top level)"
+}

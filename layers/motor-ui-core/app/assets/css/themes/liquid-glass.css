@@ -1,0 +1,920 @@
+/*
+ * Liquid Glass Theme
+ * ===================
+ * Inspired by Apple's Liquid Glass design language (iOS 26 / macOS Tahoe).
+ * Activated by adding .theme-liquid-glass to <html>.
+ * Works with both light (.theme-liquid-glass) and dark (.theme-liquid-glass.dark) modes.
+ */
+
+/* Google Fonts loaded via nuxt.config.ts app.head */
+
+/* ==========================================================================
+   1. Design Tokens (Light Mode)
+   ========================================================================== */
+html.theme-liquid-glass {
+  /* Font */
+  --glass-font: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Page background */
+  --glass-page-bg: #EEF0F5;
+
+  /* Glass surfaces — increased opacity for readability */
+  --glass-surface-bg: rgba(255, 255, 255, 0.75);
+  --glass-raised-bg: rgba(255, 255, 255, 0.82);
+  --glass-floating-bg: rgba(255, 255, 255, 0.88);
+
+  /* Borders — dark outer for definition in light mode */
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-border-subtle: rgba(0, 0, 0, 0.05);
+  /* Shadows — deeper for premium depth */
+  --glass-shadow-surface:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --glass-shadow-raised:
+    0 2px 6px rgba(0, 0, 0, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --glass-shadow-floating:
+    0 4px 12px rgba(0, 0, 0, 0.10),
+    0 16px 48px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
+  /* Accent (Apple system blue) */
+  --glass-accent: #007AFF;
+  --glass-accent-hover: #0063D1;
+  --glass-accent-tint: rgba(0, 122, 255, 0.15);
+
+  /* Text */
+  --glass-text: #1C1C1E;
+  --glass-text-muted: #636366;
+
+  /* Input */
+  --glass-input-border: rgba(0, 0, 0, 0.10);
+  --glass-input-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+  --glass-focus-ring: 0 0 0 2px rgba(0, 122, 255, 0.25);
+
+  /* Floating panels */
+  --glass-panel-inset: 10px;
+  --glass-panel-gap: 8px;
+  --glass-panel-radius: 14px;
+  --glass-sidebar-bg: rgba(255, 255, 255, 0.62);
+  --glass-panel-bg: rgba(255, 255, 255, 0.55);
+
+  /* Shape */
+  --glass-radius-sm: 8px;
+  --glass-radius-md: 10px;
+  --glass-radius-lg: 16px;
+  --glass-radius-xl: 20px;
+
+  /* Transitions */
+  --glass-transition-fast: 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  --glass-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --glass-transition-slow: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* ==========================================================================
+   2. Design Tokens (Dark Mode)
+   ========================================================================== */
+html.theme-liquid-glass.dark {
+  --glass-page-bg: #0A0A0F;
+
+  --glass-surface-bg: rgba(28, 28, 30, 0.72);
+  --glass-raised-bg: rgba(44, 44, 46, 0.78);
+  --glass-floating-bg: rgba(58, 58, 60, 0.85);
+
+  /* Dark mode keeps light borders for definition against dark bg */
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-border-subtle: rgba(255, 255, 255, 0.08);
+  --glass-shadow-surface:
+    0 1px 3px rgba(0, 0, 0, 0.20),
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  --glass-shadow-raised:
+    0 2px 6px rgba(0, 0, 0, 0.25),
+    0 8px 24px rgba(0, 0, 0, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --glass-shadow-floating:
+    0 4px 12px rgba(0, 0, 0, 0.30),
+    0 16px 48px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+
+  --glass-accent: #0A84FF;
+  --glass-accent-hover: #409CFF;
+  --glass-accent-tint: rgba(10, 132, 255, 0.20);
+
+  --glass-text: #F2F2F7;
+  --glass-text-muted: #AEAEB2;
+
+  --glass-input-border: rgba(255, 255, 255, 0.12);
+  --glass-input-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
+  --glass-focus-ring: 0 0 0 2px rgba(10, 132, 255, 0.25);
+
+  /* Floating panels */
+  --glass-sidebar-bg: rgba(28, 28, 30, 0.65);
+  --glass-panel-bg: rgba(28, 28, 30, 0.55);
+}
+
+
+/* ==========================================================================
+   3. Global: Font, Background, Color Overrides
+   ========================================================================== */
+
+/* Font family — inherits via html+body; no * selector to preserve icon fonts */
+html.theme-liquid-glass,
+html.theme-liquid-glass body {
+  font-family: var(--glass-font) !important;
+}
+
+/* Heading letter-spacing (Apple style: size-dependent tracking) */
+html.theme-liquid-glass h1 {
+  letter-spacing: -0.02em;
+}
+
+html.theme-liquid-glass h2 {
+  letter-spacing: -0.01em;
+}
+
+html.theme-liquid-glass h3 {
+  letter-spacing: -0.005em;
+}
+
+/* Body base */
+html.theme-liquid-glass body {
+  background-color: var(--glass-page-bg) !important;
+  min-height: 100vh;
+}
+
+/* --- Background: Mesh (default) --- */
+html.theme-liquid-glass.glass-bg-mesh body {
+  background-image:
+    radial-gradient(ellipse at 20% 0%, rgba(0, 122, 255, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(175, 82, 222, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(90, 200, 250, 0.03) 0%, transparent 70%) !important;
+}
+html.theme-liquid-glass.glass-bg-mesh.dark body {
+  background-image:
+    radial-gradient(ellipse at 15% 10%, rgba(10, 132, 255, 0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 90%, rgba(175, 82, 222, 0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 50% 50%, rgba(90, 200, 250, 0.03) 0%, transparent 60%) !important;
+}
+
+/* --- Background: Aurora --- */
+html.theme-liquid-glass.glass-bg-aurora body {
+  background-image:
+    linear-gradient(135deg, #0b3d2e 0%, #1a5276 30%, #6c3483 60%, #1a8a5c 100%),
+    radial-gradient(ellipse at 25% 20%, rgba(26, 188, 156, 0.45) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 70%, rgba(108, 52, 131, 0.35) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(52, 152, 219, 0.25) 0%, transparent 60%) !important;
+}
+html.theme-liquid-glass.glass-bg-aurora.dark body {
+  background-image:
+    linear-gradient(135deg, #061f17 0%, #0d2a3d 30%, #361a42 60%, #0d4530 100%),
+    radial-gradient(ellipse at 25% 20%, rgba(26, 188, 156, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 70%, rgba(108, 52, 131, 0.15) 0%, transparent 50%) !important;
+}
+
+/* --- Background: Sunset --- */
+html.theme-liquid-glass.glass-bg-sunset body {
+  background-image:
+    linear-gradient(135deg, #ff6b35 0%, #d63384 40%, #7b2d8e 70%, #4a1a6b 100%),
+    radial-gradient(ellipse at 30% 20%, rgba(255, 107, 53, 0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(214, 51, 132, 0.35) 0%, transparent 50%) !important;
+}
+html.theme-liquid-glass.glass-bg-sunset.dark body {
+  background-image:
+    linear-gradient(135deg, #5c2615 0%, #4d1230 40%, #2e1140 70%, #1a0b27 100%),
+    radial-gradient(ellipse at 30% 20%, rgba(255, 107, 53, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(214, 51, 132, 0.15) 0%, transparent 50%) !important;
+}
+
+/* --- Background: Ocean --- */
+html.theme-liquid-glass.glass-bg-ocean body {
+  background-image:
+    linear-gradient(135deg, #0c2340 0%, #0d6986 40%, #1a9ca0 70%, #0c2340 100%),
+    radial-gradient(ellipse at 20% 30%, rgba(13, 105, 134, 0.45) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 60%, rgba(26, 156, 160, 0.35) 0%, transparent 50%) !important;
+}
+html.theme-liquid-glass.glass-bg-ocean.dark body {
+  background-image:
+    linear-gradient(135deg, #06111e 0%, #063443 40%, #0d4e50 70%, #06111e 100%),
+    radial-gradient(ellipse at 20% 30%, rgba(13, 105, 134, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 60%, rgba(26, 156, 160, 0.15) 0%, transparent 50%) !important;
+}
+
+/* --- Background: Cosmic --- */
+html.theme-liquid-glass.glass-bg-cosmic body {
+  background-image:
+    linear-gradient(135deg, #0f0c29 0%, #302b63 40%, #24243e 70%, #0f0c29 100%),
+    radial-gradient(circle at 25% 25%, rgba(138, 43, 226, 0.4) 0%, transparent 30%),
+    radial-gradient(circle at 75% 60%, rgba(255, 20, 147, 0.25) 0%, transparent 30%),
+    radial-gradient(circle at 50% 85%, rgba(0, 191, 255, 0.2) 0%, transparent 25%) !important;
+}
+html.theme-liquid-glass.glass-bg-cosmic.dark body {
+  background-image:
+    linear-gradient(135deg, #080618 0%, #191536 40%, #131224 70%, #080618 100%),
+    radial-gradient(circle at 25% 25%, rgba(138, 43, 226, 0.2) 0%, transparent 30%),
+    radial-gradient(circle at 75% 60%, rgba(255, 20, 147, 0.12) 0%, transparent 30%) !important;
+}
+
+/* --- Background: Abstract --- */
+html.theme-liquid-glass.glass-bg-abstract body {
+  background-image:
+    linear-gradient(160deg, rgba(214, 40, 40, 0.6) 0%, transparent 35%),
+    linear-gradient(250deg, rgba(0, 61, 165, 0.5) 0%, transparent 35%),
+    linear-gradient(40deg, rgba(245, 183, 0, 0.4) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.8) 0%, rgba(245, 240, 230, 0.6) 100%) !important;
+}
+html.theme-liquid-glass.glass-bg-abstract.dark body {
+  background-image:
+    linear-gradient(160deg, rgba(214, 40, 40, 0.25) 0%, transparent 35%),
+    linear-gradient(250deg, rgba(0, 61, 165, 0.2) 0%, transparent 35%),
+    linear-gradient(40deg, rgba(245, 183, 0, 0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 50%, rgba(20, 18, 15, 1) 0%, rgba(10, 10, 15, 1) 100%) !important;
+}
+
+/* --- Background: Energis Orange --- */
+html.theme-liquid-glass.glass-bg-energis body {
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(249, 215, 160, 0.45) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 70%, rgba(242, 190, 130, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(252, 225, 180, 0.25) 0%, transparent 60%),
+    linear-gradient(135deg, #fef6ea 0%, #fce0b2 30%, #f9cc8a 60%, #f5b87a 100%) !important;
+}
+html.theme-liquid-glass.glass-bg-energis.dark body {
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(249, 201, 124, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 70%, rgba(242, 166, 90, 0.1) 0%, transparent 50%),
+    linear-gradient(135deg, #2a1a08 0%, #1f1508 50%, #211808 100%) !important;
+}
+
+/* Override Nuxt UI color tokens so bg-default, border-default etc. change */
+html.theme-liquid-glass {
+  --ui-bg: var(--glass-page-bg) !important;
+  --ui-color-neutral-50: #F8F9FA !important;
+  --ui-color-neutral-100: #EEF0F5 !important;
+  --ui-color-neutral-200: #D1D5DB !important;
+  --ui-color-neutral-900: #1C1C1E !important;
+  --ui-color-neutral-950: #0A0A0F !important;
+  --ui-color-primary-500: #007AFF !important;
+  --ui-color-primary-600: #0063D1 !important;
+}
+
+html.theme-liquid-glass.dark {
+  --ui-color-primary-500: #0A84FF !important;
+  --ui-color-primary-400: #409CFF !important;
+}
+
+
+/* ==========================================================================
+   3a. Floating Panel Layout (desktop only)
+   ========================================================================== */
+
+/* DashboardGroup — shrink the fixed container so panels float inside viewport */
+@media (min-width: 1024px) {
+  html.theme-liquid-glass .fixed.inset-0.flex.overflow-hidden {
+    inset: var(--glass-panel-inset) !important;
+    gap: var(--glass-panel-gap);
+  }
+
+  /* Override Tailwind's 100svh so children respect the inset container */
+  html.theme-liquid-glass .fixed.inset-0 .min-h-svh,
+  html.theme-liquid-glass .fixed.inset-0.min-h-svh {
+    min-height: 100% !important;
+  }
+}
+
+/* Content panel — glass treatment */
+@media (min-width: 1024px) {
+  html.theme-liquid-glass #energis-dashboard-panel-main {
+    background: var(--glass-panel-bg) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--glass-panel-radius) !important;
+    box-shadow: var(--glass-shadow-surface) !important;
+  }
+}
+
+/* Resize handle — ensure it sits above panels for gap */
+html.theme-liquid-glass [data-slot="handle"] {
+  z-index: 10;
+}
+
+
+/* ==========================================================================
+   4. Sidebar - Floating glass panel
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+  html.theme-liquid-glass [data-slot="root"][data-collapsed] {
+    background: var(--glass-sidebar-bg) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: var(--glass-panel-radius) !important;
+    box-shadow: var(--glass-shadow-surface) !important;
+    overflow: hidden;
+  }
+}
+
+
+/* ==========================================================================
+   5. Dashboard Navbar - Glass strip
+   ========================================================================== */
+
+/* Subtle tint — no glass (sits inside glass panel, avoid glass-on-glass) */
+html.theme-liquid-glass [data-slot="root"].border-b {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-color: var(--glass-border-subtle) !important;
+}
+
+html.theme-liquid-glass.dark [data-slot="root"].border-b {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+
+/* ==========================================================================
+   6. Dashboard Panel Body - Transparent background, reduced padding for glass panels
+   ========================================================================== */
+
+html.theme-liquid-glass [data-slot="body"] {
+  background: transparent !important;
+}
+
+/* Pages provide their own padding; remove body padding to avoid double spacing inside glass panel */
+@media (min-width: 1024px) {
+  html.theme-liquid-glass #energis-dashboard-panel-main > [data-slot="body"] {
+    padding: 0 !important;
+  }
+}
+
+
+/* ==========================================================================
+   7. Cards - UCard and UPageCard with glass effect
+   ========================================================================== */
+
+/* Solid inset — no glass (sits inside glass panel, avoid glass-on-glass) */
+html.theme-liquid-glass [data-slot="root"].bg-default {
+  background: rgba(255, 255, 255, 0.30) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid var(--glass-border-subtle) !important;
+  border-radius: var(--glass-radius-lg) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+  --tw-ring-shadow: none !important;
+  transition: transform var(--glass-transition), box-shadow var(--glass-transition);
+}
+
+html.theme-liquid-glass.dark [data-slot="root"].bg-default {
+  background: rgba(255, 255, 255, 0.06) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 1px 2px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Hover lift for interactive cards */
+html.theme-liquid-glass a[data-slot="root"].bg-default:hover,
+html.theme-liquid-glass button[data-slot="root"].bg-default:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--glass-shadow-raised) !important;
+}
+
+
+/* ==========================================================================
+   8. Inputs - Glass input fields with gradient sheen
+   ========================================================================== */
+
+html.theme-liquid-glass input[data-slot="base"],
+html.theme-liquid-glass textarea[data-slot="base"],
+html.theme-liquid-glass select[data-slot="base"],
+html.theme-liquid-glass [data-slot="base"].ring-inset {
+  background: linear-gradient(135deg,
+    rgba(250, 250, 252, 0.55) 0%,
+    rgba(255, 255, 255, 0.65) 45%,
+    rgba(255, 255, 255, 0.65) 55%,
+    rgba(250, 250, 252, 0.55) 100%
+  ) !important;
+  backdrop-filter: blur(12px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(170%) !important;
+  border: 1px solid var(--glass-input-border) !important;
+  border-radius: var(--glass-radius-md) !important;
+  box-shadow: var(--glass-input-shadow) !important;
+  --tw-ring-shadow: none !important;
+  transition: border-color var(--glass-transition), box-shadow var(--glass-transition);
+}
+
+html.theme-liquid-glass.dark input[data-slot="base"],
+html.theme-liquid-glass.dark textarea[data-slot="base"],
+html.theme-liquid-glass.dark select[data-slot="base"],
+html.theme-liquid-glass.dark [data-slot="base"].ring-inset {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  ) !important;
+}
+
+html.theme-liquid-glass input[data-slot="base"]:focus,
+html.theme-liquid-glass textarea[data-slot="base"]:focus {
+  border-color: var(--glass-accent) !important;
+  box-shadow: var(--glass-input-shadow), var(--glass-focus-ring) !important;
+}
+
+/* Select trigger buttons */
+html.theme-liquid-glass button[data-slot="base"].ring-inset {
+  background: linear-gradient(135deg,
+    rgba(250, 250, 252, 0.55) 0%,
+    rgba(255, 255, 255, 0.65) 45%,
+    rgba(255, 255, 255, 0.65) 55%,
+    rgba(250, 250, 252, 0.55) 100%
+  ) !important;
+  backdrop-filter: blur(12px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(170%) !important;
+  border: 1px solid var(--glass-input-border) !important;
+  border-radius: var(--glass-radius-md) !important;
+  --tw-ring-shadow: none !important;
+}
+
+html.theme-liquid-glass.dark button[data-slot="base"].ring-inset {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  ) !important;
+}
+
+
+/* ==========================================================================
+   9. Buttons - Glass styling
+   ========================================================================== */
+
+/* Primary buttons - glassmorphic accent */
+html.theme-liquid-glass button.bg-primary,
+html.theme-liquid-glass a.bg-primary {
+  backdrop-filter: blur(8px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: var(--glass-radius-md) !important;
+  box-shadow: 0 1px 3px rgba(0, 122, 255, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: transform var(--glass-transition), box-shadow var(--glass-transition);
+}
+
+/* Button hover/active micro-interactions */
+html.theme-liquid-glass button.bg-primary:hover,
+html.theme-liquid-glass a.bg-primary:hover {
+  transform: translateY(-0.5px);
+  box-shadow: 0 2px 6px rgba(0, 122, 255, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.20);
+}
+
+html.theme-liquid-glass button.bg-primary:active,
+html.theme-liquid-glass a.bg-primary:active {
+  transform: translateY(0px);
+  transition-duration: var(--glass-transition-fast);
+}
+
+/* All buttons: rounded corners */
+html.theme-liquid-glass button.rounded-md,
+html.theme-liquid-glass a.rounded-md {
+  border-radius: var(--glass-radius-md) !important;
+}
+
+/* Split button: connected border-radius override */
+html.theme-liquid-glass .split-button > button.rounded-r-none {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+html.theme-liquid-glass .split-button > * > button.rounded-l-none,
+html.theme-liquid-glass .split-button > button.rounded-l-none {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+
+/* ==========================================================================
+   10. Modals - Floating glass
+   ========================================================================== */
+
+html.theme-liquid-glass [data-slot="overlay"] {
+  background: rgba(0, 0, 0, 0.25) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+
+html.theme-liquid-glass.dark [data-slot="overlay"] {
+  background: rgba(0, 0, 0, 0.50) !important;
+}
+
+html.theme-liquid-glass [data-slot="content"].bg-default {
+  background: var(--glass-floating-bg) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-radius-xl) !important;
+  box-shadow: var(--glass-shadow-floating) !important;
+  --tw-ring-shadow: none !important;
+}
+
+
+/* ==========================================================================
+   11. Dropdown Menus - Raised glass
+   ========================================================================== */
+
+html.theme-liquid-glass [data-slot="content"].shadow-lg {
+  background: var(--glass-raised-bg) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-radius-lg) !important;
+  box-shadow: var(--glass-shadow-raised) !important;
+  --tw-ring-shadow: none !important;
+}
+
+
+/* ==========================================================================
+   12. Navigation Menu Root (<nav>) - Make transparent
+   ========================================================================== */
+
+/* Scoped to sidebar nav only — avoids overriding navbars elsewhere */
+html.theme-liquid-glass [data-slot="root"][data-collapsed] nav {
+  background: transparent !important;
+}
+
+/* ==========================================================================
+   12a. Navigation Menu Items - Glass active/hover states
+   ========================================================================== */
+
+html.theme-liquid-glass [data-slot="link"] {
+  border-radius: var(--glass-radius-md) !important;
+  transition: transform var(--glass-transition);
+}
+
+/* Active nav items use a ::before pseudo-element with bg-elevated (solid white).
+   Override to use translucent accent tint instead. */
+html.theme-liquid-glass [data-slot="link"]::before {
+  background: transparent !important;
+}
+
+html.theme-liquid-glass [data-slot="link"][data-active="true"]::before {
+  background: linear-gradient(135deg,
+    rgba(0, 122, 255, 0.18) 0%,
+    rgba(0, 122, 255, 0.12) 100%
+  ) !important;
+}
+
+html.theme-liquid-glass [data-slot="link"]:hover::before {
+  background: rgba(0, 122, 255, 0.08) !important;
+}
+
+html.theme-liquid-glass.dark [data-slot="link"]:hover::before {
+  background: rgba(10, 132, 255, 0.12) !important;
+}
+
+/* ==========================================================================
+   12b. Sidebar Search Button - Glass input style
+   ========================================================================== */
+
+/* The DashboardSearchButton uses variant="outline" which renders with
+   bg-default + ring-accented. Override to match glass input style. */
+html.theme-liquid-glass [data-slot="root"][data-collapsed] button.bg-default {
+  background: linear-gradient(135deg,
+    rgba(250, 250, 252, 0.55) 0%,
+    rgba(255, 255, 255, 0.65) 45%,
+    rgba(255, 255, 255, 0.65) 55%,
+    rgba(250, 250, 252, 0.55) 100%
+  ) !important;
+  backdrop-filter: blur(12px) saturate(170%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(170%) !important;
+  border: 1px solid var(--glass-input-border) !important;
+  border-radius: var(--glass-radius-md) !important;
+  box-shadow: var(--glass-input-shadow) !important;
+  --tw-ring-shadow: none !important;
+}
+
+html.theme-liquid-glass.dark [data-slot="root"][data-collapsed] button.bg-default {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  ) !important;
+}
+
+
+/* ==========================================================================
+   13. Table - Glass wrapper (UTable root is div.relative.overflow-auto)
+   ========================================================================== */
+
+/* Table sits flush inside glass panel — panel provides border & radius.
+   Just give a subtle background tint, no extra border/radius/shadow. */
+html.theme-liquid-glass [data-slot="root"].overflow-auto {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+html.theme-liquid-glass table thead {
+  background: transparent !important;
+  border-bottom: 1px solid var(--glass-border-subtle) !important;
+}
+
+html.theme-liquid-glass.dark table thead {
+  background: transparent !important;
+  border-bottom: 1px solid var(--glass-border-subtle) !important;
+}
+
+html.theme-liquid-glass table tbody tr {
+  transition: background var(--glass-transition);
+}
+
+html.theme-liquid-glass table tbody tr:hover {
+  background: rgba(0, 122, 255, 0.05);
+}
+
+html.theme-liquid-glass.dark table tbody tr:hover {
+  background: rgba(10, 132, 255, 0.07);
+}
+
+
+/* ==========================================================================
+   14. Badges - Glass pills
+   ========================================================================== */
+
+html.theme-liquid-glass span.ring-inset {
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+
+/* ==========================================================================
+   15. Tooltips
+   ========================================================================== */
+
+html.theme-liquid-glass [role="tooltip"] {
+  background: var(--glass-raised-bg) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-radius-sm) !important;
+  box-shadow: var(--glass-shadow-raised) !important;
+}
+
+
+/* ==========================================================================
+   16. Toast Notifications - Floating glass
+   ========================================================================== */
+
+html.theme-liquid-glass [data-slot="root"][class*="bg-"][role="status"],
+html.theme-liquid-glass [data-slot="root"][class*="bg-"][role="alert"] {
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-radius-lg) !important;
+  box-shadow: var(--glass-shadow-floating) !important;
+  --tw-ring-shadow: none !important;
+}
+
+
+/* ==========================================================================
+   17. Pagination - Glass controls
+   ========================================================================== */
+
+html.theme-liquid-glass [data-slot="root"] nav[aria-label] button {
+  backdrop-filter: blur(8px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(160%) !important;
+  border-radius: var(--glass-radius-md) !important;
+  transition: transform var(--glass-transition), background var(--glass-transition);
+}
+
+html.theme-liquid-glass [data-slot="root"] nav[aria-label] button:hover {
+  transform: translateY(-0.5px);
+}
+
+html.theme-liquid-glass [data-slot="root"] nav[aria-label] button[aria-current="page"] {
+  box-shadow: 0 1px 3px rgba(0, 122, 255, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+
+/* ==========================================================================
+   18. Checkbox & Switch - Glass form controls
+   ========================================================================== */
+
+/* Checkbox */
+html.theme-liquid-glass input[type="checkbox"][data-slot="base"] {
+  background: linear-gradient(135deg,
+    rgba(250, 250, 252, 0.55) 0%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(250, 250, 252, 0.55) 100%
+  ) !important;
+  border: 1px solid var(--glass-input-border) !important;
+  border-radius: var(--glass-radius-sm) !important;
+  transition: border-color var(--glass-transition), box-shadow var(--glass-transition);
+}
+
+html.theme-liquid-glass.dark input[type="checkbox"][data-slot="base"] {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.08) 100%
+  ) !important;
+}
+
+html.theme-liquid-glass input[type="checkbox"][data-slot="base"]:focus {
+  box-shadow: var(--glass-focus-ring) !important;
+}
+
+/* Switch / Toggle */
+html.theme-liquid-glass button[role="switch"] {
+  border: 1px solid var(--glass-input-border) !important;
+  border-radius: 50px !important;
+  transition: background var(--glass-transition), border-color var(--glass-transition);
+}
+
+html.theme-liquid-glass button[role="switch"]:focus {
+  box-shadow: var(--glass-focus-ring) !important;
+}
+
+
+/* ==========================================================================
+   19. Alerts - Glass alert panels
+   ========================================================================== */
+
+html.theme-liquid-glass [data-slot="root"][role="alert"] {
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--glass-radius-lg) !important;
+  box-shadow: var(--glass-shadow-surface) !important;
+  --tw-ring-shadow: none !important;
+}
+
+
+/* ==========================================================================
+   20. Slideover - Glass side panel
+   ========================================================================== */
+
+html.theme-liquid-glass [data-slot="content"][class*="bg-default"][class*="ring-"] {
+  background: var(--glass-floating-bg) !important;
+  backdrop-filter: blur(40px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
+  border-left: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow-floating) !important;
+  --tw-ring-shadow: none !important;
+}
+
+
+/* ==========================================================================
+   21. Form Validation States - Error/success input borders
+   ========================================================================== */
+
+/* Error state */
+html.theme-liquid-glass input[data-slot="base"][aria-invalid="true"],
+html.theme-liquid-glass textarea[data-slot="base"][aria-invalid="true"],
+html.theme-liquid-glass select[data-slot="base"][aria-invalid="true"] {
+  border-color: rgba(255, 59, 48, 0.50) !important;
+}
+
+html.theme-liquid-glass input[data-slot="base"][aria-invalid="true"]:focus,
+html.theme-liquid-glass textarea[data-slot="base"][aria-invalid="true"]:focus {
+  border-color: rgba(255, 59, 48, 0.70) !important;
+  box-shadow: var(--glass-input-shadow), 0 0 0 2px rgba(255, 59, 48, 0.15) !important;
+}
+
+html.theme-liquid-glass.dark input[data-slot="base"][aria-invalid="true"],
+html.theme-liquid-glass.dark textarea[data-slot="base"][aria-invalid="true"],
+html.theme-liquid-glass.dark select[data-slot="base"][aria-invalid="true"] {
+  border-color: rgba(255, 69, 58, 0.60) !important;
+}
+
+html.theme-liquid-glass.dark input[data-slot="base"][aria-invalid="true"]:focus,
+html.theme-liquid-glass.dark textarea[data-slot="base"][aria-invalid="true"]:focus {
+  border-color: rgba(255, 69, 58, 0.80) !important;
+  box-shadow: var(--glass-input-shadow), 0 0 0 2px rgba(255, 69, 58, 0.20) !important;
+}
+
+
+/* ==========================================================================
+   21a. Background-Aware Readability
+   ========================================================================== */
+
+/* Dark backgrounds in light mode — boost glass opacity so dark text stays readable */
+html.theme-liquid-glass.glass-bg-aurora:not(.dark),
+html.theme-liquid-glass.glass-bg-sunset:not(.dark),
+html.theme-liquid-glass.glass-bg-ocean:not(.dark),
+html.theme-liquid-glass.glass-bg-cosmic:not(.dark) {
+  --glass-sidebar-bg: rgba(255, 255, 255, 0.78);
+  --glass-panel-bg: rgba(255, 255, 255, 0.72);
+  --glass-surface-bg: rgba(255, 255, 255, 0.85);
+  --glass-raised-bg: rgba(255, 255, 255, 0.90);
+  --glass-floating-bg: rgba(255, 255, 255, 0.92);
+}
+
+/* Abstract has a light center, needs less boost */
+html.theme-liquid-glass.glass-bg-abstract:not(.dark) {
+  --glass-sidebar-bg: rgba(255, 255, 255, 0.70);
+  --glass-panel-bg: rgba(255, 255, 255, 0.65);
+}
+
+
+/* ==========================================================================
+   21b. Dark Mode Background Boost
+   ========================================================================== */
+
+/* Increase dark background gradient opacity ~1.5x so colors are perceptible against #0A0A0F */
+html.theme-liquid-glass.glass-bg-aurora.dark body {
+  background-image:
+    linear-gradient(135deg, #092e22 0%, #134060 30%, #502768 60%, #136943 100%),
+    radial-gradient(ellipse at 25% 20%, rgba(26, 188, 156, 0.30) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 70%, rgba(108, 52, 131, 0.22) 0%, transparent 50%) !important;
+}
+
+html.theme-liquid-glass.glass-bg-sunset.dark body {
+  background-image:
+    linear-gradient(135deg, #8a3a1f 0%, #732348 40%, #451a60 70%, #261040 100%),
+    radial-gradient(ellipse at 30% 20%, rgba(255, 107, 53, 0.30) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(214, 51, 132, 0.22) 0%, transparent 50%) !important;
+}
+
+html.theme-liquid-glass.glass-bg-ocean.dark body {
+  background-image:
+    linear-gradient(135deg, #091a2e 0%, #094f65 40%, #147578 70%, #091a2e 100%),
+    radial-gradient(ellipse at 20% 30%, rgba(13, 105, 134, 0.30) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 60%, rgba(26, 156, 160, 0.22) 0%, transparent 50%) !important;
+}
+
+html.theme-liquid-glass.glass-bg-cosmic.dark body {
+  background-image:
+    linear-gradient(135deg, #0c0924 0%, #252050 40%, #1c1a36 70%, #0c0924 100%),
+    radial-gradient(circle at 25% 25%, rgba(138, 43, 226, 0.30) 0%, transparent 30%),
+    radial-gradient(circle at 75% 60%, rgba(255, 20, 147, 0.18) 0%, transparent 30%) !important;
+}
+
+html.theme-liquid-glass.glass-bg-abstract.dark body {
+  background-image:
+    linear-gradient(160deg, rgba(214, 40, 40, 0.38) 0%, transparent 35%),
+    linear-gradient(250deg, rgba(0, 61, 165, 0.30) 0%, transparent 35%),
+    linear-gradient(40deg, rgba(245, 183, 0, 0.22) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 50%, rgba(20, 18, 15, 1) 0%, rgba(10, 10, 15, 1) 100%) !important;
+}
+
+html.theme-liquid-glass.glass-bg-energis.dark body {
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(249, 201, 124, 0.22) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 70%, rgba(242, 166, 90, 0.15) 0%, transparent 50%),
+    linear-gradient(135deg, #3d2510 0%, #2e1f0c 50%, #302210 100%) !important;
+}
+
+
+/* ==========================================================================
+   21c. Form Sticky Footer - Glass treatment
+   ========================================================================== */
+
+html.theme-liquid-glass .sticky.bottom-0 {
+  background: var(--glass-sidebar-bg) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border-color: var(--glass-border-subtle) !important;
+}
+
+
+/* ==========================================================================
+   22. Auth Form - Login page glass card
+   ========================================================================== */
+
+html.theme-liquid-glass [data-slot="root"].bg-default form {
+  background: transparent !important;
+}
+
+
+/* ==========================================================================
+   23. Accessibility
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-liquid-glass * {
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  html.theme-liquid-glass {
+    --glass-surface-bg: rgba(255, 255, 255, 0.95);
+    --glass-raised-bg: rgba(255, 255, 255, 0.97);
+    --glass-floating-bg: rgba(255, 255, 255, 0.98);
+    --glass-sidebar-bg: rgba(255, 255, 255, 0.95);
+    --glass-panel-bg: rgba(255, 255, 255, 0.92);
+    --glass-border: rgba(0, 0, 0, 0.20);
+  }
+
+  html.theme-liquid-glass.dark {
+    --glass-surface-bg: rgba(28, 28, 30, 0.95);
+    --glass-raised-bg: rgba(44, 44, 46, 0.97);
+    --glass-floating-bg: rgba(58, 58, 60, 0.98);
+    --glass-sidebar-bg: rgba(28, 28, 30, 0.95);
+    --glass-panel-bg: rgba(28, 28, 30, 0.92);
+  }
+}

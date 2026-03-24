@@ -1,0 +1,18 @@
+{
+  "domains": "Domains",
+  "title": "Domains",
+  "subtitle": "Manage system domains",
+  "add": "Add Domain",
+  "create_title": "Create Domain",
+  "edit_title": "Edit Domain",
+  "created_success": "Domain successfully created.",
+  "updated_success": "Domain successfully updated.",
+  "host": "Host",
+  "protocol": "Protocol",
+  "port": "Port",
+  "path": "Path",
+  "target": "Target",
+  "parameters": "Parameters",
+  "group_connection": "Connection",
+  "group_routing": "Routing"
+}

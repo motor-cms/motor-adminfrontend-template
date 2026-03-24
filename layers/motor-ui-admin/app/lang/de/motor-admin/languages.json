@@ -1,0 +1,16 @@
+{
+  "languages": "Sprachen",
+  "language": "Sprache",
+  "title": "Sprachen",
+  "subtitle": "Systemsprachen verwalten",
+  "add": "Sprache hinzufügen",
+  "code": "Code",
+  "english_name": "Englischer Name",
+  "native_name": "Eigenname",
+  "create_title": "Sprache erstellen",
+  "edit_title": "Sprache bearbeiten",
+  "created_success": "Sprache erfolgreich erstellt.",
+  "updated_success": "Sprache erfolgreich aktualisiert.",
+  "iso_639_1": "ISO 639-1 Code",
+  "iso_639_1_description": "Zweibuchstabiger Sprachcode (z.B. en, de, fr)"
+}

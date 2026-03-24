@@ -1,0 +1,10 @@
+{
+  "sign_in": "Sign in",
+  "sign_in_description": "Sign in to your account",
+  "email": "Email",
+  "password": "Password",
+  "email_required": "Email is required",
+  "email_invalid": "Invalid email address",
+  "password_required": "Password is required",
+  "login_failed": "Login failed. Please check your credentials."
+}

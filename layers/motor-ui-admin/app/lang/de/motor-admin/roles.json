@@ -1,0 +1,15 @@
+{
+  "roles": "Rollen",
+  "role": "Rolle",
+  "title": "Rollen",
+  "subtitle": "Benutzerrollen verwalten",
+  "add": "Rolle hinzufügen",
+  "guard": "Guard",
+  "permissions": "Berechtigungen",
+  "create_title": "Rolle erstellen",
+  "edit_title": "Rolle bearbeiten",
+  "created_success": "Rolle erfolgreich erstellt.",
+  "updated_success": "Rolle erfolgreich aktualisiert.",
+  "guard_name": "Guard-Name",
+  "group_access": "Berechtigungen"
+}

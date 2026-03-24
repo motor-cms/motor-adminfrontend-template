@@ -1,0 +1,11 @@
+{
+  "page_not_found": "Page not found",
+  "something_went_wrong": "Something went wrong",
+  "page_not_found_description": "The page you are looking for does not exist or you do not have access to it.",
+  "back_to_dashboard": "Back to Dashboard",
+  "access_denied": "Access denied",
+  "no_permission": "You do not have permission to perform this action.",
+  "create_failed": "Failed to create resource",
+  "update_failed": "Failed to update resource",
+  "delete_failed": "Failed to delete resource"
+}

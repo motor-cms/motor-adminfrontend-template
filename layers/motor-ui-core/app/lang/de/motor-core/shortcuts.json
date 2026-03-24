@@ -1,0 +1,19 @@
+{
+  "title": "Tastenkürzel",
+  "hold_hint": "Gedrückt halten:",
+  "then": "dann",
+  "click": "Klick",
+  "global": "Global",
+  "form": "Formular",
+  "grid": "Tabelle",
+  "media": "Medien",
+  "search": "Suche öffnen",
+  "go_home": "Zum Dashboard",
+  "go_settings": "Zu Einstellungen",
+  "save": "Speichern",
+  "save_and_new": "Speichern und neu erstellen",
+  "prev_page": "Vorherige Seite",
+  "next_page": "Nächste Seite",
+  "create_new": "Neu erstellen",
+  "select_multiple": "Mehrfachauswahl"
+}

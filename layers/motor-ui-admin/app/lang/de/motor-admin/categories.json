@@ -1,0 +1,12 @@
+{
+  "categories": "Kategorien",
+  "category": "Kategorie",
+  "title": "Kategorien",
+  "add": "Kategorie hinzufügen",
+  "create_title": "Kategorie erstellen",
+  "edit_title": "Kategorie bearbeiten",
+  "created_success": "Kategorie wurde erfolgreich erstellt",
+  "updated_success": "Kategorie wurde erfolgreich aktualisiert",
+  "parent": "Übergeordnete Kategorie",
+  "root": "Stamm (oberste Ebene)"
+}

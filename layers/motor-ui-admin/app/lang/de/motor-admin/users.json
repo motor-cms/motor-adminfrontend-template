@@ -1,0 +1,22 @@
+{
+  "users": "Benutzer",
+  "user": "Benutzer",
+  "title": "Benutzer",
+  "subtitle": "Systembenutzer verwalten",
+  "add": "Benutzer hinzufügen",
+  "avatar": "",
+  "clients": "Mandanten",
+  "roles": "Rollen",
+  "permissions": "Berechtigungen",
+  "create_title": "Benutzer erstellen",
+  "edit_title": "Benutzer bearbeiten",
+  "created_success": "Benutzer wurde erfolgreich erstellt",
+  "updated_success": "Benutzer wurde erfolgreich aktualisiert",
+  "password": "Passwort",
+  "password_description": "Leer lassen, um das aktuelle Passwort beizubehalten",
+  "change_password": "Passwort ändern",
+  "password_confirmation": "Passwort bestätigen",
+  "password_mismatch": "Passwörter stimmen nicht überein",
+  "group_security": "Sicherheit",
+  "group_access": "Zugriff"
+}

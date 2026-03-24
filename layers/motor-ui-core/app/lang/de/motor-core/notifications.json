@@ -1,0 +1,15 @@
+{
+  "title": "Benachrichtigungen",
+  "description": "Ihre letzten Benachrichtigungen",
+  "empty": "Noch keine Benachrichtigungen",
+  "show_error_details": "Fehlerdetails anzeigen",
+  "hide_error_details": "Fehlerdetails ausblenden",
+  "status": "Status:",
+  "url": "URL:",
+  "message": "Nachricht:",
+  "stack": "Stack:",
+  "response": "Antwort:",
+  "copy_error": "Fehler kopieren",
+  "clear_all": "Alle löschen",
+  "close": "Schließen"
+}

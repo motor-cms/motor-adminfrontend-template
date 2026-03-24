@@ -1,0 +1,14 @@
+{
+  "permissions": "Berechtigungen",
+  "permission_group": "Berechtigungsgruppe",
+  "permission_groups": "Berechtigungsgruppen",
+  "title": "Berechtigungsgruppen",
+  "subtitle": "Berechtigungsgruppen verwalten",
+  "add": "Berechtigungsgruppe hinzufügen",
+  "position": "Position",
+  "create_title": "Berechtigungsgruppe erstellen",
+  "edit_title": "Berechtigungsgruppe bearbeiten",
+  "created_success": "Berechtigungsgruppe erfolgreich erstellt.",
+  "updated_success": "Berechtigungsgruppe erfolgreich aktualisiert.",
+  "group_permissions": "Berechtigungen"
+}

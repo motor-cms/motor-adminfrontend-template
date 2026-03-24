@@ -1,0 +1,15 @@
+{
+  "roles": "Roles",
+  "role": "Role",
+  "title": "Roles",
+  "subtitle": "Manage user roles",
+  "add": "Add Role",
+  "guard": "Guard",
+  "permissions": "Permissions",
+  "create_title": "Create Role",
+  "edit_title": "Edit Role",
+  "created_success": "Role created successfully.",
+  "updated_success": "Role updated successfully.",
+  "guard_name": "Guard Name",
+  "group_access": "Permissions"
+}

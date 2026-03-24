@@ -1,0 +1,276 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+@import "./themes/liquid-glass.css";
+@import "./themes/neon-grid.css";
+
+@font-face {
+  font-family: "Sora";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("/fonts/sora/sora-latin-ext-wght-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Sora";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("/fonts/sora/sora-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("/fonts/plus-jakarta-sans/plus-jakarta-sans-latin-ext-wght-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("/fonts/plus-jakarta-sans/plus-jakarta-sans-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 300 500;
+  font-display: swap;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-ext-wght-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 300 500;
+  font-display: swap;
+  src: url("/fonts/space-grotesk/space-grotesk-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono/jetbrains-mono-latin-ext-wght-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono/jetbrains-mono-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@theme static {
+    --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+    --font-heading: "Sora", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+  
+    --color-motor-primary-50: #F0EEFF;
+    --color-motor-primary-100: #D6D0FE;
+    --color-motor-primary-200: #AEA4FC;
+    --color-motor-primary-300: #9A8CFA;
+    --color-motor-primary-400: #8B7CF8;
+    --color-motor-primary-500: #6C5CE7;
+    --color-motor-primary-600: #5241B8;
+    --color-motor-primary-700: #3D318C;
+    --color-motor-primary-800: #2D2466;
+    --color-motor-primary-900: #1E1844;
+    --color-motor-primary-950: #110E2B;
+
+
+  --color-motor-success-50: #F0FDF4;
+  --color-motor-success-100: #DCFCE7;
+  --color-motor-success-200: #BBF7D0;
+  --color-motor-success-300: #86EFAC;
+  --color-motor-success-400: #4ADE80;
+  --color-motor-success-500: #10B981;
+  --color-motor-success-600: #16A34A;
+  --color-motor-success-700: #15803D;
+  --color-motor-success-800: #166534;
+  --color-motor-success-900: #14532D;
+  --color-motor-success-950: #052E16;
+
+  --color-motor-warning-50: #FFFBEB;
+  --color-motor-warning-100: #FEF3C7;
+  --color-motor-warning-200: #FDE68A;
+  --color-motor-warning-300: #FCD34D;
+  --color-motor-warning-400: #FBBF24;
+  --color-motor-warning-500: #F59E0B;
+  --color-motor-warning-600: #D97706;   
+  --color-motor-warning-700: #B45309;
+  --color-motor-warning-800: #92400E;
+  --color-motor-warning-900: #78350F;
+  --color-motor-warning-950: #451A03;
+
+  --color-motor-error-50: #FEF2F2;
+  --color-motor-error-100: #FEE2E2;
+  --color-motor-error-200: #FECACA; 
+  --color-motor-error-300: #FCA5A5;
+  --color-motor-error-400: #F87171;
+  --color-motor-error-500: #EF4444;
+  --color-motor-error-600: #DC2626;
+  --color-motor-error-700: #B91C1C;
+  --color-motor-error-800: #991B1B;
+  --color-motor-error-900: #7F1D1D;
+  --color-motor-error-950: #450A0A;     
+
+  --color-motor-info-50: #EBF5FF;
+  --color-motor-info-100: #CCE6FA;
+  --color-motor-info-200: #A8D4F5;
+  --color-motor-info-300: #78BEEF;
+  --color-motor-info-400: #4BA8E8;
+  --color-motor-info-500: #2E8ED0;
+  --color-motor-info-600: #1A73B5;
+  --color-motor-info-700: #145C94;
+  --color-motor-info-800: #104876;
+  --color-motor-info-900: #0C355A;
+  --color-motor-info-950: #08243D;
+
+  /* Override Tailwind defaults so utility classes match motor palette */
+  --color-green-50: #F0FDF4;
+  --color-green-100: #DCFCE7;
+  --color-green-200: #BBF7D0;
+  --color-green-300: #86EFAC;
+  --color-green-400: #4ADE80;
+  --color-green-500: #10B981;
+  --color-green-600: #16A34A;
+  --color-green-700: #15803D;
+  --color-green-800: #166534;
+  --color-green-900: #14532D;
+  --color-green-950: #052E16;
+
+  --color-red-50: #FEF2F2;
+  --color-red-100: #FEE2E2;
+  --color-red-200: #FECACA;
+  --color-red-300: #FCA5A5;
+  --color-red-400: #F87171;
+  --color-red-500: #EF4444;
+  --color-red-600: #DC2626;
+  --color-red-700: #B91C1C;
+  --color-red-800: #991B1B;
+  --color-red-900: #7F1D1D;
+  --color-red-950: #450A0A;
+
+  --color-yellow-50: #FFFBEB;
+  --color-yellow-100: #FEF3C7;
+  --color-yellow-200: #FDE68A;
+  --color-yellow-300: #FCD34D;
+  --color-yellow-400: #FBBF24;
+  --color-yellow-500: #F59E0B;
+  --color-yellow-600: #D97706;
+  --color-yellow-700: #B45309;
+  --color-yellow-800: #92400E;
+  --color-yellow-900: #78350F;
+  --color-yellow-950: #451A03;
+
+  --color-blue-50: #EBF5FF;
+  --color-blue-100: #CCE6FA;
+  --color-blue-200: #A8D4F5;
+  --color-blue-300: #78BEEF;
+  --color-blue-400: #4BA8E8;
+  --color-blue-500: #2E8ED0;
+  --color-blue-600: #1A73B5;
+  --color-blue-700: #145C94;
+  --color-blue-800: #104876;
+  --color-blue-900: #0C355A;
+  --color-blue-950: #08243D;
+  }
+
+  html.dark {
+    /* Nuxt UI overrides — map elevation tokens to UI variables */
+    --ui-bg: #0E0E12;
+    --ui-bg-muted: #18181C;
+    --ui-bg-elevated: #222226;
+    --ui-bg-accented: #2C2C32;
+    --ui-text: #ECECF0;
+    --ui-text-muted: #A8A8B0;
+    --ui-text-dimmed: #6E6E78;
+    --ui-text-toned: #A8A8B0;
+    --ui-text-highlighted: #F4F4F6;
+    --ui-border: rgba(255, 255, 255, 0.10);
+    --ui-border-muted: rgba(255, 255, 255, 0.06);
+    --ui-border-accented: rgba(255, 255, 255, 0.16);
+
+    /* Primary — motor violet */
+    --ui-color-primary-50: #F0EEFF;
+    --ui-color-primary-100: #D6D0FE;
+    --ui-color-primary-200: #AEA4FC;
+    --ui-color-primary-300: #9A8CFA;
+    --ui-color-primary-400: #8B7CF8;
+    --ui-color-primary-500: #6C5CE7;
+    --ui-color-primary-600: #5241B8;
+    --ui-color-primary-700: #3D318C;
+    --ui-color-primary-800: #2D2466;
+    --ui-color-primary-900: #1E1844;
+    --ui-color-primary-950: #110E2B;
+
+    /* Success */
+    --ui-color-success-50: #F0FDF4;
+    --ui-color-success-100: #DCFCE7;
+    --ui-color-success-200: #BBF7D0;
+    --ui-color-success-300: #86EFAC;
+    --ui-color-success-400: #4ADE80;
+    --ui-color-success-500: #10B981;
+    --ui-color-success-600: #16A34A;
+    --ui-color-success-700: #15803D;
+    --ui-color-success-800: #166534;
+    --ui-color-success-900: #14532D;
+    --ui-color-success-950: #052E16;
+
+    /* Warning */
+    --ui-color-warning-50: #FFFBEB;
+    --ui-color-warning-100: #FEF3C7;
+    --ui-color-warning-200: #FDE68A;
+    --ui-color-warning-300: #FCD34D;
+    --ui-color-warning-400: #FBBF24;
+    --ui-color-warning-500: #F59E0B;
+    --ui-color-warning-600: #D97706;
+    --ui-color-warning-700: #B45309;
+    --ui-color-warning-800: #92400E;
+    --ui-color-warning-900: #78350F;
+    --ui-color-warning-950: #451A03;
+
+    /* Error */
+    --ui-color-error-50: #FEF2F2;
+    --ui-color-error-100: #FEE2E2;
+    --ui-color-error-200: #FECACA;
+    --ui-color-error-300: #FCA5A5;
+    --ui-color-error-400: #F87171;
+    --ui-color-error-500: #EF4444;
+    --ui-color-error-600: #DC2626;
+    --ui-color-error-700: #B91C1C;
+    --ui-color-error-800: #991B1B;
+    --ui-color-error-900: #7F1D1D;
+    --ui-color-error-950: #450A0A;
+
+    /* Info — ice blue */
+    --ui-color-info-50: #EBF5FF;
+    --ui-color-info-100: #CCE6FA;
+    --ui-color-info-200: #A8D4F5;
+    --ui-color-info-300: #78BEEF;
+    --ui-color-info-400: #4BA8E8;
+    --ui-color-info-500: #2E8ED0;
+    --ui-color-info-600: #1A73B5;
+    --ui-color-info-700: #145C94;
+    --ui-color-info-800: #104876;
+    --ui-color-info-900: #0C355A;
+    --ui-color-info-950: #08243D;
+  }
+
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+  }
+
+  

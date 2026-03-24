@@ -1,0 +1,12 @@
+{
+  "ai_system_prompts": "AI System Prompts",
+  "title": "AI System Prompts",
+  "subtitle": "Manage AI system prompts",
+  "add": "Add AI System Prompt",
+  "prompt": "Prompt",
+  "prompt_description": "The system prompt text sent to the AI model",
+  "create_title": "Create AI System Prompt",
+  "edit_title": "Edit AI System Prompt",
+  "created_success": "AI system prompt created successfully.",
+  "updated_success": "AI system prompt updated successfully."
+}

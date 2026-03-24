@@ -1,0 +1,14 @@
+{
+  "placeholder": "Suchen...",
+  "title": "Suchergebnisse",
+  "subtitle": "Ergebnisse aus allen Modulen",
+  "show_all": "Alle {count} Ergebnisse anzeigen",
+  "no_results": "Keine Ergebnisse gefunden",
+  "no_results_hint": "Versuchen Sie einen anderen Suchbegriff oder weniger Filter",
+  "column_module": "Modul",
+  "column_type": "Typ",
+  "column_title": "Titel",
+  "column_excerpt": "Beschreibung",
+  "filter_all_modules": "Alle Module",
+  "min_chars": "Mindestens 2 Zeichen eingeben"
+}

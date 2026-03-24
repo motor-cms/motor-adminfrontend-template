@@ -1,0 +1,12 @@
+{
+  "ai_system_prompts": "KI-System-Prompts",
+  "title": "KI-System-Prompts",
+  "subtitle": "KI-System-Prompts verwalten",
+  "add": "KI-System-Prompt hinzufügen",
+  "prompt": "Prompt",
+  "prompt_description": "Der System-Prompt-Text, der an das KI-Modell gesendet wird",
+  "create_title": "KI-System-Prompt erstellen",
+  "edit_title": "KI-System-Prompt bearbeiten",
+  "created_success": "KI-System-Prompt erfolgreich erstellt.",
+  "updated_success": "KI-System-Prompt erfolgreich aktualisiert."
+}
