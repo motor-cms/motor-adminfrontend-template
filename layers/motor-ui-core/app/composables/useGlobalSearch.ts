@@ -61,11 +61,18 @@ const ACTIONS_MAP: Record<string, ActionFactory> = {
       }
     ]
   },
-  'motor-media/files': (result, t) => [
-    { key: 'lightbox', label: t('motor-media.files.preview'), icon: 'i-lucide-expand', emit: 'lightbox' },
-    { key: 'download', label: t('motor-core.global.download'), icon: 'i-lucide-download', emit: 'download' },
-    { key: 'copy-url', label: t('motor-media.files.copy_url'), icon: 'i-lucide-link', emit: 'copy-url' }
-  ],
+  'motor-media/files': (result, t) => {
+    const mime = (result.meta?.mime_type as string) ?? ''
+    const actions: SearchAction[] = []
+    if (mime.startsWith('image/')) {
+      actions.push({ key: 'lightbox', label: t('motor-media.files.preview'), icon: 'i-lucide-expand', emit: 'lightbox' })
+    }
+    actions.push(
+      { key: 'download', label: t('motor-core.global.download'), icon: 'i-lucide-download', emit: 'download' },
+      { key: 'copy-url', label: t('motor-media.files.copy_url'), icon: 'i-lucide-link', emit: 'copy-url' }
+    )
+    return actions
+  },
   'motor-builder/navigation_trees': (result, t) => [
     { key: 'view', label: t('motor-core.search.action_view_tree'), icon: 'i-lucide-list-tree', to: resolveRoute(result) }
   ],
@@ -74,10 +81,8 @@ const ACTIONS_MAP: Record<string, ActionFactory> = {
   ]
 }
 
-function defaultActions(result: GlobalSearchResult, t: TFunc): SearchAction[] {
-  const route = resolveRoute(result)
-  if (route === '#') return []
-  return [{ key: 'edit', label: t('motor-core.search.action_edit'), icon: 'i-lucide-pencil', to: route }]
+function defaultActions(_result: GlobalSearchResult, _t: TFunc): SearchAction[] {
+  return []
 }
 
 export function resolveActions(result: GlobalSearchResult, t: TFunc): SearchAction[] {
