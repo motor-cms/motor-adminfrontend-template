@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watchDebounced } from '@vueuse/core'
+import { watchDebounced, useEventListener } from '@vueuse/core'
 import type { CommandPaletteGroup, CommandPaletteItem } from '@nuxt/ui'
 import { searchPalette, resolveModuleLabel } from '../composables/useGlobalSearch'
 import type { PaletteItem, PaletteSearchResult } from '../composables/useGlobalSearch'
@@ -19,6 +19,24 @@ const totalResults = ref(0)
 const moduleFacets = ref<Record<string, number>>({})
 
 const paletteItemsById = ref<Map<string, PaletteItem>>(new Map())
+
+const highlightedItem = ref<string | null>(null)
+
+function onHighlight(payload: { ref: HTMLElement, value: unknown } | undefined) {
+  highlightedItem.value = payload ? String((payload.value as Record<string, unknown>)?.id ?? '') : null
+}
+
+function onEnter() {
+  if (searchTerm.value.length < 2) return
+  if (highlightedItem.value) return
+  showAllResults()
+}
+
+useEventListener('keydown', (e: KeyboardEvent) => {
+  if (!open.value) return
+  if (e.key !== 'Enter') return
+  onEnter()
+})
 
 watchDebounced(
   searchTerm,
@@ -141,34 +159,23 @@ function showAllResults(moduleKey?: string) {
     router.push({ path: '/search', query })
   })
 }
-
-const highlightedItem = ref<string | null>(null)
-
-function onHighlight(payload: { ref: HTMLElement, value: unknown } | undefined) {
-  highlightedItem.value = payload ? String((payload.value as Record<string, unknown>)?.id ?? '') : null
-}
-
-function onEnter() {
-  if (searchTerm.value.length < 2) return
-  if (highlightedItem.value) return
-  showAllResults()
-}
 </script>
 
 <template>
   <UDashboardSearch
+    ref="searchRef"
     v-model:open="open"
     v-model:search-term="searchTerm"
     @highlight="onHighlight"
-    @keydown.enter="onEnter"
     :groups="groups"
     :loading="loading"
     :color-mode="false"
     :placeholder="t('motor-core.search.placeholder')"
     :ui="{
-      content: 'flex flex-col flex-1 min-h-0',
+      root: 'flex flex-col min-h-0 min-w-0 divide-y divide-default h-full',
+      content: 'flex flex-col flex-1 min-h-0 order-2',
       viewport: 'flex-1 overflow-y-auto min-h-0',
-      footer: 'sticky bottom-0 bg-[var(--ui-bg)] z-10 shrink-0',
+      footer: 'order-1 !p-0 empty:hidden',
       item: 'cursor-pointer',
       itemDescription: 'line-clamp-1'
     }"
@@ -222,38 +229,50 @@ function onEnter() {
     </template>
 
     <template
-      v-if="totalResults > 0 && searchTerm.length >= 2"
+      v-if="searchTerm.length >= 2"
       #footer
     >
-      <div class="border-t border-[var(--ui-border)] px-3 py-2 space-y-2">
-        <!-- Module facet chips -->
+      <div class="border-b border-[var(--ui-border)] px-3 py-1.5 flex items-center gap-2">
         <div
-          v-if="facetChips.length > 1"
-          class="flex flex-wrap gap-1.5"
+          v-if="totalResults > 0"
+          class="flex items-center gap-1.5 flex-1 min-w-0 overflow-x-auto"
         >
           <UBadge
-            v-for="chip in facetChips"
-            :key="chip.module"
-            :label="`${chip.label} (${chip.count})`"
+            :label="`${totalResults}`"
             size="sm"
             variant="subtle"
-            color="neutral"
-            class="cursor-pointer hover:bg-[var(--ui-bg-elevated)] transition-colors"
-            @click.stop.prevent="showAllResults(chip.module)"
-          />
-        </div>
-
-        <!-- Show all button -->
-        <div class="flex justify-center">
-          <UButton
-            :label="t('motor-core.search.show_all', { count: totalResults })"
-            variant="ghost"
             color="primary"
-            size="sm"
-            icon="i-lucide-arrow-right"
-            trailing
+            class="cursor-pointer hover:bg-[var(--ui-bg-elevated)] transition-colors shrink-0"
             @click.stop.prevent="showAllResults()"
           />
+          <template v-if="facetChips.length > 1">
+            <span class="w-px h-3.5 bg-[var(--ui-border)] shrink-0" />
+            <UBadge
+              v-for="chip in facetChips"
+              :key="chip.module"
+              :label="`${chip.label} ${chip.count}`"
+              size="sm"
+              variant="subtle"
+              color="neutral"
+              class="cursor-pointer hover:bg-[var(--ui-bg-elevated)] transition-colors shrink-0"
+              @click.stop.prevent="showAllResults(chip.module)"
+            />
+          </template>
+        </div>
+        <div
+          v-else-if="!loading"
+          class="flex-1"
+        />
+
+        <div class="flex items-center gap-2.5 text-xs text-[var(--ui-text-dimmed)] shrink-0 ml-auto">
+          <span class="inline-flex items-center gap-1">
+            <UKbd size="sm" value="enter" />
+            <span>{{ highlightedItem ? t('motor-core.search.keyboard_hint_open') : t('motor-core.search.keyboard_hint_all') }}</span>
+          </span>
+          <span class="inline-flex items-center gap-1">
+            <UKbd size="sm" value="escape" />
+            <span>{{ t('motor-core.search.keyboard_hint_close') }}</span>
+          </span>
         </div>
       </div>
     </template>
