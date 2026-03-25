@@ -240,7 +240,6 @@ export function fetchSearchGrid(
   }
 
   return async (params) => {
-    // Skip API call when there's no search term
     if (!params.search) return emptyResponse
 
     const currentFetchId = ++fetchId
@@ -251,20 +250,19 @@ export function fetchSearchGrid(
       limit: params.per_page
     }
 
-    // Module prefix syntax: prepend "module: " to query if filter is active
     if (moduleFilter) {
-      query.q = `${moduleFilter}: ${params.search || ''}`
+      query.module = moduleFilter
     }
 
     const response = await client<GlobalSearchResponse>('/api/v2/global-search', { query })
 
-    // Discard stale responses
     if (currentFetchId !== fetchId) {
       return { data: [], meta: { current_page: 1, last_page: 1, per_page: params.per_page, total: 0, from: null, to: null } }
     }
 
-    // Update module facets as side-effect
-    _moduleFacets.value = response.meta.modules
+    if (!moduleFilter) {
+      _moduleFacets.value = response.meta.modules
+    }
 
     const data: SearchGridRow[] = response.data.map(result => ({
       id: result.id,
