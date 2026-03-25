@@ -13,6 +13,7 @@ interface RouteEntry {
 }
 
 const ROUTE_MAP: Record<string, RouteEntry> = {
+  // motor-admin
   'motor-admin/users': { route: '/motor-admin/users/{id}/edit', icon: 'i-lucide-users' },
   'motor-admin/clients': { route: '/motor-admin/clients/{id}/edit', icon: 'i-lucide-building-2' },
   'motor-admin/roles': { route: '/motor-admin/roles/{id}/edit', icon: 'i-lucide-shield' },
@@ -24,16 +25,21 @@ const ROUTE_MAP: Record<string, RouteEntry> = {
   'motor-admin/config_variables': { route: '/motor-admin/config-variables/{id}/edit', icon: 'i-lucide-settings' },
   'motor-admin/category_trees': { route: '/motor-admin/category-trees/{id}', icon: 'i-lucide-folder-tree' },
   'motor-admin/categories': { route: '/motor-admin/category-trees/{id}', icon: 'i-lucide-folder' },
+  // motor-media
   'motor-media/files': { route: '/motor-media/files/{id}/edit', icon: 'i-lucide-image' },
+  // motor-builder
   'motor-builder/builder_pages': { route: '/motor-builder/builder-pages/{id}/edit', icon: 'i-lucide-file-text' },
-  'motor-builder/builder_components': { route: '/motor-builder/builder-components/{id}/edit', icon: 'i-lucide-puzzle' },
+  'motor-builder/builder_custom_components': { route: '/motor-builder/builder-components/{id}/edit', icon: 'i-lucide-puzzle' },
   'motor-builder/navigation_trees': { route: '/motor-builder/navigation-trees/{id}', icon: 'i-lucide-list-tree' },
-  'motor-builder/navigation_items': { route: '/motor-builder/navigation-trees/{id}', icon: 'i-lucide-list' },
+  'motor-builder/navigation_items': { route: '/motor-builder/navigation-trees/{meta.navigation_tree_id}/navigation-items/{id}/edit', icon: 'i-lucide-list' },
   'motor-builder/search_configs': { route: '/motor-builder/search-configs/{id}/edit', icon: 'i-lucide-search' },
   'motor-builder/seo_redirects': { route: '/motor-builder/seo-redirects/{id}/edit', icon: 'i-lucide-arrow-right-left' },
-  'motor-builder/publishing_times': { route: '/motor-builder/publishing-times/{id}/edit', icon: 'i-lucide-clock' },
+  // motor-assistant
+  'motor-assistant/clickpaths': { route: '/motor-assistant/clickpaths/{id}/edit', icon: 'i-lucide-mouse-pointer-click' },
+  // motor-scoring
   'motor-scoring/topics': { route: '/motor-scoring/topics/{id}/edit', icon: 'i-lucide-trophy' },
-  'motor-content-type/content_types': { route: '#', icon: 'i-lucide-layout-template' }
+  // motor-content-type
+  'motor-content-type/custom_content_types': { route: '/motor-content-type/content-types/{id}/edit', icon: 'i-lucide-layout-template' }
 }
 
 // ============================================
@@ -43,19 +49,24 @@ const ROUTE_MAP: Record<string, RouteEntry> = {
 type ActionFactory = (result: GlobalSearchResult, t: TFunc) => SearchAction[]
 
 const ACTIONS_MAP: Record<string, ActionFactory> = {
-  'motor-builder/builder_pages': (result, t) => [
-    { key: 'link-nav', label: t('motor-builder.builder_pages.action_link_navigation'), icon: 'i-lucide-list-tree', emit: 'link-navigation' },
-    { key: 'publish', label: t('motor-builder.builder_pages.action_publish'), icon: 'i-lucide-globe', emit: 'publish' }
-  ],
+  'motor-builder/builder_pages': (result, t) => {
+    const isPublished = !!result.meta?.is_published
+    return [
+      { key: 'link-nav', label: t('motor-builder.builder_pages.action_link_navigation'), icon: 'i-lucide-list-tree', emit: 'link-navigation' },
+      {
+        key: 'publish',
+        label: isPublished ? t('motor-builder.builder_pages.action_unpublish') : t('motor-builder.builder_pages.action_publish'),
+        icon: isPublished ? 'i-lucide-globe-lock' : 'i-lucide-globe',
+        emit: 'publish'
+      }
+    ]
+  },
   'motor-media/files': (result, t) => [
     { key: 'lightbox', label: t('motor-media.files.preview'), icon: 'i-lucide-expand', emit: 'lightbox' },
     { key: 'download', label: t('motor-core.global.download'), icon: 'i-lucide-download', emit: 'download' },
     { key: 'copy-url', label: t('motor-media.files.copy_url'), icon: 'i-lucide-link', emit: 'copy-url' }
   ],
   'motor-builder/navigation_trees': (result, t) => [
-    { key: 'view', label: t('motor-core.search.action_view_tree'), icon: 'i-lucide-list-tree', to: resolveRoute(result) }
-  ],
-  'motor-builder/navigation_items': (result, t) => [
     { key: 'view', label: t('motor-core.search.action_view_tree'), icon: 'i-lucide-list-tree', to: resolveRoute(result) }
   ],
   'motor-admin/category_trees': (result, t) => [
@@ -117,7 +128,9 @@ function resolveThumbnailUrl(url: string | undefined): string | undefined {
 export function resolveRoute(result: GlobalSearchResult): string {
   const entry = ROUTE_MAP[routeKey(result.module, result.index)]
   if (!entry || result.id == null) return '#'
-  return entry.route.replace('{id}', String(result.id))
+  return entry.route
+    .replace('{id}', String(result.id))
+    .replace(/\{meta\.(\w+)\}/g, (_, key) => String(result.meta?.[key] ?? ''))
 }
 
 export function resolveIcon(module: string, index: string): string {
