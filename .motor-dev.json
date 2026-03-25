@@ -13,6 +13,6 @@
     }
   },
   "docker": {
-    "container": "energis-stack-adminfrontend-new-node-1"
+    "container": "docker-new-admin-1"
   }
 }
