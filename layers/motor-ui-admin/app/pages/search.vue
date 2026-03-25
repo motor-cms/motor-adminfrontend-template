@@ -30,7 +30,7 @@ watch(() => route.query.search, (newSearch) => {
   if (val !== searchInput.value) {
     searchInput.value = val
     page.value = 1
-    doSearch()
+    doSearch(true)
   }
 })
 
@@ -52,7 +52,13 @@ const facetTabs = computed(() => {
   return tabs
 })
 
-async function doSearch() {
+async function refreshFacets() {
+  if (!searchInput.value || searchInput.value.length < 2) return
+  const fetcher = fetchSearchGrid(t, undefined, client)
+  await fetcher({ page: 1, per_page: 1, search: searchInput.value })
+}
+
+async function doSearch(updateFacets = false) {
   if (!searchInput.value || searchInput.value.length < 2) {
     results.value = []
     meta.value = null
@@ -62,6 +68,11 @@ async function doSearch() {
   loading.value = true
   try {
     const activeModule = moduleFilter.value === ALL_MODULES ? undefined : moduleFilter.value
+
+    if (updateFacets && activeModule) {
+      await refreshFacets()
+    }
+
     const fetcher = fetchSearchGrid(t, activeModule, client)
     const response: PaginatedResponse<SearchGridRow> = await fetcher({
       page: page.value,
@@ -80,7 +91,7 @@ async function doSearch() {
 
 watchDebounced(searchInput, () => {
   page.value = 1
-  doSearch()
+  doSearch(true)
   router.replace({ query: { ...route.query, search: searchInput.value || undefined } })
 }, { debounce: 300 })
 
@@ -133,7 +144,7 @@ async function handleCardAction(key: string, id: number | string | null, meta: R
 }
 
 onMounted(() => {
-  if (searchInput.value) doSearch()
+  if (searchInput.value) doSearch(true)
 })
 </script>
 
