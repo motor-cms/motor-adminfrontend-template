@@ -238,19 +238,34 @@ describe('useGlobalSearch', () => {
       expect(usersGroup!.items[0].to).toBe('/motor-admin/users/1/edit')
     })
 
-    it('uses thumbnail as avatar when available', async () => {
+    it('uses thumbnail as avatar for image files', async () => {
       const t = vi.fn((key: string) => key)
       mockClient.mockResolvedValue({
         data: [
-          { module: 'motor-media', index: 'files', id: 1, title: 'Photo', score: 1, meta: { thumbnail_url: 'https://example.com/thumb.jpg' } }
+          { module: 'motor-media', index: 'files', id: 1, title: 'Photo', score: 1, meta: { thumbnail_url: 'https://example.com/thumb.jpg', mime_type: 'image/jpeg' } }
         ],
-        meta: { total: 1 }
+        meta: { total: 1, modules: {} }
       })
 
       const result = await searchPalette('photo', t)
       const item = result.groups[0].items[0]
       expect(item.avatar).toEqual({ src: 'https://example.com/thumb.jpg' })
       expect(item.icon).toBeUndefined()
+    })
+
+    it('keeps icon for non-image files even with thumbnail_url', async () => {
+      const t = vi.fn((key: string) => key)
+      mockClient.mockResolvedValue({
+        data: [
+          { module: 'motor-media', index: 'files', id: 1, title: 'Document.pdf', score: 1, meta: { thumbnail_url: 'https://example.com/thumb.jpg', mime_type: 'application/pdf' } }
+        ],
+        meta: { total: 1, modules: {} }
+      })
+
+      const result = await searchPalette('doc', t)
+      const item = result.groups[0].items[0]
+      expect(item.avatar).toBeUndefined()
+      expect(item.icon).toBeDefined()
     })
 
     it('uses "(Untitled)" for results without title', async () => {
