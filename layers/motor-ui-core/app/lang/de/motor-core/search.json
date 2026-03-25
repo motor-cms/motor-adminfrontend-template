@@ -16,5 +16,8 @@
   "action_view_tree": "Baum anzeigen",
   "untitled": "(Ohne Titel)",
   "keyboard_hint": "Enter zum Öffnen",
+  "keyboard_hint_open": "Öffnen",
+  "keyboard_hint_all": "Alle Ergebnisse",
+  "keyboard_hint_close": "Schließen",
   "results_in": "{count} in {module}"
 }
