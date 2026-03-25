@@ -221,7 +221,8 @@ export async function searchPalette(query: string, t: TFunc, limit = 10): Promis
       index: result.index,
       actions: resolveActions(result, t)
     }
-    if (thumbnailUrl) {
+    const mimeType = (result.meta?.mime_type as string) ?? ''
+    if (thumbnailUrl && mimeType.startsWith('image/')) {
       item.avatar = { src: thumbnailUrl }
       delete item.icon
     }
