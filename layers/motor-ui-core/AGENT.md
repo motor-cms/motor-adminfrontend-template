@@ -311,7 +311,7 @@ if (canAny(['entities.read', 'entities.write'])) {
 
 - Unit tests go in `layers/motor-ui-core/tests/unit/`.
 - E2E tests go in `layers/motor-ui-core/tests/e2e/`.
-- Run with `docker exec energis-stack-adminfrontend-new-node-1 pnpm test` (unit) or `docker exec energis-stack-adminfrontend-new-node-1 pnpm test:e2e` (Playwright). **Never run pnpm directly on the host.**
+- Run with `docker exec docker-new-admin-1 pnpm test` (unit) or `docker exec docker-new-admin-1 pnpm test:e2e` (Playwright). **Never run pnpm directly on the host.**
 - Vitest config is at `layers/motor-ui-core/vitest.config.ts`.
 
 ---
