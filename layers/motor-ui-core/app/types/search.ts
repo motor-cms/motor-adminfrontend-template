@@ -30,16 +30,35 @@ export interface GlobalSearchResponse {
 }
 
 // ============================================
+// Search Action (entity-specific quick actions)
+// ============================================
+
+export interface SearchAction {
+  key: string
+  label: string
+  icon: string
+  to?: string
+  /** When set, the action emits this event name instead of navigating */
+  emit?: string
+}
+
+// ============================================
 // Transformed Row for Search Grid Page
 // ============================================
 
 export interface SearchGridRow {
   id: number | string | null
   module: string
+  raw_module: string
   index: string
+  raw_index: string
   index_label: string
   title: string | null
   excerpt: string | null
   to: string
+  icon: string
+  thumbnail_url?: string
   score: number
+  actions: SearchAction[]
+  entity_meta: Record<string, unknown>
 }

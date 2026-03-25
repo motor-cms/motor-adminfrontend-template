@@ -10,5 +10,11 @@
   "column_title": "Titel",
   "column_excerpt": "Beschreibung",
   "filter_all_modules": "Alle Module",
-  "min_chars": "Mindestens 2 Zeichen eingeben"
+  "min_chars": "Mindestens 2 Zeichen eingeben",
+  "action_edit": "Bearbeiten",
+  "action_open_builder": "Im Builder öffnen",
+  "action_view_tree": "Baum anzeigen",
+  "untitled": "(Ohne Titel)",
+  "keyboard_hint": "Enter zum Öffnen",
+  "results_in": "{count} in {module}"
 }
