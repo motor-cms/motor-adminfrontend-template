@@ -219,7 +219,7 @@ describe('useGlobalSearch', () => {
       await fetcher({ page: 1, per_page: 25, search: 'test' })
 
       expect(mockClient).toHaveBeenCalledWith('/api/v2/global-search', {
-        query: expect.objectContaining({ q: 'motor-admin: test' })
+        query: expect.objectContaining({ q: 'test', module: 'motor-admin' })
       })
     })
   })
