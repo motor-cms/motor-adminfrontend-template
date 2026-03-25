@@ -5,10 +5,19 @@ on:
     branches: [staging, develop]
   workflow_dispatch:
 
+concurrency:
+  group: release-prerelease-${{ github.ref_name }}
+  cancel-in-progress: false
+
 jobs:
   prerelease:
     name: Publish Pre-release
     runs-on: ubuntu-latest
+
+    # Skip bot commits (merge-downs, version bumps)
+    if: >-
+      !startsWith(github.event.head_commit.message, 'chore: version packages') &&
+      !startsWith(github.event.head_commit.message, 'Merge remote-tracking branch')
 
     steps:
       - uses: actions/checkout@v4
@@ -70,16 +79,24 @@ jobs:
         run: |
           # Exit any existing pre-release mode first
           if [ -f .changeset/pre.json ]; then
-            pnpm changeset pre exit
+            pnpm changeset pre exit || true
           fi
           pnpm changeset pre enter ${{ steps.tag.outputs.tag }}
           # Clear consumed changesets so they get re-processed with the new tag
-          node -e "
-            const f = '.changeset/pre.json';
-            const p = JSON.parse(require('fs').readFileSync(f, 'utf8'));
-            p.changesets = [];
-            require('fs').writeFileSync(f, JSON.stringify(p, null, 2) + '\n');
-          "
+          if [ -f .changeset/pre.json ]; then
+            node -e "
+              const fs = require('fs');
+              const f = '.changeset/pre.json';
+              try {
+                const p = JSON.parse(fs.readFileSync(f, 'utf8'));
+                p.changesets = [];
+                fs.writeFileSync(f, JSON.stringify(p, null, 2) + '\n');
+              } catch (e) {
+                console.error('Failed to clear changesets:', e.message);
+                process.exit(1);
+              }
+            "
+          fi
 
       - name: Version packages
         if: steps.changesets.outputs.has_changesets == 'true'
@@ -87,18 +104,22 @@ jobs:
 
       - name: Publish to npm
         if: steps.changesets.outputs.has_changesets == 'true'
-        run: pnpm changeset publish
+        id: publish
+        run: |
+          pnpm changeset publish
+          echo "published=true" >> "$GITHUB_OUTPUT"
         env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Commit version updates
-        if: steps.changesets.outputs.has_changesets == 'true'
+        if: steps.publish.outputs.published == 'true'
         run: |
-          pnpm install --lockfile-only
+          pnpm install --lockfile-only || echo "::warning::Failed to update lockfile"
           git add -A
           if git diff --cached --quiet; then
             echo "No version changes to commit"
           else
             git commit -m "chore: version packages (${{ steps.tag.outputs.tag }})"
-            git push
+            git push || { echo "::error::Failed to push version commit"; exit 1; }
           fi
