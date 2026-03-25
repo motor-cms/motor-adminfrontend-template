@@ -1,5 +1,17 @@
 # @motor-cms/ui-admin
 
+## 1.1.0
+
+### Minor Changes
+
+- 002f56e: - feat: refactor global search with server-side pagination, facet tabs, and result cards
+  - refactor: move arrow-key pagination shortcuts from Base grid to Pagination component
+
+### Patch Changes
+
+- Updated dependencies [002f56e]
+  - @motor-cms/ui-core@1.1.0
+
 ## 1.0.4
 
 ### Patch Changes
