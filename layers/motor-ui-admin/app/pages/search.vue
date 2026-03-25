@@ -123,16 +123,20 @@ async function handleCardAction(key: string, id: number | string | null, meta: R
     quicklinkerPageName.value = (meta.name as string) ?? ''
     quicklinkerOpen.value = true
   } else if (key === 'publish' && id) {
+    const isPublished = !!meta?.is_published
     try {
       await client(`/api/v2/builder-pages/${id}/publication`, {
         method: 'PUT',
-        body: { is_published: true }
+        body: { is_published: !isPublished }
       })
       toast.add({
-        title: t('motor-builder.builder_pages.toast_published'),
+        title: !isPublished
+          ? t('motor-builder.builder_pages.toast_published')
+          : t('motor-builder.builder_pages.toast_unpublished'),
         color: 'success',
-        icon: 'i-lucide-globe'
+        icon: !isPublished ? 'i-lucide-globe' : 'i-lucide-globe-lock'
       })
+      doSearch()
     } catch {
       toast.add({
         title: t('motor-builder.builder_pages.toast_publish_error'),
