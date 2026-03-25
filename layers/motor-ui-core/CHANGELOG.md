@@ -1,5 +1,14 @@
 # @motor-cms/ui-core
 
+## 1.2.0
+
+### Minor Changes
+
+- 5894226: - fix: preserve module facets when filtering by module
+  - refactor: move arrow-key pagination shortcuts from Base grid to Pagination component
+  - feat: refactor global search with server-side pagination, facet tabs, and result cards
+  - fix: update Docker container name to docker-new-admin-1
+
 ## 1.1.0
 
 ### Minor Changes
