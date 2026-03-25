@@ -1,0 +1,20 @@
+{
+  "placeholder": "Search...",
+  "title": "Search Results",
+  "subtitle": "Results across all modules",
+  "show_all": "Show all {count} results",
+  "no_results": "No results found",
+  "no_results_hint": "Try a different search term or fewer filters",
+  "column_module": "Module",
+  "column_type": "Type",
+  "column_title": "Title",
+  "column_excerpt": "Description",
+  "filter_all_modules": "All modules",
+  "min_chars": "Type at least 2 characters",
+  "action_edit": "Edit",
+  "action_open_builder": "Open in Builder",
+  "action_view_tree": "View tree",
+  "untitled": "(Untitled)",
+  "keyboard_hint": "Enter to open",
+  "results_in": "{count} in {module}"
+}

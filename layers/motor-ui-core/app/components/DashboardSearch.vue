@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import { watchDebounced } from '@vueuse/core'
 import type { CommandPaletteGroup, CommandPaletteItem } from '@nuxt/ui'
-import { searchPalette } from '../composables/useGlobalSearch'
+import { searchPalette, resolveModuleLabel } from '../composables/useGlobalSearch'
+import type { PaletteItem, PaletteSearchResult } from '../composables/useGlobalSearch'
 
 const router = useRouter()
 const { t } = useI18n()
 
+const searchRef = ref<{ commandPaletteRef: { el: HTMLElement } } | null>(null)
+const open = ref(false)
 const searchTerm = ref('')
 const loading = ref(false)
 const groups = ref<CommandPaletteGroup<CommandPaletteItem>[]>([])
 const totalResults = ref(0)
+const moduleFacets = ref<Record<string, number>>({})
+
+const paletteItemsById = ref<Map<string, PaletteItem>>(new Map())
 
 watchDebounced(
   searchTerm,
@@ -17,32 +23,44 @@ watchDebounced(
     if (!query || query.length < 2) {
       groups.value = []
       totalResults.value = 0
+      moduleFacets.value = {}
+      paletteItemsById.value = new Map()
       return
     }
 
     loading.value = true
     try {
-      const result = await searchPalette(query, t)
+      const result: PaletteSearchResult = await searchPalette(query, t)
+
+      const itemMap = new Map<string, PaletteItem>()
       groups.value = result.groups.map(group => ({
         id: group.id,
         label: group.label,
         ignoreFilter: true,
-        items: group.items.map(item => ({
-          id: item.id,
-          label: item.label,
-          icon: item.icon,
-          avatar: item.avatar,
-          ...(item.avatar ? { ui: { itemLeadingAvatarSize: 'lg' as const, item: 'items-center' } } : {}),
-          suffix: item.suffix,
-          onSelect() {
-            router.push(item.to)
-          }
-        }) satisfies CommandPaletteItem)
+        items: group.items.map((item) => {
+          itemMap.set(item.id, item)
+          return {
+            id: item.id,
+            label: item.label,
+            icon: item.icon,
+            avatar: item.avatar,
+            description: item.excerpt,
+            ...(item.avatar ? { ui: { itemLeadingAvatarSize: 'lg' as const, item: 'items-start' } } : {}),
+            onSelect() {
+              router.push(item.to)
+            }
+          } satisfies CommandPaletteItem
+        })
       }))
+
+      paletteItemsById.value = itemMap
       totalResults.value = result.total
+      moduleFacets.value = result.moduleFacets
     } catch {
       groups.value = []
       totalResults.value = 0
+      moduleFacets.value = {}
+      paletteItemsById.value = new Map()
     } finally {
       loading.value = false
     }
@@ -50,20 +68,76 @@ watchDebounced(
   { debounce: 300 }
 )
 
-function showAllResults() {
-  router.push({ path: '/search', query: { search: searchTerm.value } })
+const facetChips = computed(() => {
+  return Object.entries(moduleFacets.value)
+    .sort(([, a], [, b]) => b - a)
+    .map(([key, count]) => ({
+      module: key,
+      label: resolveModuleLabel(key, t),
+      count
+    }))
+})
+
+function showAllResults(moduleKey?: string) {
+  const query: Record<string, string> = { search: searchTerm.value }
+  if (moduleKey) query.module = moduleKey
+  open.value = false
+  nextTick(() => {
+    router.push({ path: '/search', query })
+  })
+}
+
+const highlightedItem = ref<string | null>(null)
+
+function onHighlight(payload: { ref: HTMLElement, value: unknown } | undefined) {
+  highlightedItem.value = payload ? String((payload.value as Record<string, unknown>)?.id ?? '') : null
+}
+
+function onEnter() {
+  if (searchTerm.value.length < 2) return
+  if (highlightedItem.value) return
+  showAllResults()
 }
 </script>
 
 <template>
   <UDashboardSearch
+    v-model:open="open"
     v-model:search-term="searchTerm"
+    @highlight="onHighlight"
+    @keydown.enter="onEnter"
     :groups="groups"
     :loading="loading"
     :color-mode="false"
     :placeholder="t('motor-core.search.placeholder')"
-    :ui="{ content: 'flex flex-col flex-1 min-h-0', viewport: 'flex-1 overflow-y-auto', footer: 'mt-auto shrink-0' }"
+    :ui="{
+      content: 'flex flex-col flex-1 min-h-0',
+      viewport: 'flex-1 overflow-y-auto',
+      footer: 'mt-auto shrink-0',
+      itemDescription: 'line-clamp-1'
+    }"
   >
+    <template #item-trailing="{ item }">
+      <div class="flex items-center gap-1">
+        <template v-if="paletteItemsById.get(item.id as string)?.actions?.length">
+          <UTooltip
+            v-for="action in paletteItemsById.get(item.id as string)!.actions.slice(1)"
+            :key="action.key"
+            :text="action.label"
+          >
+            <UButton
+              :icon="action.icon"
+              :to="action.to"
+              size="xs"
+              variant="ghost"
+              color="neutral"
+              @click.stop
+            />
+          </UTooltip>
+        </template>
+      </div>
+    </template>
+
     <template #empty>
       <div class="flex flex-col items-center justify-center py-8 text-sm text-[var(--ui-text-muted)]">
         <template v-if="!searchTerm || searchTerm.length < 2">
@@ -72,6 +146,7 @@ function showAllResults() {
             class="size-6 mb-2"
           />
           <span>{{ t('motor-core.search.min_chars') }}</span>
+          <span class="text-xs text-[var(--ui-text-dimmed)] mt-1">{{ t('motor-core.search.keyboard_hint') }}</span>
         </template>
         <template v-else-if="loading">
           <UIcon
@@ -94,16 +169,36 @@ function showAllResults() {
       v-if="totalResults > 0 && searchTerm.length >= 2"
       #footer
     >
-      <div class="flex justify-center border-t border-[var(--ui-border)] p-2">
-        <UButton
-          :label="t('motor-core.search.show_all', { count: totalResults })"
-          variant="ghost"
-          color="primary"
-          size="sm"
-          icon="i-lucide-arrow-right"
-          trailing
-          @click="showAllResults"
-        />
+      <div class="border-t border-[var(--ui-border)] px-3 py-2 space-y-2">
+        <!-- Module facet chips -->
+        <div
+          v-if="facetChips.length > 1"
+          class="flex flex-wrap gap-1.5"
+        >
+          <UBadge
+            v-for="chip in facetChips"
+            :key="chip.module"
+            :label="`${chip.label} (${chip.count})`"
+            size="sm"
+            variant="subtle"
+            color="neutral"
+            class="cursor-pointer hover:bg-[var(--ui-bg-elevated)] transition-colors"
+            @click.stop.prevent="showAllResults(chip.module)"
+          />
+        </div>
+
+        <!-- Show all button -->
+        <div class="flex justify-center">
+          <UButton
+            :label="t('motor-core.search.show_all', { count: totalResults })"
+            variant="ghost"
+            color="primary"
+            size="sm"
+            icon="i-lucide-arrow-right"
+            trailing
+            @click.stop.prevent="showAllResults()"
+          />
+        </div>
       </div>
     </template>
   </UDashboardSearch>

@@ -82,42 +82,32 @@ const resolvedAddRoute = computed(() => {
   return null
 })
 
-// Arrow key pagination + N for create new
+// N key for create new
 useEventListener('keydown', (e: KeyboardEvent) => {
   if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement) return
   if (e.metaKey || e.ctrlKey || e.altKey) return
-
-  if (!meta.value) return
-  if (e.key === 'ArrowLeft' && meta.value.current_page > 1) {
-    gridState.setPage(meta.value.current_page - 1)
-  } else if (e.key === 'ArrowRight' && meta.value.current_page < meta.value.last_page) {
-    gridState.setPage(meta.value.current_page + 1)
-  } else if (e.key === 'n' && resolvedAddRoute.value && (!props.writePermission || can(props.writePermission))) {
+  if (e.key === 'n' && resolvedAddRoute.value && (!props.writePermission || can(props.writePermission))) {
     router.push(resolvedAddRoute.value)
   }
 })
 
-// Register contextual shortcuts for the overlay
+// Register "N for create" shortcut for the overlay
 const { register: registerShortcut, unregister: unregisterShortcut } = useShortcutRegistry()
-const gridShortcuts = computed(() => {
-  const entries = [
-    { keys: ['←'], label: t('motor-core.shortcuts.prev_page'), icon: 'i-lucide-arrow-left' },
-    { keys: ['→'], label: t('motor-core.shortcuts.next_page'), icon: 'i-lucide-arrow-right' }
-  ]
-  if (resolvedAddRoute.value) {
-    entries.push({ keys: ['N'], label: t('motor-core.shortcuts.create_new'), icon: 'i-lucide-plus' })
-  }
-  return entries
-})
-watch(gridShortcuts, (shortcuts) => {
-  registerShortcut({
-    id: 'grid',
-    label: t('motor-core.shortcuts.grid'),
-    icon: 'i-lucide-table-2',
-    shortcuts
-  })
-}, { immediate: true })
-onUnmounted(() => unregisterShortcut('grid'))
+if (resolvedAddRoute.value) {
+  watch(() => resolvedAddRoute.value, (route) => {
+    if (route) {
+      registerShortcut({
+        id: 'grid-create',
+        label: t('motor-core.shortcuts.grid'),
+        icon: 'i-lucide-table-2',
+        shortcuts: [
+          { keys: ['N'], label: t('motor-core.shortcuts.create_new'), icon: 'i-lucide-plus' }
+        ]
+      })
+    }
+  }, { immediate: true })
+  onUnmounted(() => unregisterShortcut('grid-create'))
+}
 
 // Data fetching — useAsyncData ensures SSR waits for data
 const paramsKey = computed(() => JSON.stringify(gridState.toParams()))
