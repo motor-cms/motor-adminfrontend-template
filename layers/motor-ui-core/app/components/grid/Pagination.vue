@@ -4,7 +4,7 @@ import type { PaginationMeta } from '@motor-cms/ui-core/app/types/grid'
 import { useEventListener } from '@vueuse/core'
 
 const props = withDefaults(defineProps<{
-  meta: PaginationMeta | null
+  meta?: PaginationMeta | null
   perPageOptions?: number[]
   compact?: boolean
   keyboard?: boolean
