@@ -2,12 +2,11 @@
   "mode": "pre",
   "tag": "alpha",
   "initialVersions": {
-    "@motor-cms/ui-admin": "1.0.4-alpha.1",
-    "@motor-cms/ui-core": "1.0.4-alpha.1",
-    "@motor-cms/ui-media": "1.0.4-alpha.1"
+    "@motor-cms/ui-admin": "1.0.4-alpha.2",
+    "@motor-cms/ui-core": "1.0.4-alpha.2",
+    "@motor-cms/ui-media": "1.0.4-alpha.2"
   },
   "changesets": [
-    "fix-i18n-cache-storage",
-    "test-renovate"
+    "auto-d71300b"
   ]
 }
