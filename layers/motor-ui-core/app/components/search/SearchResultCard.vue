@@ -29,7 +29,9 @@ const backendBaseUrl = runtimeConfig.public.backendBaseUrl as string
 
 const lightboxOpen = ref(false)
 
-const isImage = computed(() => !!props.thumbnailUrl)
+const mimeType = computed(() => (props.entityMeta?.mime_type as string) ?? '')
+const isImage = computed(() => mimeType.value.startsWith('image/'))
+const showThumbnail = computed(() => isImage.value && !!props.thumbnailUrl)
 
 const downloadUrl = computed(() => {
   if (!props.fileId) return undefined
@@ -119,7 +121,7 @@ async function forceDownload() {
       :class="compact ? 'size-8' : 'size-12'"
     >
       <img
-        v-if="thumbnailUrl"
+        v-if="showThumbnail"
         :src="thumbnailUrl"
         :alt="title ?? ''"
         class="size-full object-cover"
