@@ -133,7 +133,23 @@ export function resolveRoute(result: GlobalSearchResult): string {
     .replace(/\{meta\.(\w+)\}/g, (_, key) => String(result.meta?.[key] ?? ''))
 }
 
-export function resolveIcon(module: string, index: string): string {
+function resolveMimeIcon(mimeType: string): string {
+  if (mimeType.startsWith('image/')) return 'i-lucide-image'
+  if (mimeType === 'application/pdf') return 'i-lucide-file-text'
+  if (mimeType.startsWith('video/')) return 'i-lucide-film'
+  if (mimeType.startsWith('audio/')) return 'i-lucide-music'
+  if (mimeType.includes('spreadsheet') || mimeType.includes('excel') || mimeType === 'text/csv') return 'i-lucide-sheet'
+  if (mimeType.includes('presentation') || mimeType.includes('powerpoint')) return 'i-lucide-presentation'
+  if (mimeType.includes('word') || mimeType.includes('document')) return 'i-lucide-file-text'
+  if (mimeType.includes('zip') || mimeType.includes('compressed') || mimeType.includes('archive')) return 'i-lucide-file-archive'
+  if (mimeType.startsWith('text/')) return 'i-lucide-file-code'
+  return 'i-lucide-file'
+}
+
+export function resolveIcon(module: string, index: string, meta?: Record<string, unknown>): string {
+  if (meta?.mime_type && typeof meta.mime_type === 'string') {
+    return resolveMimeIcon(meta.mime_type)
+  }
   return ROUTE_MAP[routeKey(module, index)]?.icon ?? 'i-lucide-file'
 }
 
@@ -198,7 +214,7 @@ export async function searchPalette(query: string, t: TFunc, limit = 10): Promis
     const item: PaletteItem = {
       id: `${result.module}-${result.index}-${result.id}`,
       label: result.title ?? '(Untitled)',
-      icon: resolveIcon(result.module, result.index),
+      icon: resolveIcon(result.module, result.index, result.meta),
       excerpt: result.excerpt ?? undefined,
       to: resolveRoute(result),
       module: result.module,
@@ -287,7 +303,7 @@ export function fetchSearchGrid(
       title: result.title,
       excerpt: result.excerpt,
       to: resolveRoute(result),
-      icon: resolveIcon(result.module, result.index),
+      icon: resolveIcon(result.module, result.index, result.meta),
       thumbnail_url: resolveThumbnailUrl(result.meta?.thumbnail_url as string | undefined),
       score: result.score,
       actions: resolveActions(result, t),
