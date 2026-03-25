@@ -16,5 +16,8 @@
   "action_view_tree": "View tree",
   "untitled": "(Untitled)",
   "keyboard_hint": "Enter to open",
+  "keyboard_hint_open": "Open",
+  "keyboard_hint_all": "All results",
+  "keyboard_hint_close": "Close",
   "results_in": "{count} in {module}"
 }
