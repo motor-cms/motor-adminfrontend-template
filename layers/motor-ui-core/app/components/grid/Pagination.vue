@@ -1,13 +1,16 @@
 <!-- app/components/grid/GridPagination.vue -->
 <script setup lang="ts">
 import type { PaginationMeta } from '@motor-cms/ui-core/app/types/grid'
+import { useEventListener } from '@vueuse/core'
 
 const props = withDefaults(defineProps<{
   meta: PaginationMeta | null
   perPageOptions?: number[]
   compact?: boolean
+  keyboard?: boolean
 }>(), {
-  compact: false
+  compact: false,
+  keyboard: true
 })
 
 const emit = defineEmits<{
@@ -37,6 +40,32 @@ const showingText = computed(() => {
   if (props.compact) return `${from}-${to} / ${total}`
   return t('motor-core.grid.showing', { from, to, total })
 })
+
+// Arrow key pagination
+if (props.keyboard) {
+  useEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement) return
+    if (e.metaKey || e.ctrlKey || e.altKey) return
+    if (!props.meta) return
+    if (e.key === 'ArrowLeft' && props.meta.current_page > 1) {
+      emit('update:page', props.meta.current_page - 1)
+    } else if (e.key === 'ArrowRight' && props.meta.current_page < props.meta.last_page) {
+      emit('update:page', props.meta.current_page + 1)
+    }
+  })
+
+  const { register: registerShortcut, unregister: unregisterShortcut } = useShortcutRegistry()
+  registerShortcut({
+    id: 'pagination',
+    label: t('motor-core.shortcuts.grid'),
+    icon: 'i-lucide-table-2',
+    shortcuts: [
+      { keys: ['←'], label: t('motor-core.shortcuts.prev_page'), icon: 'i-lucide-arrow-left' },
+      { keys: ['→'], label: t('motor-core.shortcuts.next_page'), icon: 'i-lucide-arrow-right' }
+    ]
+  })
+  onUnmounted(() => unregisterShortcut('pagination'))
+}
 </script>
 
 <template>
