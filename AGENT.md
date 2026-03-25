@@ -38,3 +38,34 @@ Layers are published as npm packages under the `@motor-cms` scope.
 Unit tests use Vitest with a workspace config. Each layer has its own `vitest.config.ts`.
 Tests live in `layers/<name>/tests/unit/`.
 Run `pnpm test` to run all, or `pnpm test:core` etc. for one layer.
+
+## CI/CD Pipeline
+
+### Branching Strategy
+
+Code flows: `develop` → `staging` → `production`. Version changes cascade back down automatically.
+
+### Workflows
+
+| Workflow | Trigger | Purpose |
+|----------|---------|---------|
+| **Release (Production)** | Push to `production` | Typecheck, test, auto-generate changeset from conventional commits if missing, version, publish to npm, create GitHub releases |
+| **Merge Down** | After Release (Production) completes; push to `staging` | Cascade `production → staging → develop` with auto-resolution of version/changelog conflicts |
+| **Release (Pre-release)** | Push to `staging` or `develop` | Publish pre-release versions (`rc` for staging, `alpha` for develop) |
+| **Tests & Coverage** | Push/PR to any main branch | Run unit tests with coverage and typecheck |
+| **Changeset Check** | PR to any main branch | Remind contributors to include a changeset when code under `layers/` changes |
+
+### Pipeline Sequencing
+
+1. Code merges into `production`
+2. **Release (Production)** runs: typecheck → test → auto-changeset → version → publish → commit → GitHub release
+3. **Merge Down** triggers via `workflow_run` (waits for Release to complete): merges `production → staging → develop`, auto-resolving version file conflicts
+4. Staging push triggers **Release (Pre-release)** (publishes `rc` tags) and then merge-down continues to `develop`
+
+### Key Behaviours
+
+- **Concurrency controls**: Each workflow uses concurrency groups to prevent parallel runs from colliding
+- **Bot commit filtering**: Version bumps and merge-down commits are skipped to prevent infinite loops
+- **Auto-changeset generation**: If no changeset exists on production, one is generated from conventional commit messages (`feat:` → minor, `fix:/refactor:/perf:` → patch, `!:` or `BREAKING CHANGE:` → major)
+- **Conflict auto-resolution**: `package.json`, `CHANGELOG.md`, `pnpm-lock.yaml`, and `pre.json` conflicts are resolved automatically (keeps target branch version); code conflicts open a PR for manual resolution
+- **Changesets use fixed mode** with `develop` as the base branch — all three packages are versioned together
