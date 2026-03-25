@@ -153,19 +153,6 @@ const hideableColumns = computed(() =>
 
 const hasColumnSelector = computed(() => hideableColumns.value.length > 0)
 
-// Per-page select items
-const perPageItems = computed(() =>
-  props.perPageOptions.map(value => ({ label: String(value), value }))
-)
-
-// Null-safe showing range
-const showingRange = computed(() => {
-  if (!props.meta) return ''
-  const from = props.meta.from ?? ((props.meta.current_page - 1) * props.meta.per_page + 1)
-  const to = props.meta.to ?? Math.min(props.meta.current_page * props.meta.per_page, props.meta.total)
-  return `${from}-${to} / ${props.meta.total}`
-})
-
 // Load async options on mount
 onMounted(() => {
   props.filters?.forEach((filter) => {
@@ -310,30 +297,13 @@ onMounted(() => {
 
     <!-- Right: Pagination + Column Selector (never wraps) -->
     <div class="flex items-center gap-3 flex-nowrap shrink-0">
-      <!-- Compact Inline Pagination -->
-      <template v-if="meta && meta.total > 0">
-        <span class="text-sm text-muted whitespace-nowrap">
-          {{ showingRange }}
-        </span>
-
-        <USelect
-          :model-value="meta.per_page"
-          :items="perPageItems"
-          value-key="value"
-          label-key="label"
-          aria-label="Results per page"
-          class="w-20"
-          @update:model-value="emit('update:perPage', Number($event))"
-        />
-
-        <UPagination
-          :page="meta.current_page"
-          :total="meta.total"
-          :items-per-page="meta.per_page"
-          :sibling-count="1"
-          @update:page="emit('update:page', $event)"
-        />
-      </template>
+      <GridPagination
+        compact
+        :meta="meta"
+        :per-page-options="perPageOptions"
+        @update:page="emit('update:page', $event)"
+        @update:per-page="emit('update:perPage', $event)"
+      />
 
       <!-- Column Selector (rightmost, next to table columns) -->
       <UPopover v-if="hasColumnSelector">

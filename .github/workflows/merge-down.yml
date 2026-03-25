@@ -41,7 +41,7 @@ jobs:
             echo "result=merged" >> "$GITHUB_OUTPUT"
           else
             # Auto-resolve version file conflicts: keep staging's versions
-            VERSION_FILES="layers/*/package.json package.json pnpm-lock.yaml .changeset/pre.json CHANGELOG.md"
+            VERSION_FILES="layers/*/package.json package.json pnpm-lock.yaml .changeset/pre.json CHANGELOG.md layers/*/CHANGELOG.md"
             HAS_VERSION_CONFLICT=false
 
             for pattern in $VERSION_FILES; do
@@ -98,7 +98,7 @@ jobs:
             echo "result=merged" >> "$GITHUB_OUTPUT"
           else
             # Auto-resolve version file conflicts: keep develop's versions
-            VERSION_FILES="layers/*/package.json package.json pnpm-lock.yaml .changeset/pre.json CHANGELOG.md"
+            VERSION_FILES="layers/*/package.json package.json pnpm-lock.yaml .changeset/pre.json CHANGELOG.md layers/*/CHANGELOG.md"
             HAS_VERSION_CONFLICT=false
 
             for pattern in $VERSION_FILES; do

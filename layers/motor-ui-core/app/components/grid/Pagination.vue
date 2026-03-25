@@ -1,11 +1,17 @@
 <!-- app/components/grid/GridPagination.vue -->
 <script setup lang="ts">
 import type { PaginationMeta } from '@motor-cms/ui-core/app/types/grid'
+import { useEventListener } from '@vueuse/core'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   meta: PaginationMeta | null
   perPageOptions?: number[]
-}>()
+  compact?: boolean
+  keyboard?: boolean
+}>(), {
+  compact: false,
+  keyboard: true
+})
 
 const emit = defineEmits<{
   'update:page': [page: number]
@@ -19,40 +25,69 @@ const page = computed({
   set: value => emit('update:page', value)
 })
 
-const perPageOptions = computed(() => {
+const perPageItems = computed(() => {
   const options = props.perPageOptions ?? [10, 25, 50, 100]
-  return options.map(value => ({
-    label: t('motor-core.grid.per_page', { count: value }),
-    value
-  }))
+  return props.compact
+    ? options.map(value => ({ label: String(value), value }))
+    : options.map(value => ({ label: t('motor-core.grid.per_page', { count: value }), value }))
 })
 
 const showingText = computed(() => {
   if (!props.meta) return ''
   const { current_page, per_page, total } = props.meta
-  const from = (current_page - 1) * per_page + 1
-  const to = Math.min(current_page * per_page, total)
+  const from = props.meta.from ?? (current_page - 1) * per_page + 1
+  const to = props.meta.to ?? Math.min(current_page * per_page, total)
+  if (props.compact) return `${from}-${to} / ${total}`
   return t('motor-core.grid.showing', { from, to, total })
 })
+
+// Arrow key pagination
+if (props.keyboard) {
+  useEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement) return
+    if (e.metaKey || e.ctrlKey || e.altKey) return
+    if (!props.meta) return
+    if (e.key === 'ArrowLeft' && props.meta.current_page > 1) {
+      emit('update:page', props.meta.current_page - 1)
+    } else if (e.key === 'ArrowRight' && props.meta.current_page < props.meta.last_page) {
+      emit('update:page', props.meta.current_page + 1)
+    }
+  })
+
+  const { register: registerShortcut, unregister: unregisterShortcut } = useShortcutRegistry()
+  registerShortcut({
+    id: 'pagination',
+    label: t('motor-core.shortcuts.grid'),
+    icon: 'i-lucide-table-2',
+    shortcuts: [
+      { keys: ['←'], label: t('motor-core.shortcuts.prev_page'), icon: 'i-lucide-arrow-left' },
+      { keys: ['→'], label: t('motor-core.shortcuts.next_page'), icon: 'i-lucide-arrow-right' }
+    ]
+  })
+  onUnmounted(() => unregisterShortcut('pagination'))
+}
 </script>
 
 <template>
   <div
     v-if="meta && meta.total > 0"
-    class="flex items-center justify-between"
+    :class="compact
+      ? 'flex items-center gap-3 flex-nowrap shrink-0'
+      : 'flex items-center justify-between'"
   >
-    <span class="text-sm text-muted">
+    <span class="text-sm text-muted whitespace-nowrap">
       {{ showingText }}
     </span>
 
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-3">
       <USelect
         :model-value="meta.per_page"
-        :items="perPageOptions"
+        :items="perPageItems"
         value-key="value"
         label-key="label"
-        class="w-36"
-        @update:model-value="emit('update:perPage', $event as number)"
+        aria-label="Results per page"
+        :class="compact ? 'w-20' : 'w-36'"
+        @update:model-value="emit('update:perPage', Number($event))"
       />
 
       <UPagination
@@ -60,7 +95,8 @@ const showingText = computed(() => {
         :total="meta.total"
         :items-per-page="meta.per_page"
         :sibling-count="1"
-        show-edges
+        :show-edges="!compact"
+        @update:page="emit('update:page', $event)"
       />
     </div>
   </div>
