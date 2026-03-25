@@ -5,7 +5,10 @@ import { searchPalette, resolveModuleLabel } from '../composables/useGlobalSearc
 import type { PaletteItem, PaletteSearchResult } from '../composables/useGlobalSearch'
 
 const router = useRouter()
+const toast = useToast()
 const { t } = useI18n()
+const runtimeConfig = useRuntimeConfig()
+const backendBaseUrl = runtimeConfig.public.backendBaseUrl as string
 
 const searchRef = ref<{ commandPaletteRef: { el: HTMLElement } } | null>(null)
 const open = ref(false)
@@ -78,6 +81,58 @@ const facetChips = computed(() => {
     }))
 })
 
+function getFileId(item: PaletteItem): string | undefined {
+  if (item.index !== 'files') return undefined
+  return item.id.split('-').pop()
+}
+
+async function handleEmitAction(action: { key: string, emit?: string }, item: PaletteItem) {
+  const fileId = getFileId(item)
+  if (!fileId) return
+  const downloadUrl = `${backendBaseUrl}/download/${fileId}`
+
+  if (action.emit === 'download') {
+    try {
+      const response = await fetch(downloadUrl, { credentials: 'include' })
+      const blob = await response.blob()
+      const blobUrl = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = blobUrl
+      a.download = item.label ?? 'download'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(blobUrl)
+    } catch {
+      const a = document.createElement('a')
+      a.href = downloadUrl
+      a.download = item.label ?? 'download'
+      a.target = '_blank'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+    }
+  } else if (action.emit === 'copy-url') {
+    try {
+      await navigator.clipboard.writeText(downloadUrl)
+    } catch {
+      const textarea = document.createElement('textarea')
+      textarea.value = downloadUrl
+      textarea.style.position = 'fixed'
+      textarea.style.opacity = '0'
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+    }
+    toast.add({
+      title: t('motor-media.files.url_copied'),
+      icon: 'i-lucide-check',
+      color: 'success'
+    })
+  }
+}
+
 function showAllResults(moduleKey?: string) {
   const query: Record<string, string> = { search: searchTerm.value }
   if (moduleKey) query.module = moduleKey
@@ -121,17 +176,17 @@ function onEnter() {
       <div class="flex items-center gap-1">
         <template v-if="paletteItemsById.get(item.id as string)?.actions?.length">
           <UTooltip
-            v-for="action in paletteItemsById.get(item.id as string)!.actions.slice(1)"
+            v-for="action in paletteItemsById.get(item.id as string)!.actions.filter(a => a.to || a.emit === 'download' || a.emit === 'copy-url')"
             :key="action.key"
             :text="action.label"
           >
             <UButton
               :icon="action.icon"
-              :to="action.to"
+              :to="action.emit ? undefined : action.to"
               size="xs"
               variant="ghost"
               color="neutral"
-              @click.stop
+              @click.stop="action.emit ? handleEmitAction(action, paletteItemsById.get(item.id as string)!) : undefined"
             />
           </UTooltip>
         </template>
