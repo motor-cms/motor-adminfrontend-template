@@ -167,8 +167,9 @@ function onEnter() {
     :placeholder="t('motor-core.search.placeholder')"
     :ui="{
       content: 'flex flex-col flex-1 min-h-0',
-      viewport: 'flex-1 overflow-y-auto',
-      footer: 'mt-auto shrink-0',
+      viewport: 'flex-1 overflow-y-auto min-h-0',
+      footer: 'sticky bottom-0 bg-[var(--ui-bg)] z-10 shrink-0',
+      item: 'cursor-pointer',
       itemDescription: 'line-clamp-1'
     }"
   >

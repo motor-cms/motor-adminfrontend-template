@@ -132,12 +132,18 @@ describe('useGlobalSearch', () => {
       expect(unpubActions[1].icon).toBe('i-lucide-globe')
     })
 
-    it('returns lightbox, download, copy-url for files', () => {
-      const result = { module: 'motor-media', index: 'files', id: 1, title: 'File', score: 1, meta: {} }
+    it('returns lightbox, download, copy-url for image files', () => {
+      const result = { module: 'motor-media', index: 'files', id: 1, title: 'Photo', score: 1, meta: { mime_type: 'image/jpeg' } }
       const actions = resolveActions(result, t)
       expect(actions).toHaveLength(3)
       expect(actions.map(a => a.key)).toEqual(['lightbox', 'download', 'copy-url'])
-      expect(actions.every(a => a.emit !== undefined)).toBe(true)
+    })
+
+    it('returns only download and copy-url for non-image files', () => {
+      const result = { module: 'motor-media', index: 'files', id: 1, title: 'Doc.pdf', score: 1, meta: { mime_type: 'application/pdf' } }
+      const actions = resolveActions(result, t)
+      expect(actions).toHaveLength(2)
+      expect(actions.map(a => a.key)).toEqual(['download', 'copy-url'])
     })
 
     it('returns view action for navigation_trees', () => {
@@ -148,12 +154,10 @@ describe('useGlobalSearch', () => {
       expect(actions[0].to).toBe('/motor-builder/navigation-trees/5')
     })
 
-    it('returns default edit action for generic entities', () => {
+    it('returns no actions for generic entities (click navigates to edit)', () => {
       const result = { module: 'motor-admin', index: 'users', id: 1, title: 'User', score: 1, meta: {} }
       const actions = resolveActions(result, t)
-      expect(actions).toHaveLength(1)
-      expect(actions[0].key).toBe('edit')
-      expect(actions[0].to).toBe('/motor-admin/users/1/edit')
+      expect(actions).toEqual([])
     })
 
     it('returns empty actions for unknown entities', () => {
@@ -311,7 +315,7 @@ describe('useGlobalSearch', () => {
       const t = vi.fn((key: string) => key)
       mockClient.mockResolvedValue({
         data: [
-          { module: 'motor-media', index: 'files', id: 1, title: 'Photo', score: 1, meta: {} }
+          { module: 'motor-media', index: 'files', id: 1, title: 'Photo', score: 1, meta: { mime_type: 'image/jpeg' } }
         ],
         meta: { total: 1, modules: {} }
       })
