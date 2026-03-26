@@ -19,10 +19,10 @@ function formatDate(isoString: string): string {
 </script>
 
 <template>
-  <UPageCard>
+  <UPageCard :ui="{ root: 'border-0 shadow-none' }">
     <template #header>
       <div class="flex items-center gap-2">
-        <UIcon name="i-lucide-clock" class="size-4 text-info" />
+        <UIcon name="i-lucide-clock" class="size-4 text-primary" />
         <span class="text-sm font-heading font-semibold text-highlighted">{{ t('motor-admin.dashboard.publishing_queue.title') }}</span>
       </div>
     </template>
@@ -37,10 +37,10 @@ function formatDate(isoString: string): string {
         v-for="item in items"
         :key="item.id"
         :to="`/motor-builder/builder-pages/${item.publishable_id}/edit`"
-        class="p-3 rounded-lg border border-default hover:border-primary/50 transition-colors"
+        class="p-3 rounded-lg bg-muted hover:bg-accented transition-colors"
       >
         <div class="text-sm font-medium text-default">{{ item.name }}</div>
-        <div class="text-xs text-info mt-1">{{ formatDate(item.to_be_published_at) }}</div>
+        <div class="text-xs text-dimmed mt-1">{{ formatDate(item.to_be_published_at) }}</div>
       </NuxtLink>
     </div>
   </UPageCard>

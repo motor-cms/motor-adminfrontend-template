@@ -24,20 +24,20 @@ const typeLabels: Record<string, string> = {
   SearchConfig: 'search',
 }
 
-const typeIcons: Record<string, { icon: string; color: string }> = {
-  BuilderPage: { icon: 'i-lucide-file-text', color: 'primary' },
-  Navigation: { icon: 'i-lucide-menu', color: 'info' },
-  NavigationItem: { icon: 'i-lucide-menu', color: 'info' },
-  File: { icon: 'i-lucide-image', color: 'success' },
-  CustomContentType: { icon: 'i-lucide-layout-grid', color: 'primary' },
-  CustomContentField: { icon: 'i-lucide-layout-grid', color: 'primary' },
-  Clickpath: { icon: 'i-lucide-mouse-pointer-click', color: 'warning' },
-  ClickpathStep: { icon: 'i-lucide-mouse-pointer-click', color: 'warning' },
-  Topic: { icon: 'i-lucide-bar-chart-2', color: 'info' },
-  PublishingTime: { icon: 'i-lucide-clock', color: 'info' },
-  Approval: { icon: 'i-lucide-check-circle', color: 'success' },
-  SeoRedirect: { icon: 'i-lucide-link', color: 'error' },
-  SearchConfig: { icon: 'i-lucide-search', color: 'info' },
+const typeIcons: Record<string, string> = {
+  BuilderPage: 'i-lucide-file-text',
+  Navigation: 'i-lucide-menu',
+  NavigationItem: 'i-lucide-menu',
+  File: 'i-lucide-image',
+  CustomContentType: 'i-lucide-layout-grid',
+  CustomContentField: 'i-lucide-layout-grid',
+  Clickpath: 'i-lucide-mouse-pointer-click',
+  ClickpathStep: 'i-lucide-mouse-pointer-click',
+  Topic: 'i-lucide-bar-chart-2',
+  PublishingTime: 'i-lucide-clock',
+  Approval: 'i-lucide-check-circle',
+  SeoRedirect: 'i-lucide-link',
+  SearchConfig: 'i-lucide-search',
 }
 
 function typeLabel(subjectType: string): string {
@@ -45,18 +45,14 @@ function typeLabel(subjectType: string): string {
   return key ? t(`motor-admin.dashboard.activity.types.${key}`) : subjectType
 }
 
+const isDeleted = computed(() => props.item.description === 'deleted')
+
 const config = computed(() => {
-  const icons = typeIcons[props.item.subject_type]
-  if (props.item.description === 'deleted') {
-    return {
-      icon: 'i-lucide-trash-2',
-      color: 'error',
-      label: typeLabel(props.item.subject_type),
-    }
-  }
+  const icon = isDeleted.value
+    ? 'i-lucide-trash-2'
+    : typeIcons[props.item.subject_type] ?? 'i-lucide-activity'
   return {
-    icon: icons?.icon ?? 'i-lucide-activity',
-    color: icons?.color ?? 'neutral',
+    icon,
     label: typeLabel(props.item.subject_type),
   }
 })
@@ -70,15 +66,15 @@ const timestamp = computed(() => new Date(props.item.created_at))
 </script>
 
 <template>
-  <div class="flex items-start gap-3 px-4 py-3 border-b border-default last:border-b-0 hover:bg-elevated/50 transition-colors">
+  <div class="flex items-start gap-3 px-4 py-3 last:pb-0 hover:bg-elevated/50 transition-colors">
     <div
       class="flex items-center justify-center size-7 rounded-md flex-shrink-0 mt-0.5"
-      :class="`bg-${config.color}/10`"
+      :class="isDeleted ? 'bg-error/10' : 'bg-muted/50'"
     >
       <UIcon
         :name="config.icon"
         class="size-3.5"
-        :class="`text-${config.color}`"
+        :class="isDeleted ? 'text-error' : 'text-dimmed'"
       />
     </div>
     <div class="flex-1 min-w-0">
@@ -90,7 +86,7 @@ const timestamp = computed(() => new Date(props.item.created_at))
       </div>
     </div>
     <UBadge
-      :color="config.color"
+      :color="isDeleted ? 'error' : 'neutral'"
       variant="subtle"
       size="xs"
     >
