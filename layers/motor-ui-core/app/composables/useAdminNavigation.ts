@@ -41,6 +41,7 @@ function mapIcon(icon?: string): string | undefined {
 // Convert Laravel route name to URL path
 function routeToPath(route?: string | null): string | undefined {
   if (!route) return undefined
+  if (route.startsWith('/')) return route
 
   // Convert route like 'admin.motor-admin.users' to '/motor-admin/users'
   // Remove 'admin.' prefix and convert dots to slashes
