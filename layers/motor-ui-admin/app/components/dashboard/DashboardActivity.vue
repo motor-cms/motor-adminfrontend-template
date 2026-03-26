@@ -12,6 +12,7 @@ const emit = defineEmits<{
   loadMore: []
 }>()
 
+const { t } = useI18n()
 const scrollContainer = ref<HTMLElement | null>(null)
 const sentinel = ref<HTMLElement | null>(null)
 const isAtBottom = ref(false)
@@ -52,7 +53,7 @@ onBeforeUnmount(() => observer?.disconnect())
   <UPageCard>
     <template #header>
       <div class="flex items-center justify-between w-full">
-        <span class="text-sm font-heading font-semibold text-highlighted">Letzte Aktivitäten</span>
+        <span class="text-sm font-heading font-semibold text-highlighted">{{ t('motor-admin.dashboard.activity.title') }}</span>
       </div>
     </template>
     <div v-if="loading" class="flex items-center justify-center py-12 text-muted">
@@ -60,7 +61,7 @@ onBeforeUnmount(() => observer?.disconnect())
     </div>
     <div v-else-if="items.length === 0" class="flex flex-col items-center justify-center py-12 text-muted">
       <UIcon name="i-lucide-activity" class="size-10 mb-3" />
-      <p class="text-sm">Noch keine Aktivitäten</p>
+      <p class="text-sm">{{ t('motor-admin.dashboard.activity.empty') }}</p>
     </div>
     <div v-else class="relative -mx-4 -my-4 sm:-mx-6 sm:-my-6">
       <div

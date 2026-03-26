@@ -8,6 +8,7 @@ const emit = defineEmits<{
   created: []
 }>()
 
+const { t } = useI18n()
 const client = useSanctumClient()
 const { can } = usePermissions()
 const saving = ref(false)
@@ -26,30 +27,30 @@ const form = reactive({
   expires_at: null as string | null,
 })
 
-const typeOptions = [
-  { label: 'Info', value: 'info' },
-  { label: 'Warnung', value: 'warning' },
-  { label: 'Fehler', value: 'error' },
-]
+const typeOptions = computed(() => [
+  { label: t('motor-admin.dashboard.announcements.type_info'), value: 'info' },
+  { label: t('motor-admin.dashboard.announcements.type_warning'), value: 'warning' },
+  { label: t('motor-admin.dashboard.announcements.type_error'), value: 'error' },
+])
 
-const allAudienceOptions = [
-  { label: 'Nur für mich', value: 'self' },
-  { label: 'Bestimmte Nutzer', value: 'users' },
-  { label: 'Alle im Mandanten', value: 'client' },
-]
+const allAudienceOptions = computed(() => [
+  { label: t('motor-admin.dashboard.announcements.audience_self'), value: 'self' },
+  { label: t('motor-admin.dashboard.announcements.audience_users'), value: 'users' },
+  { label: t('motor-admin.dashboard.announcements.audience_client'), value: 'client' },
+])
 
 const audienceOptions = computed(() =>
   canWriteAnnouncements.value
-    ? allAudienceOptions
-    : allAudienceOptions.filter(o => o.value === 'self')
+    ? allAudienceOptions.value
+    : allAudienceOptions.value.filter(o => o.value === 'self')
 )
 
-const linkableTypeOptions = [
-  { label: 'Seite', value: 'Motor\\Builder\\Models\\BuilderPage' },
-  { label: 'Navigationspunkt', value: 'Motor\\Builder\\Models\\Navigation' },
-  { label: 'Datei', value: 'Motor\\Media\\Models\\File' },
-  { label: 'Inhaltstyp', value: 'Motor\\ContentType\\Models\\CustomContentType' },
-]
+const linkableTypeOptions = computed(() => [
+  { label: t('motor-admin.dashboard.announcements.linkable_page'), value: 'Motor\\Builder\\Models\\BuilderPage' },
+  { label: t('motor-admin.dashboard.announcements.linkable_navigation'), value: 'Motor\\Builder\\Models\\Navigation' },
+  { label: t('motor-admin.dashboard.announcements.linkable_file'), value: 'Motor\\Media\\Models\\File' },
+  { label: t('motor-admin.dashboard.announcements.linkable_content_type'), value: 'Motor\\ContentType\\Models\\CustomContentType' },
+])
 
 const userOptions = ref<Array<{ label: string; value: number }>>([])
 const usersLoading = ref(false)
@@ -186,52 +187,52 @@ async function handleSubmit() {
     @update:open="emit('update:open', $event)"
   >
     <template #header>
-      <span class="font-heading font-semibold">Neue Meldung</span>
+      <span class="font-heading font-semibold">{{ t('motor-admin.dashboard.announcements.modal_title') }}</span>
     </template>
 
     <template #body>
       <div class="flex flex-col gap-5">
-        <UFormField label="Titel" required>
-          <UInput v-model="form.title" class="w-full" placeholder="Meldung eingeben..." />
+        <UFormField :label="t('motor-admin.dashboard.announcements.field_title')" required>
+          <UInput v-model="form.title" class="w-full" :placeholder="t('motor-admin.dashboard.announcements.field_title_placeholder')" />
         </UFormField>
 
-        <UFormField label="Beschreibung">
-          <UTextarea v-model="form.body" class="w-full" placeholder="Optionale Details..." :rows="3" />
+        <UFormField :label="t('motor-admin.dashboard.announcements.field_body')">
+          <UTextarea v-model="form.body" class="w-full" :placeholder="t('motor-admin.dashboard.announcements.field_body_placeholder')" :rows="3" />
         </UFormField>
 
         <div class="grid grid-cols-2 gap-4">
-          <UFormField label="Typ">
+          <UFormField :label="t('motor-admin.dashboard.announcements.field_type')">
             <USelectMenu v-model="form.type" :items="typeOptions" value-key="value" class="w-full" />
           </UFormField>
 
-          <UFormField label="Zielgruppe">
+          <UFormField :label="t('motor-admin.dashboard.announcements.field_audience')">
             <USelectMenu v-model="form.audience" :items="audienceOptions" value-key="value" class="w-full" />
           </UFormField>
         </div>
 
-        <UFormField v-if="form.audience === 'users'" label="Nutzer auswählen">
+        <UFormField v-if="form.audience === 'users'" :label="t('motor-admin.dashboard.announcements.field_users')">
           <USelectMenu
             v-model="form.target_user_ids"
             :items="userOptions"
             value-key="value"
             multiple
             :loading="usersLoading"
-            placeholder="Nutzer suchen..."
+            :placeholder="t('motor-admin.dashboard.announcements.field_users_placeholder')"
             class="w-full"
           />
         </UFormField>
 
-        <UFormField label="Verknüpfung (optional)">
+        <UFormField :label="t('motor-admin.dashboard.announcements.field_link')">
           <USelectMenu
             v-model="form.linkable_type"
             :items="linkableTypeOptions"
             value-key="value"
-            placeholder="Typ wählen..."
+            :placeholder="t('motor-admin.dashboard.announcements.field_link_type_placeholder')"
             class="w-full"
           />
         </UFormField>
 
-        <UFormField v-if="form.linkable_type" label="Element">
+        <UFormField v-if="form.linkable_type" :label="t('motor-admin.dashboard.announcements.field_link_item')">
           <USelectMenu
             v-model="form.linkable_id"
             v-model:search-term="linkableSearchTerm"
@@ -239,16 +240,16 @@ async function handleSubmit() {
             value-key="value"
             ignore-filter
             :loading="linkableLoading"
-            placeholder="Element suchen..."
+            :placeholder="t('motor-admin.dashboard.announcements.field_link_item_placeholder')"
             class="w-full"
           />
         </UFormField>
 
         <div class="grid grid-cols-2 gap-4">
-          <UFormField label="Sichtbar ab">
+          <UFormField :label="t('motor-admin.dashboard.announcements.field_starts_at')">
             <UInput v-model="form.starts_at" type="datetime-local" class="w-full" />
           </UFormField>
-          <UFormField label="Sichtbar bis">
+          <UFormField :label="t('motor-admin.dashboard.announcements.field_expires_at')">
             <UInput v-model="form.expires_at" type="datetime-local" class="w-full" />
           </UFormField>
         </div>
@@ -262,7 +263,7 @@ async function handleSubmit() {
           variant="outline"
           @click="emit('update:open', false)"
         >
-          Abbrechen
+          {{ t('motor-admin.dashboard.announcements.cancel') }}
         </UButton>
         <UButton
           color="primary"
@@ -270,7 +271,7 @@ async function handleSubmit() {
           :disabled="!form.title"
           @click="handleSubmit"
         >
-          Erstellen
+          {{ t('motor-admin.dashboard.announcements.create') }}
         </UButton>
       </div>
     </template>
