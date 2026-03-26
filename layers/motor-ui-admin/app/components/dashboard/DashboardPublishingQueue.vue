@@ -37,7 +37,7 @@ function formatDate(isoString: string): string {
         v-for="item in items"
         :key="item.id"
         :to="`/motor-builder/builder-pages/${item.publishable_id}/edit`"
-        class="p-3 rounded-lg bg-elevated border border-muted hover:border-primary/50 transition-colors"
+        class="p-3 rounded-lg border border-default hover:border-primary/50 transition-colors"
       >
         <div class="text-sm font-medium text-default">{{ item.name }}</div>
         <div class="text-xs text-info mt-1">{{ formatDate(item.to_be_published_at) }}</div>
