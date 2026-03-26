@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { DashboardStats } from '../../composables/useDashboardData'
 
+const { t } = useI18n()
+
 const props = defineProps<{
   stats: DashboardStats
   loading: boolean
@@ -8,30 +10,30 @@ const props = defineProps<{
 
 const cards = computed(() => [
   {
-    label: 'Seiten',
+    label: t('motor-admin.dashboard.stats.pages'),
     value: props.stats.pages_total,
-    subtitle: 'Gesamt',
+    subtitle: t('motor-admin.dashboard.stats.pages_total'),
     icon: 'i-lucide-file-text',
     color: 'primary' as const,
   },
   {
-    label: 'Entwürfe',
+    label: t('motor-admin.dashboard.stats.drafts'),
     value: props.stats.pages_draft,
-    subtitle: 'In Bearbeitung',
+    subtitle: t('motor-admin.dashboard.stats.drafts_subtitle'),
     icon: 'i-lucide-pencil',
     color: 'warning' as const,
   },
   {
-    label: 'Geplant',
+    label: t('motor-admin.dashboard.stats.scheduled'),
     value: props.stats.pages_scheduled,
-    subtitle: 'Veröffentlichung',
+    subtitle: t('motor-admin.dashboard.stats.scheduled_subtitle'),
     icon: 'i-lucide-clock',
     color: 'info' as const,
   },
   {
-    label: 'Medien',
+    label: t('motor-admin.dashboard.stats.media'),
     value: props.stats.media_total,
-    subtitle: 'Dateien',
+    subtitle: t('motor-admin.dashboard.stats.media_subtitle'),
     icon: 'i-lucide-image',
     color: 'success' as const,
   },

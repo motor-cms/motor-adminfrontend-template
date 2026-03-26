@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import type { PublishingQueueItem } from '../../composables/useDashboardData'
 
+const { t, locale } = useI18n()
+
 defineProps<{
   items: PublishingQueueItem[]
   loading: boolean
 }>()
 
 function formatDate(isoString: string): string {
-  return new Date(isoString).toLocaleDateString('de-DE', {
+  return new Date(isoString).toLocaleDateString(locale.value, {
     day: 'numeric',
     month: 'long',
     hour: '2-digit',
@@ -21,14 +23,14 @@ function formatDate(isoString: string): string {
     <template #header>
       <div class="flex items-center gap-2">
         <UIcon name="i-lucide-clock" class="size-4 text-info" />
-        <span class="text-sm font-heading font-semibold text-highlighted">Geplante Veröffentlichungen</span>
+        <span class="text-sm font-heading font-semibold text-highlighted">{{ t('motor-admin.dashboard.publishing_queue.title') }}</span>
       </div>
     </template>
     <div v-if="loading" class="flex items-center justify-center py-6 text-muted">
       <UIcon name="i-lucide-loader-2" class="size-5 animate-spin" />
     </div>
     <div v-else-if="items.length === 0" class="text-sm text-muted py-4 text-center">
-      Keine geplanten Veröffentlichungen
+      {{ t('motor-admin.dashboard.publishing_queue.empty') }}
     </div>
     <div v-else class="flex flex-col gap-2">
       <NuxtLink

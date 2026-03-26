@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const { t } = useI18n()
+
 const emit = defineEmits<{
   'create-page': []
   'upload-media': []
@@ -8,7 +10,7 @@ const emit = defineEmits<{
 <template>
   <UPageCard>
     <template #header>
-      <span class="text-sm font-heading font-semibold text-highlighted">Schnellaktionen</span>
+      <span class="text-sm font-heading font-semibold text-highlighted">{{ t('motor-admin.dashboard.quick_actions.title') }}</span>
     </template>
     <div class="flex flex-col gap-2">
       <UButton
@@ -17,7 +19,7 @@ const emit = defineEmits<{
         block
         @click="emit('create-page')"
       >
-        Neue Seite
+        {{ t('motor-admin.dashboard.quick_actions.new_page') }}
       </UButton>
       <UButton
         icon="i-lucide-upload"
@@ -26,7 +28,7 @@ const emit = defineEmits<{
         block
         @click="emit('upload-media')"
       >
-        Medien hochladen
+        {{ t('motor-admin.dashboard.quick_actions.upload_media') }}
       </UButton>
       <UButton
         icon="i-lucide-menu"
@@ -35,7 +37,7 @@ const emit = defineEmits<{
         block
         to="/motor-builder/navigation-trees"
       >
-        Navigation
+        {{ t('motor-admin.dashboard.quick_actions.navigation') }}
       </UButton>
     </div>
   </UPageCard>
