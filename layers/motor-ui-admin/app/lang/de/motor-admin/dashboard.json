@@ -1,3 +1,81 @@
 {
-  "welcome": "Willkommen, {name}"
+  "welcome": "Willkommen, {name}",
+  "announcement_created": "Meldung erstellt",
+  "announcement_dismissed": "Meldung ausgeblendet",
+  "stats": {
+    "pages": "Seiten",
+    "pages_total": "Gesamt",
+    "drafts": "Entwürfe",
+    "drafts_subtitle": "In Bearbeitung",
+    "scheduled": "Geplant",
+    "scheduled_subtitle": "Veröffentlichung",
+    "media": "Medien",
+    "media_subtitle": "Dateien"
+  },
+  "activity": {
+    "title": "Letzte Aktivitäten",
+    "empty": "Noch keine Aktivitäten",
+    "unknown": "Unbekannt",
+    "system": "System",
+    "verbs": {
+      "created": "erstellt",
+      "updated": "aktualisiert",
+      "deleted": "gelöscht",
+      "published": "veröffentlicht",
+      "unpublished": "offline genommen"
+    },
+    "types": {
+      "page": "Seite",
+      "navigation": "Navigation",
+      "media": "Medien",
+      "content_type": "Inhaltstyp",
+      "assistant": "Assistent",
+      "scoring": "Scoring",
+      "scheduled": "Geplant",
+      "approval": "Freigabe",
+      "seo": "SEO",
+      "search": "Suche"
+    }
+  },
+  "announcements": {
+    "title": "Meldungen",
+    "empty": "Keine Meldungen",
+    "modal_title": "Neue Meldung",
+    "field_title": "Titel",
+    "field_title_placeholder": "Meldung eingeben...",
+    "field_body": "Beschreibung",
+    "field_body_placeholder": "Optionale Details...",
+    "field_type": "Typ",
+    "field_audience": "Zielgruppe",
+    "field_users": "Nutzer auswählen",
+    "field_users_placeholder": "Nutzer suchen...",
+    "field_link": "Verknüpfung (optional)",
+    "field_link_type_placeholder": "Typ wählen...",
+    "field_link_item": "Element",
+    "field_link_item_placeholder": "Element suchen...",
+    "field_starts_at": "Sichtbar ab",
+    "field_expires_at": "Sichtbar bis",
+    "cancel": "Abbrechen",
+    "create": "Erstellen",
+    "type_info": "Info",
+    "type_warning": "Warnung",
+    "type_error": "Fehler",
+    "audience_self": "Nur für mich",
+    "audience_users": "Bestimmte Nutzer",
+    "audience_client": "Alle im Mandanten",
+    "linkable_page": "Seite",
+    "linkable_navigation": "Navigationspunkt",
+    "linkable_file": "Datei",
+    "linkable_content_type": "Inhaltstyp"
+  },
+  "quick_actions": {
+    "title": "Schnellaktionen",
+    "new_page": "Neue Seite",
+    "upload_media": "Medien hochladen",
+    "navigation": "Navigation"
+  },
+  "publishing_queue": {
+    "title": "Geplante Veröffentlichungen",
+    "empty": "Keine geplanten Veröffentlichungen"
+  }
 }

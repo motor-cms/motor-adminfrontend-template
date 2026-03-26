@@ -13,6 +13,8 @@ const emit = defineEmits<{
   create: []
 }>()
 
+const { t } = useI18n()
+
 const borderColors: Record<string, string> = {
   info: 'border-l-info',
   warning: 'border-l-warning',
@@ -26,7 +28,7 @@ const borderColors: Record<string, string> = {
       <div class="flex items-center justify-between w-full">
         <div class="flex items-center gap-2">
           <UIcon name="i-lucide-megaphone" class="size-4 text-primary" />
-          <span class="text-sm font-heading font-semibold text-highlighted">Meldungen</span>
+          <span class="text-sm font-heading font-semibold text-highlighted">{{ t('motor-admin.dashboard.announcements.title') }}</span>
           <UBadge
             v-if="items.length > 0"
             color="primary"
@@ -50,7 +52,7 @@ const borderColors: Record<string, string> = {
       <UIcon name="i-lucide-loader-2" class="size-5 animate-spin" />
     </div>
     <div v-else-if="items.length === 0" class="text-sm text-muted py-4 text-center">
-      Keine Meldungen
+      {{ t('motor-admin.dashboard.announcements.empty') }}
     </div>
     <div v-else class="flex flex-col gap-2">
       <div

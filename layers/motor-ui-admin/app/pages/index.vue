@@ -3,7 +3,7 @@ definePageMeta({
   permission: 'dashboard.read',
 })
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { user } = useSanctumAuth()
 const { can } = usePermissions()
 
@@ -25,7 +25,7 @@ const {
 const announcementModalOpen = ref(false)
 
 const currentDate = computed(() => {
-  return new Date().toLocaleDateString('de-DE', {
+  return new Date().toLocaleDateString(locale.value, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -35,14 +35,14 @@ const currentDate = computed(() => {
 
 function onAnnouncementCreated() {
   refresh()
-  toast.add({ title: 'Meldung erstellt', icon: 'i-lucide-megaphone', color: 'success' })
+  toast.add({ title: t('motor-admin.dashboard.announcement_created'), icon: 'i-lucide-megaphone', color: 'success' })
 }
 
 const toast = useToast()
 
 async function onDismiss(id: number) {
   await dismissAnnouncement(id)
-  toast.add({ title: 'Meldung ausgeblendet', icon: 'i-lucide-check', color: 'success' })
+  toast.add({ title: t('motor-admin.dashboard.announcement_dismissed'), icon: 'i-lucide-check', color: 'success' })
 }
 </script>
 
