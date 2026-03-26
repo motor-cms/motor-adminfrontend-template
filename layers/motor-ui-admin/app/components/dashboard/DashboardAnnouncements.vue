@@ -58,7 +58,7 @@ const borderColors: Record<string, string> = {
       <div
         v-for="item in items"
         :key="item.id"
-        class="p-3 rounded-lg bg-elevated border border-muted border-l-3"
+        class="p-3 rounded-lg border border-default border-l-3"
         :class="borderColors[item.type] ?? 'border-l-info'"
       >
         <div class="flex items-start justify-between gap-2">

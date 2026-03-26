@@ -47,34 +47,55 @@ async function onDismiss(id: number) {
 </script>
 
 <template>
-  <div class="p-6 max-w-7xl mx-auto">
-    <div class="mb-6">
-      <h1 class="text-xl font-heading font-semibold text-highlighted">
-        {{ t('motor-admin.dashboard.welcome', { name: user?.data?.name ?? '' }) }}
-      </h1>
-      <p class="text-sm text-dimmed mt-1">
-        {{ currentDate }}
-      </p>
+  <div class="p-6">
+    <div class="flex items-start justify-between mb-6">
+      <div>
+        <h1 class="text-xl font-heading font-semibold text-highlighted">
+          {{ t('motor-admin.dashboard.welcome', { name: user?.data?.name ?? '' }) }}
+        </h1>
+        <p class="text-sm text-dimmed mt-1">
+          {{ currentDate }}
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <UButton
+          icon="i-lucide-plus"
+          color="primary"
+          size="sm"
+          :label="t('motor-admin.dashboard.quick_actions.new_page')"
+          @click="navigateTo('/motor-builder/builder-pages/create')"
+        />
+        <UButton
+          icon="i-lucide-upload"
+          color="neutral"
+          variant="outline"
+          size="sm"
+          :label="t('motor-admin.dashboard.quick_actions.upload_media')"
+          @click="navigateTo('/motor-media/files/create')"
+        />
+        <UButton
+          icon="i-lucide-menu"
+          color="neutral"
+          variant="outline"
+          size="sm"
+          :label="t('motor-admin.dashboard.quick_actions.navigation')"
+          to="/motor-builder/navigation-trees"
+        />
+      </div>
     </div>
 
     <DashboardStats :stats="stats" :loading="loading" class="mb-6" />
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-2">
-        <DashboardActivity
-          :items="activity"
-          :loading="loading"
-          :loading-more="activityLoadingMore"
-          :has-more="hasMoreActivity"
-          @load-more="loadMoreActivity"
-        />
-      </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <DashboardActivity
+        :items="activity"
+        :loading="loading"
+        :loading-more="activityLoadingMore"
+        :has-more="hasMoreActivity"
+        @load-more="loadMoreActivity"
+      />
 
       <div class="flex flex-col gap-4">
-        <DashboardQuickActions
-          @create-page="navigateTo('/motor-builder/builder-pages/create')"
-          @upload-media="navigateTo('/motor-media/files/create')"
-        />
         <DashboardAnnouncements
           :items="announcements"
           :loading="loading"
