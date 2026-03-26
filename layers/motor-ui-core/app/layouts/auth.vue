@@ -1,10 +1,17 @@
+<script setup lang="ts">
+const appConfig = useAppConfig()
+
+const wordmark = computed(() => (appConfig as any).auth?.wordmark ?? 'motor')
+const tagline = computed(() => (appConfig as any).auth?.tagline ?? 'the engine behind your content')
+</script>
+
 <template>
   <div class="auth-split">
     <div class="auth-split__brand">
       <div class="auth-split__brand-content">
         <MotorLogoParallax />
-        <span class="auth-split__wordmark">motor</span>
-        <span class="auth-split__tagline">the engine behind your content</span>
+        <span class="auth-split__wordmark">{{ wordmark }}</span>
+        <span class="auth-split__tagline">{{ tagline }}</span>
       </div>
     </div>
     <div class="auth-split__form">
@@ -17,21 +24,29 @@
 
 <style scoped>
 .auth-split {
+  --_auth-accent-1: var(--auth-gradient-accent-1, rgba(232, 160, 191, 0.15));
+  --_auth-accent-2: var(--auth-gradient-accent-2, rgba(108, 92, 231, 0.12));
+  --_auth-accent-3: var(--auth-gradient-accent-3, rgba(160, 112, 192, 0.1));
+
   display: flex;
   min-height: 100vh;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(232, 160, 191, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 30%, rgba(108, 92, 231, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(160, 112, 192, 0.1) 0%, transparent 50%),
-    linear-gradient(135deg, #0E0E12 0%, #1A1528 40%, #110E2B 70%, #0E0E12 100%);
+    radial-gradient(ellipse at 20% 50%, var(--_auth-accent-1) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 30%, var(--_auth-accent-2) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, var(--_auth-accent-3) 0%, transparent 50%),
+    var(--auth-gradient-base, linear-gradient(135deg, #0E0E12 0%, #1A1528 40%, #110E2B 70%, #0E0E12 100%));
 }
 
 :root:not(.dark) .auth-split {
+  --_auth-accent-1: var(--auth-gradient-accent-1-light, rgba(232, 160, 191, 0.2));
+  --_auth-accent-2: var(--auth-gradient-accent-2-light, rgba(108, 92, 231, 0.15));
+  --_auth-accent-3: var(--auth-gradient-accent-3-light, rgba(160, 112, 192, 0.12));
+
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(232, 160, 191, 0.2) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 30%, rgba(108, 92, 231, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(160, 112, 192, 0.12) 0%, transparent 50%),
-    linear-gradient(135deg, #f0eeff 0%, #e8e0ff 40%, #f5f0ff 70%, #fafaff 100%);
+    radial-gradient(ellipse at 20% 50%, var(--_auth-accent-1) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 30%, var(--_auth-accent-2) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, var(--_auth-accent-3) 0%, transparent 50%),
+    var(--auth-gradient-base-light, linear-gradient(135deg, #f0eeff 0%, #e8e0ff 40%, #f5f0ff 70%, #fafaff 100%));
 }
 
 .auth-split__brand {
@@ -51,8 +66,8 @@
 }
 
 .auth-split__wordmark {
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 400;
+  font-family: var(--auth-wordmark-font, "Space Grotesk", sans-serif);
+  font-weight: var(--auth-wordmark-weight, 400);
   font-size: 32px;
   letter-spacing: 2.5px;
   color: #FFFFFF;
@@ -63,7 +78,7 @@
 }
 
 .auth-split__tagline {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--auth-tagline-font, "Space Grotesk", sans-serif);
   font-weight: 300;
   font-size: 12px;
   letter-spacing: 2px;
