@@ -23,7 +23,7 @@ const borderColors: Record<string, string> = {
 </script>
 
 <template>
-  <UPageCard>
+  <UPageCard :ui="{ root: 'border-0 shadow-none' }">
     <template #header>
       <div class="flex items-center justify-between w-full">
         <div class="flex items-center gap-2">
@@ -33,7 +33,7 @@ const borderColors: Record<string, string> = {
             v-if="items.length > 0"
             color="primary"
             variant="subtle"
-            size="xs"
+            size="md"
           >
             {{ items.length }}
           </UBadge>
@@ -58,7 +58,7 @@ const borderColors: Record<string, string> = {
       <div
         v-for="item in items"
         :key="item.id"
-        class="p-3 rounded-lg border border-default border-l-3"
+        class="p-3 rounded-lg bg-muted border-l-3"
         :class="borderColors[item.type] ?? 'border-l-info'"
       >
         <div class="flex items-start justify-between gap-2">

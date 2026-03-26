@@ -38,7 +38,7 @@ onBeforeUnmount(() => observer?.disconnect())
 </script>
 
 <template>
-  <UPageCard>
+  <UPageCard :ui="{ root: 'border-0 shadow-none' }">
     <template #header>
       <div class="flex items-center justify-between w-full">
         <span class="text-sm font-heading font-semibold text-highlighted">{{ t('motor-admin.dashboard.activity.title') }}</span>
