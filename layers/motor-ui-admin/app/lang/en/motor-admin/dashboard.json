@@ -1,3 +1,81 @@
 {
-  "welcome": "Welcome, {name}"
+  "welcome": "Welcome, {name}",
+  "announcement_created": "Announcement created",
+  "announcement_dismissed": "Announcement dismissed",
+  "stats": {
+    "pages": "Pages",
+    "pages_total": "Total",
+    "drafts": "Drafts",
+    "drafts_subtitle": "In progress",
+    "scheduled": "Scheduled",
+    "scheduled_subtitle": "Publishing",
+    "media": "Media",
+    "media_subtitle": "Files"
+  },
+  "activity": {
+    "title": "Recent Activity",
+    "empty": "No activity yet",
+    "unknown": "Unknown",
+    "system": "System",
+    "verbs": {
+      "created": "created",
+      "updated": "updated",
+      "deleted": "deleted",
+      "published": "published",
+      "unpublished": "unpublished"
+    },
+    "types": {
+      "page": "Page",
+      "navigation": "Navigation",
+      "media": "Media",
+      "content_type": "Content type",
+      "assistant": "Assistant",
+      "scoring": "Scoring",
+      "scheduled": "Scheduled",
+      "approval": "Approval",
+      "seo": "SEO",
+      "search": "Search"
+    }
+  },
+  "announcements": {
+    "title": "Announcements",
+    "empty": "No announcements",
+    "modal_title": "New Announcement",
+    "field_title": "Title",
+    "field_title_placeholder": "Enter announcement...",
+    "field_body": "Description",
+    "field_body_placeholder": "Optional details...",
+    "field_type": "Type",
+    "field_audience": "Audience",
+    "field_users": "Select users",
+    "field_users_placeholder": "Search users...",
+    "field_link": "Link (optional)",
+    "field_link_type_placeholder": "Select type...",
+    "field_link_item": "Item",
+    "field_link_item_placeholder": "Search item...",
+    "field_starts_at": "Visible from",
+    "field_expires_at": "Visible until",
+    "cancel": "Cancel",
+    "create": "Create",
+    "type_info": "Info",
+    "type_warning": "Warning",
+    "type_error": "Error",
+    "audience_self": "Only me",
+    "audience_users": "Specific users",
+    "audience_client": "Everyone in client",
+    "linkable_page": "Page",
+    "linkable_navigation": "Navigation item",
+    "linkable_file": "File",
+    "linkable_content_type": "Content type"
+  },
+  "quick_actions": {
+    "title": "Quick Actions",
+    "new_page": "New Page",
+    "upload_media": "Upload Media",
+    "navigation": "Navigation"
+  },
+  "publishing_queue": {
+    "title": "Scheduled Publications",
+    "empty": "No scheduled publications"
+  }
 }
