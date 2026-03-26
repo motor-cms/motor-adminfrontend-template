@@ -1,5 +1,6 @@
-import { resolve } from 'node:path'
-import { existsSync } from 'node:fs'
+import { resolve, dirname } from 'node:path'
+import { existsSync, realpathSync } from 'node:fs'
+import { createRequire } from 'node:module'
 
 const rootDir = resolve(__dirname, '..')
 const appDir = resolve(rootDir, 'app')
@@ -26,8 +27,14 @@ export function resolveAcrossLayers(relativePath: string): string | null {
   return null
 }
 
+function resolveVuePath(): string {
+  const req = createRequire(resolve(rootDir, 'package.json'))
+  return dirname(req.resolve('vue/package.json'))
+}
+
 export function createLayerAliases() {
   return [
+    { find: 'vue', replacement: resolveVuePath() },
     {
       find: /^[~@]\/(.*)/,
       replacement: '$1',
