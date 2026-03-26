@@ -149,7 +149,7 @@ export function useDashboardData() {
     await refresh()
   }
 
-  refresh()
+  refresh().catch(() => {})
 
   return {
     stats,
