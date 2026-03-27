@@ -53,7 +53,7 @@ async function onDismiss(id: number) {
     <div class="flex items-start justify-between mb-6">
       <div>
         <h1 class="text-xl font-heading font-semibold text-highlighted">
-          {{ t('motor-admin.dashboard.welcome', { name: user?.name ?? '' }) }}
+          {{ t('motor-admin.dashboard.welcome', { name: user?.data?.name ?? '' }) }}
         </h1>
         <p class="text-sm text-dimmed mt-1">
           {{ currentDate }}
