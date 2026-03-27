@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import type { User } from '@motor-cms/ui-core/app/types/auth'
+
 definePageMeta({
   permission: 'dashboard.read',
 })
 
 const { t, locale } = useI18n()
-const { user } = useSanctumAuth()
+const { user } = useSanctumAuth<User>()
 const { can } = usePermissions()
 
 const canCreateAnnouncements = computed(() => can('dashboard-announcements.write'))
@@ -51,7 +53,7 @@ async function onDismiss(id: number) {
     <div class="flex items-start justify-between mb-6">
       <div>
         <h1 class="text-xl font-heading font-semibold text-highlighted">
-          {{ t('motor-admin.dashboard.welcome', { name: user?.data?.name ?? '' }) }}
+          {{ t('motor-admin.dashboard.welcome', { name: user?.name ?? '' }) }}
         </h1>
         <p class="text-sm text-dimmed mt-1">
           {{ currentDate }}
