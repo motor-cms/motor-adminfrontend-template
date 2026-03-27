@@ -22,9 +22,9 @@ const form = reactive({
   audience: 'self',
   target_user_ids: [] as number[],
   linkable_type: '',
-  linkable_id: null as number | null,
-  starts_at: null as string | null,
-  expires_at: null as string | null,
+  linkable_id: undefined as number | undefined,
+  starts_at: undefined as string | undefined,
+  expires_at: undefined as string | undefined,
 })
 
 const typeOptions = computed(() => [
@@ -119,7 +119,7 @@ async function fetchLinkableOptions(query: string) {
 }
 
 watch(() => form.linkable_type, (type) => {
-  form.linkable_id = null
+  form.linkable_id = undefined
   linkableOptions.value = []
   linkableSearchTerm.value = ''
   if (!type) return
