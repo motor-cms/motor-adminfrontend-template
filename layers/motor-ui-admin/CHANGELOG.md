@@ -1,5 +1,12 @@
 # @motor-cms/ui-admin
 
+## 1.4.0
+
+### Patch Changes
+
+- Updated dependencies [19e52cb]
+  - @motor-cms/ui-core@1.4.0
+
 ## 1.3.0
 
 ### Minor Changes
