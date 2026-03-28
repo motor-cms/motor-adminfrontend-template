@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 1.4.0
+
+### Minor Changes
+
+- 19e52cb: Add app.vue with UApp wrapper and TooltipProvider to ui-core, fix typecheck errors in dashboard announcement modal and index page
+
 ## 1.3.0
 
 ### Minor Changes
