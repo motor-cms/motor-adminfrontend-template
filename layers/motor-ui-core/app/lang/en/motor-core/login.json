@@ -6,5 +6,6 @@
   "email_required": "Email is required",
   "email_invalid": "Invalid email address",
   "password_required": "Password is required",
-  "login_failed": "Login failed. Please check your credentials."
+  "login_failed": "Login failed. Please check your credentials.",
+  "login_success": "Successfully signed in"
 }
