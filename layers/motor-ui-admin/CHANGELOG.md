@@ -1,5 +1,18 @@
 # @motor-cms/ui-admin
 
+## 1.5.0
+
+### Minor Changes
+
+- - fix: git pathspec in release workflow not matching layer files
+  - fix: remove wrapper divs breaking sticky table headers
+  - feat: show navigation tree name in global search results
+
+### Patch Changes
+
+- Updated dependencies
+  - @motor-cms/ui-core@1.5.0
+
 ## 1.4.0
 
 ### Patch Changes
