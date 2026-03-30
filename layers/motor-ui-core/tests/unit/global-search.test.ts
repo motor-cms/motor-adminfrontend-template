@@ -7,6 +7,7 @@ import {
   resolveIndexLabel,
   resolveModuleLabel,
   resolveActions,
+  resolveSuffix,
   searchPalette,
   fetchSearchGrid,
   useModuleFacets
@@ -217,6 +218,23 @@ describe('useGlobalSearch', () => {
     })
   })
 
+  describe('resolveSuffix', () => {
+    it('returns navigation_tree_name from meta', () => {
+      const result = { module: 'motor-builder', index: 'navigation_items', id: 1, title: 'Strom', score: 1, meta: { navigation_tree_id: 5, navigation_tree_name: 'Hauptnavigation links' } }
+      expect(resolveSuffix(result)).toBe('Hauptnavigation links')
+    })
+
+    it('returns undefined when no navigation_tree_name in meta', () => {
+      const result = { module: 'motor-admin', index: 'users', id: 1, title: 'User', score: 1, meta: {} }
+      expect(resolveSuffix(result)).toBeUndefined()
+    })
+
+    it('returns undefined when meta is empty', () => {
+      const result = { module: 'motor-builder', index: 'navigation_items', id: 1, title: 'Item', score: 1, meta: { navigation_tree_id: 5 } }
+      expect(resolveSuffix(result)).toBeUndefined()
+    })
+  })
+
   describe('searchPalette', () => {
     it('calls API and returns grouped results', async () => {
       const t = vi.fn((key: string) => key)
@@ -338,6 +356,21 @@ describe('useGlobalSearch', () => {
       const result = await searchPalette('page', t)
       expect(result.groups[0].items[0].module).toBe('motor-builder')
       expect(result.groups[0].items[0].index).toBe('builder_pages')
+    })
+
+    it('includes suffix from navigation_tree_name for navigation items', async () => {
+      const t = vi.fn((key: string) => key)
+      mockClient.mockResolvedValue({
+        data: [
+          { module: 'motor-builder', index: 'navigation_items', id: 1, title: 'Strom', score: 1, meta: { navigation_tree_id: 5, navigation_tree_name: 'Navbar' } },
+          { module: 'motor-builder', index: 'navigation_items', id: 2, title: 'Strom', score: 0.9, meta: { navigation_tree_id: 8, navigation_tree_name: 'Hauptnavigation links' } }
+        ],
+        meta: { total: 2, modules: {} }
+      })
+
+      const result = await searchPalette('strom', t)
+      expect(result.groups[0].items[0].suffix).toBe('Navbar')
+      expect(result.groups[0].items[1].suffix).toBe('Hauptnavigation links')
     })
   })
 

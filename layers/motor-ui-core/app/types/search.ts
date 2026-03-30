@@ -53,6 +53,7 @@ export interface SearchGridRow {
   index: string
   raw_index: string
   index_label: string
+  suffix?: string
   title: string | null
   excerpt: string | null
   to: string
