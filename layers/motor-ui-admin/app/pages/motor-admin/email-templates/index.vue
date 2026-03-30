@@ -37,31 +37,29 @@ const fetchEmailTemplates = useGridFetch<EmailTemplate>('/api/v2/email-templates
 </script>
 
 <template>
-  <div>
-    <GridPage
-      :title="t('motor-admin.email_templates.title')"
-      :subtitle="t('motor-admin.email_templates.subtitle')"
-      add-route="/motor-admin/email-templates/create"
-      :add-label="t('motor-admin.email_templates.add')"
+  <GridPage
+    :title="t('motor-admin.email_templates.title')"
+    :subtitle="t('motor-admin.email_templates.subtitle')"
+    add-route="/motor-admin/email-templates/create"
+    :add-label="t('motor-admin.email_templates.add')"
+    write-permission="email-templates.write"
+  >
+    <GridBase
+      id="email-templates-grid"
+      :fetch="fetchEmailTemplates"
+      :columns="columns"
+      :filters="filters"
+      :row-actions="rowActions"
+      base-path="/motor-admin/email-templates"
+      :row-click-to="(row: any) => `/motor-admin/email-templates/${row.id}/edit`"
       write-permission="email-templates.write"
-    >
-      <GridBase
-        id="email-templates-grid"
-        :fetch="fetchEmailTemplates"
-        :columns="columns"
-        :filters="filters"
-        :row-actions="rowActions"
-        base-path="/motor-admin/email-templates"
-        :row-click-to="(row: any) => `/motor-admin/email-templates/${row.id}/edit`"
-        write-permission="email-templates.write"
-        delete-permission="email-templates.delete"
-      />
-    </GridPage>
-
-    <EntityUsageModal
-      v-model:open="usageModalOpen"
-      :endpoint="usageEndpoint"
-      :title="t('motor-admin.email_templates.usage_title')"
+      delete-permission="email-templates.delete"
     />
-  </div>
+  </GridPage>
+
+  <EntityUsageModal
+    v-model:open="usageModalOpen"
+    :endpoint="usageEndpoint"
+    :title="t('motor-admin.email_templates.usage_title')"
+  />
 </template>
