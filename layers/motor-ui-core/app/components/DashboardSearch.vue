@@ -63,6 +63,7 @@ watchDebounced(
           return {
             id: item.id,
             label: item.label,
+            suffix: item.suffix,
             icon: item.icon,
             avatar: item.avatar,
             description: item.excerpt,
