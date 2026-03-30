@@ -79,8 +79,7 @@ const fetchFiles = useGridFetch<File>('/api/v2/files')
 </script>
 
 <template>
-  <div>
-    <GridPage
+  <GridPage
       :title="t('motor-media.files.title')"
       :subtitle="t('motor-media.files.subtitle')"
       add-route="/motor-media/files/create"
@@ -153,12 +152,11 @@ const fetchFiles = useGridFetch<File>('/api/v2/files')
         delete-permission="files.delete"
         :row-click-to="(row: any) => `/motor-media/files/${row.id}/edit`"
       />
-    </GridPage>
+  </GridPage>
 
-    <EntityUsageModal
-      v-model:open="usageModalOpen"
-      :endpoint="usageEndpoint"
-      :title="t('motor-media.files.usage_title')"
-    />
-  </div>
+  <EntityUsageModal
+    v-model:open="usageModalOpen"
+    :endpoint="usageEndpoint"
+    :title="t('motor-media.files.usage_title')"
+  />
 </template>
