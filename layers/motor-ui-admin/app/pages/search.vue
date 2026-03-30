@@ -266,6 +266,7 @@ onMounted(() => {
             :thumbnail-url="row.thumbnail_url"
             :module="row.module"
             :index-label="row.index_label"
+            :suffix="row.suffix"
             :to="row.to"
             :actions="row.actions"
             :file-id="row.raw_index === 'files' ? row.id : undefined"

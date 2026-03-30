@@ -158,6 +158,12 @@ export function resolveIcon(module: string, index: string, meta?: Record<string,
   return ROUTE_MAP[routeKey(module, index)]?.icon ?? 'i-lucide-file'
 }
 
+export function resolveSuffix(result: GlobalSearchResult): string | undefined {
+  const treeName = result.meta?.navigation_tree_name as string | undefined
+  if (treeName) return treeName
+  return undefined
+}
+
 export function resolveIndexLabel(module: string, index: string, t: TFunc): string {
   const key = `${module}.${index}.title`
   const translated = t(key)
@@ -220,6 +226,7 @@ export async function searchPalette(query: string, t: TFunc, limit = 10): Promis
       id: `${result.module}-${result.index}-${result.id}`,
       label: result.title ?? '(Untitled)',
       icon: resolveIcon(result.module, result.index, result.meta),
+      suffix: resolveSuffix(result),
       excerpt: result.excerpt ?? undefined,
       to: resolveRoute(result),
       module: result.module,
@@ -306,6 +313,7 @@ export function fetchSearchGrid(
       index: result.index,
       raw_index: result.index,
       index_label: resolveIndexLabel(result.module, result.index, t),
+      suffix: resolveSuffix(result),
       title: result.title,
       excerpt: result.excerpt,
       to: resolveRoute(result),

@@ -8,6 +8,7 @@ const props = defineProps<{
   thumbnailUrl?: string
   module: string
   indexLabel: string
+  suffix?: string
   to: string
   actions: SearchAction[]
   compact?: boolean
@@ -160,6 +161,13 @@ async function forceDownload() {
           :label="indexLabel"
           size="sm"
           variant="subtle"
+          color="neutral"
+        />
+        <UBadge
+          v-if="suffix"
+          :label="suffix"
+          size="sm"
+          variant="outline"
           color="neutral"
         />
       </div>
