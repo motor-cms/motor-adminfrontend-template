@@ -67,7 +67,7 @@ jobs:
           fi
 
           CODE_CHANGED=false
-          if git diff --name-only "$DIFF_REF"..HEAD -- 'layers/*/app/' 'layers/*/server/' | grep -q .; then
+          if git diff --name-only "$DIFF_REF"..HEAD -- 'layers/' | grep -q .; then
             CODE_CHANGED=true
           fi
           echo "changed=$CODE_CHANGED" >> "$GITHUB_OUTPUT"
