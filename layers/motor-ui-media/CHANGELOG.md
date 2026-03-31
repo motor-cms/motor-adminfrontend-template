@@ -1,5 +1,13 @@
 # @motor-cms/ui-media
 
+## 1.5.1
+
+### Patch Changes
+
+- - fix: move dashboard quick actions below header to avoid bell overlap
+- Updated dependencies
+  - @motor-cms/ui-core@1.5.1
+
 ## 1.5.0
 
 ### Minor Changes
