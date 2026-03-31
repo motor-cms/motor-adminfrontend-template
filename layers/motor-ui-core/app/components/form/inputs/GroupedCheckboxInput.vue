@@ -7,6 +7,7 @@ const emit = defineEmits<{ 'update:modelValue': [value: FormInputValue] }>()
 const { t, te } = useI18n()
 
 const separator = (props.field.inputProps?.separator as string) ?? '.'
+const presetsEndpoint = props.field.inputProps?.presetsEndpoint as string | undefined
 
 const searchQuery = ref('')
 
@@ -14,6 +15,41 @@ const selected = computed({
   get: () => (props.modelValue as (string | number)[]) ?? [],
   set: val => emit('update:modelValue', val)
 })
+
+interface PresetGroup {
+  id: number
+  name: string
+  permissionIds: (string | number)[]
+}
+
+const presetGroups = ref<PresetGroup[]>([])
+
+if (presetsEndpoint) {
+  const client = useSanctumClient()
+  const { data } = useLazyAsyncData(`grouped-checkbox-presets-${presetsEndpoint}`, () =>
+    client<{ data: Array<{ id: number, name: string, permissions?: Array<{ id: number, name: string }> }> }>(presetsEndpoint)
+  )
+
+  watchEffect(() => {
+    if (data.value?.data) {
+      presetGroups.value = data.value.data
+        .filter(g => g.permissions && g.permissions.length > 0)
+        .map(g => ({
+          id: g.id,
+          name: g.name,
+          permissionIds: g.permissions!.map(p => p.id),
+        }))
+    }
+  })
+}
+
+function applyPreset(preset: PresetGroup) {
+  const current = new Set(selected.value)
+  for (const id of preset.permissionIds) {
+    current.add(id)
+  }
+  selected.value = Array.from(current)
+}
 
 interface OptionGroup {
   key: string
@@ -119,6 +155,20 @@ const selectedCount = computed(() => selected.value.length)
         size="sm"
         class="w-48"
       />
+      <UDropdownMenu
+        v-if="presetGroups.length > 0"
+        :items="presetGroups.map(g => ({ label: g.name, onSelect: () => applyPreset(g) }))"
+        :ui="{ content: 'max-h-64 overflow-y-auto' }"
+      >
+        <UButton
+          size="sm"
+          variant="soft"
+          color="primary"
+          icon="i-lucide-layers"
+          :label="t('motor-core.global.apply_preset')"
+          trailing-icon="i-lucide-chevron-down"
+        />
+      </UDropdownMenu>
       <span class="text-xs text-[var(--ui-text-muted)] tabular-nums whitespace-nowrap">
         {{ t('motor-core.global.selected_count', { selected: selectedCount, total: totalCount }) }}
       </span>
