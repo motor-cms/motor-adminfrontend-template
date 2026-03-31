@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatTimeAgo } from '@vueuse/core'
+import { formatTimeAgoIntl } from '@vueuse/core'
 import type { AnnouncementItem } from '../../composables/useDashboardData'
 
 const props = defineProps<{
@@ -13,7 +13,7 @@ const emit = defineEmits<{
   create: []
 }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const borderColors: Record<string, string> = {
   info: 'border-l-info',
@@ -80,7 +80,7 @@ const borderColors: Record<string, string> = {
           {{ item.linkable_name }}
         </NuxtLink>
         <div class="text-xs text-dimmed mt-2">
-          {{ item.created_by_name }} &middot; {{ formatTimeAgo(new Date(item.starts_at ?? item.created_at)) }}
+          {{ item.created_by_name }} &middot; {{ formatTimeAgoIntl(new Date(item.starts_at ?? item.created_at), { locale }) }}
         </div>
       </div>
     </div>
