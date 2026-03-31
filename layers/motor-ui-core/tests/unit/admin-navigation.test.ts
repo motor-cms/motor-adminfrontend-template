@@ -16,6 +16,7 @@ vi.stubGlobal('useI18n', () => ({
   }
 }))
 vi.stubGlobal('useRoute', () => ({ path: '/motor-admin/users' }))
+vi.stubGlobal('usePermissions', () => ({ can: () => true, canAny: () => true, hasRole: () => false }))
 vi.stubGlobal('useAsyncData', (...args: unknown[]) => {
   const result = mockAsyncData(...args)
   return result

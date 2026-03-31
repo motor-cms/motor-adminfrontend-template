@@ -19,6 +19,8 @@ const props = withDefaults(defineProps<{
   dirtyGuard?: boolean
   /** Delete handler (only shown in edit mode) */
   deleteRecord?: () => Promise<void>
+  /** Permission required to delete (e.g. 'users.delete'). If set, hides button when user lacks permission. */
+  deletePermission?: string
   /** Whether a delete operation is in progress */
   deleting?: boolean
   /** Show "Save and Continue Editing" button (edit mode only) */
@@ -32,6 +34,7 @@ const props = withDefaults(defineProps<{
   cancelRoute: undefined,
   dirtyGuard: true,
   deleteRecord: undefined,
+  deletePermission: undefined,
   deleting: false
 })
 
@@ -50,6 +53,11 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const router = useRouter()
 const { warning } = useNotify()
+const { can } = usePermissions()
+
+const canDelete = computed(() =>
+  !!props.deleteRecord && (!props.deletePermission || can(props.deletePermission))
+)
 
 // Dirty guard: track unsaved changes and confirm navigation
 const { isDirty, showLeaveModal, captureSnapshot, confirmLeave, cancelLeave, markSubmitted } = useFormDirtyGuard(state)
@@ -375,7 +383,7 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
       <slot name="actions">
         <div class="flex items-center gap-2">
           <UButton
-            v-if="deleteRecord"
+            v-if="canDelete"
             color="error"
             variant="outline"
             icon="i-lucide-trash-2"
@@ -463,7 +471,7 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
 
   <!-- Delete confirmation modal -->
   <UModal
-    v-if="deleteRecord"
+    v-if="canDelete"
     v-model:open="showDeleteModal"
   >
     <template #header>

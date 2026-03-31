@@ -81,6 +81,7 @@ export function zodSchemaForField(field: FormFieldMeta, t: (key: string, params?
 
     case 'multi-select':
     case 'checkbox-group':
+    case 'grouped-checkbox':
       return z.array(z.number().or(z.string())).optional()
 
     case 'tags':
@@ -108,7 +109,7 @@ export function initFormState(fields: FormFieldConfig[]): Record<string, unknown
   const state: Record<string, unknown> = {}
   for (const field of fields) {
     if (field.input === 'toggle') state[field.key] = false
-    else if (field.input === 'multi-select' || field.input === 'checkbox-group' || field.input === 'tags') state[field.key] = []
+    else if (field.input === 'multi-select' || field.input === 'checkbox-group' || field.input === 'grouped-checkbox' || field.input === 'tags') state[field.key] = []
     else if (field.input === 'select' || field.input === 'search-select' || field.input === 'number') state[field.key] = undefined
     else state[field.key] = ''
   }
