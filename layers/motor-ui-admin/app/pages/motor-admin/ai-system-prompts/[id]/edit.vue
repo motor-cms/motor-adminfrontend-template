@@ -7,7 +7,7 @@ definePageMeta({ layout: 'default', permission: 'ai-system-prompts.write' })
 
 const route = useRoute()
 const { t } = useI18n()
-const { fields, schema, groups, state, loading, fetching, fetchError, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/ai-system-prompts',
   routePrefix: '/motor-admin/ai-system-prompts',
   translationPrefix: 'motor-admin.ai_system_prompts',
@@ -28,6 +28,7 @@ const { fields, schema, groups, state, loading, fetching, fetchError, formRef, s
   >
     <FormBase
       ref="formRef"
+      :disabled="!canWrite"
       v-model:state="state"
       :fields="fields"
       :schema="schema"

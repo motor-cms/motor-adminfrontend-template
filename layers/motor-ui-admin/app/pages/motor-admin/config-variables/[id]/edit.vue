@@ -6,7 +6,7 @@ definePageMeta({ layout: 'default', permission: 'config-variables.write' })
 
 const route = useRoute()
 const { t } = useI18n()
-const { fields, schema, groups, state, loading, fetching, fetchError, formRef, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/config-variables',
   routePrefix: '/motor-admin/config-variables',
   translationPrefix: 'motor-admin.config_variables',
@@ -26,6 +26,7 @@ const { fields, schema, groups, state, loading, fetching, fetchError, formRef, o
   >
     <FormBase
       ref="formRef"
+      :disabled="!canWrite"
       v-model:state="state"
       :fields="fields"
       :schema="schema"
