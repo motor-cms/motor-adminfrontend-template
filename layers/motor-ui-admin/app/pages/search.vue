@@ -4,6 +4,11 @@ import type { SearchGridRow } from '@motor-cms/ui-core/app/types/search'
 import type { PaginatedResponse, PaginationMeta } from '@motor-cms/ui-core/app/types/grid'
 import { watchDebounced } from '@vueuse/core'
 
+definePageMeta({
+  layout: 'default',
+  permission: 'search.read'
+})
+
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()

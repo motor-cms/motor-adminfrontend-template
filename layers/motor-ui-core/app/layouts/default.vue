@@ -5,6 +5,7 @@ useTheme()
 const open = ref(false)
 const collapsed = ref(false)
 const { navigation } = useAdminNavigation()
+const { can } = usePermissions()
 
 // Resolve ⌘/Ctrl during SSR via User-Agent to avoid hydration glitch
 // (Nuxt UI's useKbd defers this to onMounted, rendering an empty <kbd> on the server)
@@ -69,6 +70,7 @@ const searchKbds = isMacOS ? ['\u2318', 'K'] : ['Ctrl', 'K']
 
       <template #default>
         <UDashboardSearchButton
+          v-if="can('search.read')"
           :collapsed="collapsed"
           :kbds="searchKbds"
         />
@@ -103,7 +105,7 @@ const searchKbds = isMacOS ? ['\u2318', 'K'] : ['Ctrl', 'K']
     <NotificationsSlideover />
 
     <!-- Global Search (Cmd+K) -->
-    <DashboardSearch />
+    <DashboardSearch v-if="can('search.read')" />
 
     <!-- Keyboard Shortcut Overlay (hold ⌘/Ctrl) -->
     <ShortcutOverlay />
