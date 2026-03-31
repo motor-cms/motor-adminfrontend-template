@@ -80,7 +80,7 @@ const borderColors: Record<string, string> = {
           {{ item.linkable_name }}
         </NuxtLink>
         <div class="text-xs text-dimmed mt-2">
-          {{ item.created_by_name }} &middot; {{ formatTimeAgo(new Date(item.created_at)) }}
+          {{ item.created_by_name }} &middot; {{ formatTimeAgo(new Date(item.starts_at ?? item.created_at)) }}
         </div>
       </div>
     </div>

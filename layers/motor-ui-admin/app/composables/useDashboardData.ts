@@ -37,6 +37,7 @@ export interface AnnouncementItem {
   linkable_name: string | null
   linkable_url: string | null
   created_by_name: string | null
+  starts_at: string | null
   created_at: string
 }
 
