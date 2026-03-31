@@ -50,7 +50,7 @@ async function onDismiss(id: number) {
 
 <template>
   <div class="p-6">
-    <div class="flex items-start justify-between mb-6">
+    <div class="flex flex-col mb-6">
       <div>
         <h1 class="text-xl font-heading font-semibold text-highlighted">
           {{ t('motor-admin.dashboard.welcome', { name: user?.data?.name ?? '' }) }}
@@ -59,7 +59,7 @@ async function onDismiss(id: number) {
           {{ currentDate }}
         </p>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2 mt-3 self-end">
         <UButton
           icon="i-lucide-plus"
           color="primary"
