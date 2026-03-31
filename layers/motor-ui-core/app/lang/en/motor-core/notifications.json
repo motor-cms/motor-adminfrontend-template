@@ -1,0 +1,15 @@
+{
+  "title": "Notifications",
+  "description": "Your recent notifications",
+  "empty": "No notifications yet",
+  "show_error_details": "Show error details",
+  "hide_error_details": "Hide error details",
+  "status": "Status:",
+  "url": "URL:",
+  "message": "Message:",
+  "stack": "Stack:",
+  "response": "Response:",
+  "copy_error": "Copy error",
+  "clear_all": "Clear all",
+  "close": "Close"
+}
