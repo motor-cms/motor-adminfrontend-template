@@ -8,7 +8,7 @@ definePageMeta({ layout: 'default', permission: 'domains.write' })
 const route = useRoute()
 const { t } = useI18n()
 
-const { fields, schema, groups, state, loading, fetching, fetchError, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/domains',
   routePrefix: '/motor-admin/domains',
   translationPrefix: 'motor-admin.domains',
@@ -34,6 +34,7 @@ const mergedSelectOptions = computed(() => ({
   >
     <FormBase
       ref="formRef"
+      :disabled="!canWrite"
       v-model:state="state"
       :fields="fields"
       :schema="schema"
