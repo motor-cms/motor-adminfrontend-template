@@ -6,6 +6,9 @@ export const roleSelectOptionConfigs: Record<string, SelectOptionConfig> = {
 }
 
 export const roleFormConfig: FormFieldsFromMetaOptions = {
+  overrides: {
+    permissions: { input: 'grouped-checkbox' }
+  },
   groups: {
     basic: ['name', 'guard_name'],
     access: ['permissions']
