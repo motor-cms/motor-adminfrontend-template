@@ -72,6 +72,7 @@
   "no_permission_edit": "Sie haben keine Berechtigung, diesen Eintrag zu bearbeiten. Bitte wenden Sie sich an Ihren Administrator.",
   "select_all": "Alle",
   "select_none": "Keine",
+  "apply_preset": "Gruppe anwenden",
   "filter_placeholder": "Filtern...",
   "selected_count": "{selected} von {total} ausgewählt",
   "read": "Lesen",
