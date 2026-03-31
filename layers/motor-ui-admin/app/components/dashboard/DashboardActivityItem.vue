@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { formatTimeAgo } from '@vueuse/core'
+import { formatTimeAgoIntl } from '@vueuse/core'
 import type { ActivityItem } from '../../composables/useDashboardData'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const props = defineProps<{
   item: ActivityItem
@@ -82,7 +82,7 @@ const timestamp = computed(() => new Date(props.item.created_at))
         <strong>{{ item.subject_name ?? t('motor-admin.dashboard.activity.unknown') }}</strong> {{ verb }}
       </div>
       <div class="text-xs text-dimmed mt-0.5">
-        {{ item.causer_name ?? t('motor-admin.dashboard.activity.system') }} &middot; {{ formatTimeAgo(timestamp) }}
+        {{ item.causer_name ?? t('motor-admin.dashboard.activity.system') }} &middot; {{ formatTimeAgoIntl(timestamp, { locale }) }}
       </div>
     </div>
     <UBadge

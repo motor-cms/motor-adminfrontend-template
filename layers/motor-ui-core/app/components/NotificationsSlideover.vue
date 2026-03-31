@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { formatTimeAgo } from '@vueuse/core'
+import { formatTimeAgoIntl } from '@vueuse/core'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const notificationsStore = useNotificationsStore()
 const expandedErrorId = ref<string | null>(null)
 
@@ -86,7 +86,7 @@ const colorClasses: Record<string, string> = {
                   {{ notification.title }}
                 </p>
                 <span class="text-xs text-muted whitespace-nowrap">
-                  {{ formatTimeAgo(notification.timestamp) }}
+                  {{ formatTimeAgoIntl(new Date(notification.timestamp), { locale }) }}
                 </span>
               </div>
 
