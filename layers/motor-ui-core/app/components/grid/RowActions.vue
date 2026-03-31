@@ -123,7 +123,10 @@ function onCancel(): void {
 </script>
 
 <template>
-  <UDropdownMenu :items="menuItems">
+  <UDropdownMenu
+    v-if="visibleActions.length > 0"
+    :items="menuItems"
+  >
     <UButton
       color="neutral"
       variant="ghost"

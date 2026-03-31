@@ -142,7 +142,7 @@ export async function useEntityForm(options: EntityFormOptions) {
   if (selectOptionConfigs) {
     // Build a set of multi-value field keys so we can fetch all options for them
     const multiValueFields = new Set(
-      fields.filter(f => f.input === 'multi-select' || f.input === 'checkbox-group').map(f => f.key)
+      fields.filter(f => f.input === 'multi-select' || f.input === 'checkbox-group' || f.input === 'grouped-checkbox').map(f => f.key)
     )
 
     for (const [fieldKey, config] of Object.entries(selectOptionConfigs)) {
@@ -200,6 +200,7 @@ export async function useEntityForm(options: EntityFormOptions) {
   // ============================================
 
   const sanctumClient = useSanctumClient()
+  const { can } = usePermissions()
 
   // Register onMounted before await to preserve component instance context
   if (mode === 'edit') {
@@ -220,7 +221,7 @@ export async function useEntityForm(options: EntityFormOptions) {
       for (const field of fields) {
         const value = record[field.key]
         if (value !== undefined && value !== null) {
-          if ((field.input === 'multi-select' || field.input === 'checkbox-group') && Array.isArray(value)) {
+          if ((field.input === 'multi-select' || field.input === 'checkbox-group' || field.input === 'grouped-checkbox') && Array.isArray(value)) {
             state[field.key] = value.map((item: unknown) =>
               typeof item === 'object' && item !== null ? (item as Record<string, unknown>).id : item
             )
@@ -352,6 +353,11 @@ export async function useEntityForm(options: EntityFormOptions) {
   // Delete (edit mode only)
   // ============================================
 
+  // Derive delete permission from apiEndpoint: '/api/v2/users' → 'users.delete'
+  const resourceSegment = apiEndpoint.replace(/^\/api\/v\d+\//, '').split('/').pop() ?? ''
+  const deletePermission = resourceSegment ? `${resourceSegment}.delete` : undefined
+
+  const canDelete = !isCreate && !!deletePermission && can(deletePermission)
   const deleting = ref(false)
 
   async function deleteRecord() {
@@ -395,6 +401,6 @@ export async function useEntityForm(options: EntityFormOptions) {
     onSaveAndContinue,
     onSaveAndNew,
     deleting,
-    deleteRecord
+    deleteRecord: canDelete ? deleteRecord : undefined
   }
 }

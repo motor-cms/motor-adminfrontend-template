@@ -10,10 +10,12 @@ const mockSuccess = vi.fn()
 const mockNotifyError = vi.fn()
 const mockSanctumClient = vi.fn()
 
+const mockCan = vi.fn(() => true)
 vi.stubGlobal('useI18n', () => ({ t: mockT, te: mockTe }))
 vi.stubGlobal('useRouter', () => mockRouter)
 vi.stubGlobal('useSanctumClient', () => mockSanctumClient)
 vi.stubGlobal('useNotify', () => ({ success: mockSuccess, error: mockNotifyError }))
+vi.stubGlobal('usePermissions', () => ({ can: mockCan, canAny: vi.fn(() => true), hasRole: vi.fn(() => false) }))
 vi.stubGlobal('onMounted', vi.fn())
 vi.stubGlobal('useAsyncData', vi.fn(async (_key: string, fn: () => Promise<unknown>) => {
   try {
@@ -253,14 +255,14 @@ describe('useEntityForm', () => {
     })
 
     result.state.name = 'John'
-    await result.deleteRecord()
+    await result.deleteRecord!()
 
     expect(mockMutate).toHaveBeenCalledWith('/api/v2/users/10', { method: 'DELETE' })
     expect(mockSuccess).toHaveBeenCalled()
     expect(mockRouter.push).toHaveBeenCalledWith('/motor-admin/users')
   })
 
-  it('deleteRecord is no-op in create mode', async () => {
+  it('deleteRecord is undefined in create mode', async () => {
     const result = await useEntityForm({
       mode: 'create',
       apiEndpoint: '/api/v2/users',
@@ -269,8 +271,23 @@ describe('useEntityForm', () => {
       formMeta: { post: {} as never, patch: {} as never }
     })
 
-    await result.deleteRecord()
-    expect(mockMutate).not.toHaveBeenCalled()
+    expect(result.deleteRecord).toBeUndefined()
+  })
+
+  it('deleteRecord is undefined when user lacks delete permission', async () => {
+    mockCan.mockReturnValue(false)
+
+    const result = await useEntityForm({
+      mode: 'edit',
+      id: '10',
+      apiEndpoint: '/api/v2/users',
+      routePrefix: '/motor-admin/users',
+      translationPrefix: 'motor-admin.users',
+      formMeta: { post: {} as never, patch: {} as never }
+    })
+
+    expect(result.deleteRecord).toBeUndefined()
+    mockCan.mockReturnValue(true)
   })
 
   it('deleteRecord handles errors', async () => {
@@ -285,7 +302,7 @@ describe('useEntityForm', () => {
       formMeta: { post: {} as never, patch: {} as never }
     })
 
-    await result.deleteRecord()
+    await result.deleteRecord!()
 
     expect(mockNotifyError).toHaveBeenCalled()
     expect(result.deleting.value).toBe(false)
@@ -303,7 +320,7 @@ describe('useEntityForm', () => {
       formMeta: { post: {} as never, patch: {} as never }
     })
 
-    await result.deleteRecord()
+    await result.deleteRecord!()
     expect(mockNotifyError).toHaveBeenCalled()
     expect(result.deleting.value).toBe(false)
   })
@@ -437,7 +454,7 @@ describe('useEntityForm', () => {
     })
 
     result.state.name = ''
-    await result.deleteRecord()
+    await result.deleteRecord!()
 
     expect(mockSuccess).toHaveBeenCalledWith(
       expect.any(String),
@@ -675,7 +692,7 @@ describe('useEntityForm', () => {
     })
 
     result.state.name = ''
-    await result.deleteRecord()
+    await result.deleteRecord!()
 
     expect(mockNotifyError).toHaveBeenCalledWith(
       expect.any(String),

@@ -64,6 +64,7 @@ export function useAdminNavigation() {
   const client = useSanctumClient()
   const { t } = useI18n()
   const route = useRoute()
+  const { can } = usePermissions()
 
   const { data, status, error, refresh } = useAsyncData<ApiResponse>(
     'admin-navigations',
@@ -73,6 +74,33 @@ export function useAdminNavigation() {
       default: () => ({ data: {} })
     }
   )
+
+  function isItemVisible(item: ApiNavigationItem): boolean {
+    if (!item.permissions || item.permissions.length === 0) return true
+    return item.permissions.some(p => can(p))
+  }
+
+  function filterNavItems(items: Record<string, ApiNavigationItem>): Record<string, ApiNavigationItem> {
+    const filtered: Record<string, ApiNavigationItem> = {}
+
+    for (const [key, item] of Object.entries(items)) {
+      let filteredItem = item
+
+      if (filteredItem.items && Object.keys(filteredItem.items).length > 0) {
+        const filteredChildren = filterNavItems(filteredItem.items)
+        if (Object.keys(filteredChildren).length === 0) continue
+        // Parent group with surviving children — always show as container
+        filtered[key] = { ...filteredItem, items: filteredChildren }
+        continue
+      }
+
+      if (isItemVisible(filteredItem)) {
+        filtered[key] = filteredItem
+      }
+    }
+
+    return filtered
+  }
 
   function transformNavItem(item: ApiNavigationItem, isChild = false): NavigationMenuItem {
     // Try translation first - if it returns the key itself, use fallback
@@ -113,8 +141,7 @@ export function useAdminNavigation() {
   const navigation = computed<NavigationMenuItem[]>(() => {
     if (!data.value?.data || typeof data.value.data !== 'object') return []
 
-    // Convert object to sorted array by numeric keys
-    const navData = data.value.data
+    const navData = filterNavItems(data.value.data)
     const sortedKeys = Object.keys(navData).sort((a, b) => Number(a) - Number(b))
     return sortedKeys
       .map(key => navData[key])
