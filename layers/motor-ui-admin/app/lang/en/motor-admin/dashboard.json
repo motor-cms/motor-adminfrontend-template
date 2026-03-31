@@ -49,6 +49,8 @@
     "field_audience": "Audience",
     "field_users": "Select users",
     "field_users_placeholder": "Search users...",
+    "field_client": "Select client",
+    "field_client_placeholder": "Choose a client...",
     "field_link": "Link (optional)",
     "field_link_type_placeholder": "Select type...",
     "field_link_item": "Item",

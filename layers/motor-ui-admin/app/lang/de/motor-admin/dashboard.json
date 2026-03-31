@@ -49,6 +49,8 @@
     "field_audience": "Zielgruppe",
     "field_users": "Nutzer auswählen",
     "field_users_placeholder": "Nutzer suchen...",
+    "field_client": "Mandant auswählen",
+    "field_client_placeholder": "Mandant wählen...",
     "field_link": "Verknüpfung (optional)",
     "field_link_type_placeholder": "Typ wählen...",
     "field_link_item": "Element",
