@@ -290,6 +290,52 @@ describe('useEntityForm', () => {
     mockCan.mockReturnValue(true)
   })
 
+  it('canWrite is true when user has write permission', async () => {
+    const result = await useEntityForm({
+      mode: 'edit',
+      id: '10',
+      apiEndpoint: '/api/v2/users',
+      routePrefix: '/motor-admin/users',
+      translationPrefix: 'motor-admin.users',
+      formMeta: { post: {} as never, patch: {} as never }
+    })
+
+    expect(result.canWrite).toBe(true)
+  })
+
+  it('canWrite is false when user lacks write permission', async () => {
+    mockCan.mockReturnValue(false)
+
+    const result = await useEntityForm({
+      mode: 'edit',
+      id: '10',
+      apiEndpoint: '/api/v2/users',
+      routePrefix: '/motor-admin/users',
+      translationPrefix: 'motor-admin.users',
+      formMeta: { post: {} as never, patch: {} as never }
+    })
+
+    expect(result.canWrite).toBe(false)
+    mockCan.mockReturnValue(true)
+  })
+
+  it('canWrite respects explicit writePermission override', async () => {
+    mockCan.mockImplementation((p: string) => p === 'navigations.write')
+
+    const result = await useEntityForm({
+      mode: 'edit',
+      id: '10',
+      apiEndpoint: '/api/v2/navigation-trees/1/navigation-items',
+      routePrefix: '/motor-builder/navigation-trees/1',
+      translationPrefix: 'motor-builder.navigation_items',
+      formMeta: { post: {} as never, patch: {} as never },
+      writePermission: 'navigations.write'
+    })
+
+    expect(result.canWrite).toBe(true)
+    mockCan.mockReturnValue(true)
+  })
+
   it('deleteRecord handles errors', async () => {
     mockMutate.mockRejectedValueOnce(new Error('Delete failed'))
 

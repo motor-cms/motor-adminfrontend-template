@@ -6,7 +6,7 @@ definePageMeta({ layout: 'default', permission: 'roles.write' })
 
 const route = useRoute()
 const { t } = useI18n()
-const { fields, schema, groups, state, loading, fetching, fetchError, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/roles',
   routePrefix: '/motor-admin/roles',
   translationPrefix: 'motor-admin.roles',
@@ -27,6 +27,7 @@ const { fields, schema, groups, state, loading, fetching, fetchError, formRef, s
   >
     <FormBase
       ref="formRef"
+      :disabled="!canWrite"
       v-model:state="state"
       :fields="fields"
       :schema="schema"

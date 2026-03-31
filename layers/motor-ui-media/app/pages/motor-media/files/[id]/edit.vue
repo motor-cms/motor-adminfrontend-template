@@ -10,7 +10,7 @@ const client = useSanctumClient()
 const { success, error: notifyError } = useNotify()
 const router = useRouter()
 
-const { fields, schema, groups, state, loading, fetching, fetchError, formRef, selectOptions, selectOptionsLoading, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/files',
   routePrefix: '/motor-media/files',
   translationPrefix: 'motor-media.files',
@@ -137,6 +137,7 @@ async function onSaveAndContinue(event: { data: Record<string, unknown> }) {
     >
       <FormBase
         ref="formRef"
+        :disabled="!canWrite"
         v-model:state="state"
         :fields="fields"
         :schema="schema"

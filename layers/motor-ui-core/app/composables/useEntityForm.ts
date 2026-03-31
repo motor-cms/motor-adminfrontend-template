@@ -55,6 +55,8 @@ interface EntityFormOptionsBase {
   extraState?: Record<string, unknown>
   /** Hook called before each submit — mutate event.data to inject extra payload */
   beforeSubmit?: (data: Record<string, unknown>, state: Record<string, unknown>) => void | Promise<void>
+  /** Explicit write permission override (auto-derived from apiEndpoint if not set) */
+  writePermission?: string
 }
 
 interface EntityFormCreateOptions extends EntityFormOptionsBase {
@@ -90,7 +92,8 @@ export async function useEntityForm(options: EntityFormOptions) {
     nameKey = 'name',
     extraFields: extraFieldsDef,
     extraState: extraStateDef,
-    beforeSubmit
+    beforeSubmit,
+    writePermission: writePermissionOverride
   } = options
 
   const { t, te } = useI18n()
@@ -353,10 +356,12 @@ export async function useEntityForm(options: EntityFormOptions) {
   // Delete (edit mode only)
   // ============================================
 
-  // Derive delete permission from apiEndpoint: '/api/v2/users' → 'users.delete'
+  // Derive permissions from apiEndpoint: '/api/v2/users' → 'users.write' / 'users.delete'
   const resourceSegment = apiEndpoint.replace(/^\/api\/v\d+\//, '').split('/').pop() ?? ''
+  const writePermission = writePermissionOverride ?? (resourceSegment ? `${resourceSegment}.write` : undefined)
   const deletePermission = resourceSegment ? `${resourceSegment}.delete` : undefined
 
+  const canWrite = !writePermission || can(writePermission)
   const canDelete = !isCreate && !!deletePermission && can(deletePermission)
   const deleting = ref(false)
 
@@ -401,6 +406,7 @@ export async function useEntityForm(options: EntityFormOptions) {
     onSaveAndContinue,
     onSaveAndNew,
     deleting,
-    deleteRecord: canDelete ? deleteRecord : undefined
+    deleteRecord: canDelete ? deleteRecord : undefined,
+    canWrite
   }
 }
