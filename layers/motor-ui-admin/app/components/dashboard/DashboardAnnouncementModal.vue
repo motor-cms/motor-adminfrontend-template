@@ -9,8 +9,9 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
-const client = useSanctumClient()
-const { can } = usePermissions()
+const apiClient = useSanctumClient()
+const { can, hasRole } = usePermissions()
+const { user } = useSanctumAuth<import('@motor-cms/ui-core/app/types/auth').User>()
 const saving = ref(false)
 
 const canWriteAnnouncements = computed(() => can('dashboard-announcements.write'))
@@ -21,6 +22,7 @@ const form = reactive({
   type: 'info',
   audience: 'self',
   target_user_ids: [] as number[],
+  client_id: undefined as number | undefined,
   linkable_type: '',
   linkable_id: undefined as number | undefined,
   starts_at: undefined as string | undefined,
@@ -56,11 +58,29 @@ const userOptions = ref<Array<{ label: string; value: number }>>([])
 const usersLoading = ref(false)
 const usersFetched = ref(false)
 
+const clientOptions = computed(() => {
+  return (user.value?.data?.clients ?? []).map(c => ({
+    label: c.name,
+    value: c.id,
+  }))
+})
+
+const allClientOptions = ref<Array<{ label: string; value: number }>>([])
+const allClientsFetched = ref(false)
+const allClientsLoading = ref(false)
+
+const visibleClientOptions = computed(() => {
+  if (hasRole('SuperAdmin') && allClientsFetched.value) {
+    return allClientOptions.value
+  }
+  return clientOptions.value
+})
+
 watch(() => form.audience, async (audience) => {
   if (audience === 'users' && !usersFetched.value) {
     usersLoading.value = true
     try {
-      const response = await client<{ data: Array<{ id: number; name: string }> }>('/api/v2/users?per_page=200')
+      const response = await apiClient<{ data: Array<{ id: number; name: string }> }>('/api/v2/users?per_page=200')
       userOptions.value = response.data.map(u => ({
         label: u.name,
         value: u.id,
@@ -68,6 +88,19 @@ watch(() => form.audience, async (audience) => {
       usersFetched.value = true
     } finally {
       usersLoading.value = false
+    }
+  }
+  if (audience === 'client' && hasRole('SuperAdmin') && !allClientsFetched.value) {
+    allClientsLoading.value = true
+    try {
+      const response = await apiClient<{ data: Array<{ id: number; name: string }> }>('/api/v2/clients?per_page=200')
+      allClientOptions.value = response.data.map(c => ({
+        label: c.name,
+        value: c.id,
+      }))
+      allClientsFetched.value = true
+    } finally {
+      allClientsLoading.value = false
     }
   }
 })
@@ -106,7 +139,7 @@ async function fetchLinkableOptions(query: string) {
     if (query) {
       params.set('search', query)
     }
-    const response = await client<{ data: Array<Record<string, any>> }>(`${config.endpoint}?${params}`)
+    const response = await apiClient<{ data: Array<Record<string, any>> }>(`${config.endpoint}?${params}`)
     linkableOptions.value = response.data.map(item => ({
       label: config.labelFn(item),
       value: item.id,
@@ -144,6 +177,9 @@ async function handleSubmit() {
     if (form.audience === 'users') {
       data.target_user_ids = form.target_user_ids
     }
+    if (form.audience === 'client' && form.client_id) {
+      data.client_id = form.client_id
+    }
     if (form.linkable_type && form.linkable_id) {
       data.linkable_type = form.linkable_type
       data.linkable_id = form.linkable_id
@@ -155,7 +191,7 @@ async function handleSubmit() {
       data.expires_at = form.expires_at
     }
 
-    await client('/api/v2/dashboard/announcements', {
+    await apiClient('/api/v2/dashboard/announcements', {
       method: 'POST',
       body: data,
     })
@@ -166,6 +202,7 @@ async function handleSubmit() {
       type: 'info',
       audience: 'self',
       target_user_ids: [],
+      client_id: undefined,
       linkable_type: '',
       linkable_id: null,
       starts_at: null,
@@ -218,6 +255,17 @@ async function handleSubmit() {
             multiple
             :loading="usersLoading"
             :placeholder="t('motor-admin.dashboard.announcements.field_users_placeholder')"
+            class="w-full"
+          />
+        </UFormField>
+
+        <UFormField v-if="form.audience === 'client'" :label="t('motor-admin.dashboard.announcements.field_client')">
+          <USelectMenu
+            v-model="form.client_id"
+            :items="visibleClientOptions"
+            value-key="value"
+            :loading="allClientsLoading"
+            :placeholder="t('motor-admin.dashboard.announcements.field_client_placeholder')"
             class="w-full"
           />
         </UFormField>
