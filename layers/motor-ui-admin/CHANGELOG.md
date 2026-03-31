@@ -1,5 +1,13 @@
 # @motor-cms/ui-admin
 
+## 1.5.2
+
+### Patch Changes
+
+- - fix: dashboard nav item always active because / matches all routes
+- Updated dependencies
+  - @motor-cms/ui-core@1.5.2
+
 ## 1.5.1
 
 ### Patch Changes
