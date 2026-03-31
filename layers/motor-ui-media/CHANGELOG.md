@@ -1,5 +1,16 @@
 # @motor-cms/ui-media
 
+## 1.6.0
+
+### Minor Changes
+
+- - feat: add client selector for announcements and show starts_at date
+
+### Patch Changes
+
+- Updated dependencies
+  - @motor-cms/ui-core@1.6.0
+
 ## 1.5.2
 
 ### Patch Changes
