@@ -10,7 +10,7 @@ const { t } = useI18n()
 const treeId = route.params.id as string
 const categoryId = route.params.categoryId as string
 
-const { fields, schema, groups, state, loading, fetching, fetchError, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: `/api/v2/category-trees/${treeId}/categories`,
   routePrefix: `/motor-admin/category-trees/${treeId}`,
   translationPrefix: 'motor-admin.categories',
@@ -33,6 +33,7 @@ const { fields, schema, groups, state, loading, fetching, fetchError, formRef, s
   >
     <FormBase
       ref="formRef"
+      :disabled="!canWrite"
       v-model:state="state"
       :fields="fields"
       :schema="schema"

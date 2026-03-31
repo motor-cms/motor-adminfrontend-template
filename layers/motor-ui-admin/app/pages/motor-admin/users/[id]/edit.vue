@@ -8,7 +8,7 @@ definePageMeta({ layout: 'default', permission: 'users.write' })
 const route = useRoute()
 const { t } = useI18n()
 
-const { fields: rawFields, schema, groups, state, loading, fetching, fetchError, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields: rawFields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/users',
   routePrefix: '/motor-admin/users',
   translationPrefix: 'motor-admin.users',
@@ -63,6 +63,7 @@ watchEffect(() => {
   >
     <FormBase
       ref="formRef"
+      :disabled="!canWrite"
       v-model:state="state"
       :fields="fields"
       :schema="refinedSchema"

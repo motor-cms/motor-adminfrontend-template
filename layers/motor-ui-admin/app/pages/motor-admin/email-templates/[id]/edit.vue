@@ -7,7 +7,7 @@ definePageMeta({ layout: 'default', permission: 'email-templates.write' })
 
 const route = useRoute()
 const { t } = useI18n()
-const { fields: rawFields, schema, groups, state, loading, fetching, fetchError, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields: rawFields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/email-templates',
   routePrefix: '/motor-admin/email-templates',
   translationPrefix: 'motor-admin.email_templates',
@@ -36,6 +36,7 @@ if (bodyHtmlField) {
   >
     <FormBase
       ref="formRef"
+      :disabled="!canWrite"
       v-model:state="state"
       :fields="fields"
       :schema="schema"
