@@ -89,7 +89,7 @@ export function useAdminNavigation() {
       label,
       icon: isChild ? undefined : mapIcon(item.icon),
       to: path,
-      active: path ? route.path.startsWith(path) : false
+      active: path ? (path === '/' ? route.path === '/' : route.path.startsWith(path)) : false
     }
 
     // Handle nested items (object with numeric keys)
@@ -102,7 +102,7 @@ export function useAdminNavigation() {
 
       // Auto-expand groups that contain the currently active route
       const hasActiveChild = navItem.children.some(child =>
-        child.to && route.path.startsWith(String(child.to))
+        child.to && (String(child.to) === '/' ? route.path === '/' : route.path.startsWith(String(child.to)))
       )
       navItem.defaultOpen = hasActiveChild
     }
