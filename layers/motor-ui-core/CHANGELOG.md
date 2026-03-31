@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 1.6.0
+
+### Minor Changes
+
+- - feat: add client selector for announcements and show starts_at date
+
 ## 1.5.2
 
 ### Patch Changes
