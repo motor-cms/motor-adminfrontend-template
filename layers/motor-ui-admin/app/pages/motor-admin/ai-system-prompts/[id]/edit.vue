@@ -3,11 +3,10 @@
 import { aISystemPromptFormMeta } from '../../../../types/generated/form-meta'
 import { aiSystemPromptFormConfig, aiSystemPromptSelectOptionConfigs } from '@motor-cms/ui-core/app/types/config/ai-system-prompt'
 
-definePageMeta({ layout: 'default', permission: 'ai-system-prompts.write' })
+definePageMeta({ layout: 'default', permission: 'ai-system-prompts.read' })
 
 const route = useRoute()
-const { t } = useI18n()
-const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, pageTitle, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/ai-system-prompts',
   routePrefix: '/motor-admin/ai-system-prompts',
   translationPrefix: 'motor-admin.ai_system_prompts',
@@ -21,7 +20,7 @@ const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, 
 
 <template>
   <FormPage
-    :title="t('motor-admin.ai_system_prompts.edit_title')"
+    :title="pageTitle"
     back-route="/motor-admin/ai-system-prompts"
     :loading="fetching"
     :error="fetchError"

@@ -2,11 +2,10 @@
 import { permissionGroupFormMeta } from '../../../../types/generated/form-meta'
 import { permissionGroupFormConfig, permissionGroupSelectOptionConfigs, permissionGroupExtraFields } from '@motor-cms/ui-core/app/types/config/permission-group'
 
-definePageMeta({ layout: 'default', permission: 'permission-groups.write' })
+definePageMeta({ layout: 'default', permission: 'permission-groups.read' })
 
 const route = useRoute()
-const { t } = useI18n()
-const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, pageTitle, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/permission-groups',
   routePrefix: '/motor-admin/permission-groups',
   translationPrefix: 'motor-admin.permissions',
@@ -22,7 +21,7 @@ const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, 
 
 <template>
   <FormPage
-    :title="t('motor-admin.permissions.edit_title')"
+    :title="pageTitle"
     back-route="/motor-admin/permission-groups"
     :loading="fetching"
     :error="fetchError"

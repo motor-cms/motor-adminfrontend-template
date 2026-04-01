@@ -5,6 +5,7 @@
   "add": "E-Mail-Vorlage hinzufügen",
   "create_title": "E-Mail-Vorlage erstellen",
   "edit_title": "E-Mail-Vorlage bearbeiten",
+  "view_title": "E-Mail-Vorlage ansehen",
   "slug": "Slug",
   "slug_description": "URL-freundlicher Bezeichner, automatisch aus dem Namen generiert",
   "subject": "Betreff",

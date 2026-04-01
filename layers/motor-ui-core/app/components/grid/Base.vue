@@ -42,7 +42,6 @@ const router = useRouter()
 const client = useSanctumClient()
 const { t } = useI18n()
 const { can } = usePermissions()
-const { warning } = useNotify()
 
 // Row click handling — skip navigation when click originates from interactive elements
 const interactiveSelectors = 'a, button, input, select, textarea, [data-no-row-click]'
@@ -53,10 +52,6 @@ function handleRowClick(e: Event, row: T): void {
 
   emit('row-click', row)
   if (props.rowClickTo) {
-    if (props.writePermission && !can(props.writePermission)) {
-      warning(t('motor-core.global.no_permission'), t('motor-core.global.no_permission_edit'))
-      return
-    }
     router.push(props.rowClickTo(row))
   }
 }
@@ -165,6 +160,13 @@ const mergedRowActions = computed<RowActionDef<T>[]>(() => {
   const defaults: RowActionDef<T>[] = props.disableDefaultActions
     ? []
     : [
+        {
+          key: 'view',
+          label: t('motor-core.grid.view'),
+          icon: 'i-lucide-eye',
+          to: (row: T) => `${props.basePath}/${row[props.rowKey]}/edit`,
+          visible: () => !!props.writePermission && !can(props.writePermission)
+        },
         {
           key: 'edit',
           label: t('motor-core.grid.edit'),

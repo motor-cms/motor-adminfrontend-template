@@ -2,11 +2,10 @@
 import { languageFormMeta } from '../../../../types/generated/form-meta'
 import { languageFormConfig } from '@motor-cms/ui-core/app/types/config/language'
 
-definePageMeta({ layout: 'default', permission: 'languages.write' })
+definePageMeta({ layout: 'default', permission: 'languages.read' })
 
 const route = useRoute()
-const { t } = useI18n()
-const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, pageTitle, formRef, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/languages',
   routePrefix: '/motor-admin/languages',
   translationPrefix: 'motor-admin.languages',
@@ -19,7 +18,7 @@ const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, 
 
 <template>
   <FormPage
-    :title="t('motor-admin.languages.edit_title')"
+    :title="pageTitle"
     back-route="/motor-admin/languages"
     :loading="fetching"
     :error="fetchError"

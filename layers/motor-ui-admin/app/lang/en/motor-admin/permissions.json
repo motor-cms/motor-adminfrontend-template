@@ -8,6 +8,7 @@
   "position": "Position",
   "create_title": "Create Permission Group",
   "edit_title": "Edit Permission Group",
+  "view_title": "View Permission Group",
   "created_success": "Permission group created successfully.",
   "updated_success": "Permission group updated successfully.",
   "group_permissions": "Permissions"

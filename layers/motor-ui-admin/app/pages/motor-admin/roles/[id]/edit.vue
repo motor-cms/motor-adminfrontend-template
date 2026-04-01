@@ -2,11 +2,10 @@
 import { roleFormMeta } from '../../../../types/generated/form-meta'
 import { roleFormConfig, roleSelectOptionConfigs } from '@motor-cms/ui-core/app/types/config/role'
 
-definePageMeta({ layout: 'default', permission: 'roles.write' })
+definePageMeta({ layout: 'default', permission: 'roles.read' })
 
 const route = useRoute()
-const { t } = useI18n()
-const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, pageTitle, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/roles',
   routePrefix: '/motor-admin/roles',
   translationPrefix: 'motor-admin.roles',
@@ -20,7 +19,7 @@ const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, 
 
 <template>
   <FormPage
-    :title="t('motor-admin.roles.edit_title')"
+    :title="pageTitle"
     back-route="/motor-admin/roles"
     :loading="fetching"
     :error="fetchError"

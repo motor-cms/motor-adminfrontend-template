@@ -6,6 +6,7 @@
   "add": "Upload Files",
   "create_title": "Upload Files",
   "edit_title": "Edit File",
+  "view_title": "View File",
   "created_success": "Files were uploaded successfully",
   "updated_success": "File was updated successfully",
   "description": "Description",

@@ -9,6 +9,7 @@
   "is_invisible": "Versteckt",
   "create_title": "Konfigurationsvariable erstellen",
   "edit_title": "Konfigurationsvariable bearbeiten",
+  "view_title": "Konfigurationsvariable ansehen",
   "created_success": "Konfigurationsvariable erfolgreich erstellt.",
   "updated_success": "Konfigurationsvariable erfolgreich aktualisiert."
 }
