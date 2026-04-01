@@ -1,5 +1,22 @@
 # @motor-cms/ui-media
 
+## 1.7.0
+
+### Minor Changes
+
+- - fix: tsconfig extends path for CI test resolution
+  - fix: block Cmd+S shortcut on read-only forms and show permission warning
+  - feat: read-only detail view with view action, dynamic title, and permission legend
+  - feat: hide save button and disable form when user lacks write permission
+  - feat: add permission group presets dropdown to role edit form
+  - fix: use locale-aware relative time and add missing EN notifications translations
+  - feat: implement frontend permission system for navigation, grids, and forms
+
+### Patch Changes
+
+- Updated dependencies
+  - @motor-cms/ui-core@1.7.0
+
 ## 1.6.0
 
 ### Minor Changes
