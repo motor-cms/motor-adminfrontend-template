@@ -93,6 +93,10 @@ defineExpose({ captureSnapshot, isDirty, setErrors })
 useEventListener('keydown', (e: KeyboardEvent) => {
   if ((e.metaKey || e.ctrlKey) && e.key === 's') {
     e.preventDefault()
+    if (props.disabled) {
+      warning(t('motor-core.global.no_permission'), t('motor-core.global.no_permission_edit'))
+      return
+    }
     if (props.loading || props.deleting) return
     if (e.shiftKey && props.showSaveAndNew) {
       submitAction.value = 'saveAndNew'
@@ -101,9 +105,10 @@ useEventListener('keydown', (e: KeyboardEvent) => {
   }
 })
 
-// Register contextual shortcuts for the overlay
+// Register contextual shortcuts for the overlay (skip when form is read-only)
 const { register: registerShortcut, unregister: unregisterShortcut } = useShortcutRegistry()
 const formShortcuts = computed(() => {
+  if (props.disabled) return []
   const entries = [
     { keys: ['meta', 'S'], label: t('motor-core.shortcuts.save'), icon: 'i-lucide-save' }
   ]
@@ -114,12 +119,16 @@ const formShortcuts = computed(() => {
 })
 
 watchEffect(() => {
-  registerShortcut({
-    id: 'form',
-    label: t('motor-core.shortcuts.form'),
-    icon: 'i-lucide-file-pen-line',
-    shortcuts: formShortcuts.value
-  })
+  if (formShortcuts.value.length > 0) {
+    registerShortcut({
+      id: 'form',
+      label: t('motor-core.shortcuts.form'),
+      icon: 'i-lucide-file-pen-line',
+      shortcuts: formShortcuts.value
+    })
+  } else {
+    unregisterShortcut('form')
+  }
 })
 onUnmounted(() => unregisterShortcut('form'))
 
