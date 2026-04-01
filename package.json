@@ -3,18 +3,14 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "nuxt dev playground",
-    "build": "nuxt build playground",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:core": "vitest --project motor-ui-core",
     "test:admin": "vitest --project motor-ui-admin",
     "test:media": "vitest --project motor-ui-media",
-    "typecheck": "nuxt typecheck",
     "changeset": "changeset",
     "changeset:version": "changeset version",
-    "changeset:publish": "changeset publish",
-    "postinstall": "nuxt prepare playground"
+    "changeset:publish": "changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",
