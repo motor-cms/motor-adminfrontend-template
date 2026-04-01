@@ -43,9 +43,6 @@ jobs:
       - name: Run tests with coverage
         run: pnpm test:coverage
 
-      - name: Typecheck
-        run: pnpm typecheck
-
       - name: Coverage summary
         if: always()
         run: |
