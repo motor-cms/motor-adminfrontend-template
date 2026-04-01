@@ -3,11 +3,10 @@
 import { emailTemplateFormMeta } from '../../../../types/generated/form-meta'
 import { emailTemplateFormConfig, emailTemplateSelectOptionConfigs } from '@motor-cms/ui-core/app/types/config/email-template'
 
-definePageMeta({ layout: 'default', permission: 'email-templates.write' })
+definePageMeta({ layout: 'default', permission: 'email-templates.read' })
 
 const route = useRoute()
-const { t } = useI18n()
-const { fields: rawFields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields: rawFields, schema, groups, state, loading, fetching, fetchError, canWrite, pageTitle, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/email-templates',
   routePrefix: '/motor-admin/email-templates',
   translationPrefix: 'motor-admin.email_templates',
@@ -29,7 +28,7 @@ if (bodyHtmlField) {
 
 <template>
   <FormPage
-    :title="t('motor-admin.email_templates.edit_title')"
+    :title="pageTitle"
     back-route="/motor-admin/email-templates"
     :loading="fetching"
     :error="fetchError"

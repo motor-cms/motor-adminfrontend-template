@@ -8,6 +8,7 @@
   "permissions": "Berechtigungen",
   "create_title": "Rolle erstellen",
   "edit_title": "Rolle bearbeiten",
+  "view_title": "Rolle ansehen",
   "created_success": "Rolle erfolgreich erstellt.",
   "updated_success": "Rolle erfolgreich aktualisiert.",
   "guard_name": "Guard-Name",

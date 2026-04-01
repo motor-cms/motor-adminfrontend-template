@@ -6,6 +6,7 @@
   "add": "Domain hinzufügen",
   "create_title": "Domain erstellen",
   "edit_title": "Domain bearbeiten",
+  "view_title": "Domain ansehen",
   "created_success": "Domain erfolgreich erstellt.",
   "updated_success": "Domain erfolgreich aktualisiert.",
   "host": "Host",

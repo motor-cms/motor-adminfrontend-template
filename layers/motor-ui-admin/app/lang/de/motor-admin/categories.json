@@ -5,6 +5,7 @@
   "add": "Kategorie hinzufügen",
   "create_title": "Kategorie erstellen",
   "edit_title": "Kategorie bearbeiten",
+  "view_title": "Kategorie ansehen",
   "created_success": "Kategorie wurde erfolgreich erstellt",
   "updated_success": "Kategorie wurde erfolgreich aktualisiert",
   "parent": "Übergeordnete Kategorie",

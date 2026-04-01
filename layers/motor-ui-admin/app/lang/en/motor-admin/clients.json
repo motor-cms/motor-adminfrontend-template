@@ -6,6 +6,7 @@
   "add": "Add Client",
   "create_title": "Create Client",
   "edit_title": "Edit Client",
+  "view_title": "View Client",
   "created_success": "Client successfully created.",
   "updated_success": "Client successfully updated.",
   "slug": "Slug",

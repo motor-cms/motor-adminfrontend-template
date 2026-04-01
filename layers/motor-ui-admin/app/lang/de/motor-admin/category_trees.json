@@ -6,6 +6,7 @@
   "add": "Kategoriebaum hinzufügen",
   "create_title": "Kategoriebaum erstellen",
   "edit_title": "Kategoriebaum bearbeiten",
+  "view_title": "Kategoriebaum ansehen",
   "created_success": "Kategoriebaum wurde erfolgreich erstellt",
   "updated_success": "Kategoriebaum wurde erfolgreich aktualisiert",
   "children": "Kinder",
