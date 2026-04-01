@@ -3,11 +3,10 @@
 import { clientFormMeta } from '../../../../types/generated/form-meta'
 import { clientFormConfig } from '@motor-cms/ui-core/app/types/config/client'
 
-definePageMeta({ layout: 'default', permission: 'clients.write' })
+definePageMeta({ layout: 'default', permission: 'clients.read' })
 
 const route = useRoute()
-const { t } = useI18n()
-const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, pageTitle, formRef, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/clients',
   routePrefix: '/motor-admin/clients',
   translationPrefix: 'motor-admin.clients',
@@ -20,7 +19,7 @@ const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, 
 
 <template>
   <FormPage
-    :title="t('motor-admin.clients.edit_title')"
+    :title="pageTitle"
     back-route="/motor-admin/clients"
     :loading="fetching"
     :error="fetchError"

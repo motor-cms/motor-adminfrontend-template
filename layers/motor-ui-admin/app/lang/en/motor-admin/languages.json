@@ -9,6 +9,7 @@
   "native_name": "Native Name",
   "create_title": "Create Language",
   "edit_title": "Edit Language",
+  "view_title": "View Language",
   "created_success": "Language created successfully.",
   "updated_success": "Language updated successfully.",
   "iso_639_1": "ISO 639-1 Code",

@@ -8,6 +8,7 @@
   "position": "Position",
   "create_title": "Berechtigungsgruppe erstellen",
   "edit_title": "Berechtigungsgruppe bearbeiten",
+  "view_title": "Berechtigungsgruppe ansehen",
   "created_success": "Berechtigungsgruppe erfolgreich erstellt.",
   "updated_success": "Berechtigungsgruppe erfolgreich aktualisiert.",
   "group_permissions": "Berechtigungen"

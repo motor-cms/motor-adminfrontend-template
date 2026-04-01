@@ -7,6 +7,7 @@
   "prompt_description": "Der System-Prompt-Text, der an das KI-Modell gesendet wird",
   "create_title": "KI-System-Prompt erstellen",
   "edit_title": "KI-System-Prompt bearbeiten",
+  "view_title": "KI-System-Prompt ansehen",
   "created_success": "KI-System-Prompt erfolgreich erstellt.",
   "updated_success": "KI-System-Prompt erfolgreich aktualisiert."
 }

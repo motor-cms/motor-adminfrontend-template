@@ -57,6 +57,7 @@
   "column_updated": "Updated",
   "columns": "Columns",
   "page_of": "Page {page} of {total}",
+  "view": "View",
   "edit": "Edit",
   "delete": "Delete",
   "duplicate": "Duplicate",

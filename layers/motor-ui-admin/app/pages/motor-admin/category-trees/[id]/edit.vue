@@ -3,11 +3,10 @@
 import { categoryTreeFormMeta } from '@motor-cms/ui-core/app/types/generated/form-meta'
 import { categoryTreeEditFormConfig } from '@motor-cms/ui-core/app/types/config/category-tree'
 
-definePageMeta({ layout: 'default', permission: 'category-trees.write' })
+definePageMeta({ layout: 'default', permission: 'category-trees.read' })
 
 const route = useRoute()
-const { t } = useI18n()
-const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, pageTitle, formRef, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/category-trees',
   routePrefix: '/motor-admin/category-trees',
   translationPrefix: 'motor-admin.category_trees',
@@ -20,7 +19,7 @@ const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, 
 
 <template>
   <FormPage
-    :title="t('motor-admin.category_trees.edit_title')"
+    :title="pageTitle"
     back-route="/motor-admin/category-trees"
     :loading="fetching"
     :error="fetchError"

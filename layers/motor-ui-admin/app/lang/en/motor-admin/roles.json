@@ -8,6 +8,7 @@
   "permissions": "Permissions",
   "create_title": "Create Role",
   "edit_title": "Edit Role",
+  "view_title": "View Role",
   "created_success": "Role created successfully.",
   "updated_success": "Role updated successfully.",
   "guard_name": "Guard Name",

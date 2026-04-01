@@ -2,11 +2,10 @@
 import { configVariableFormMeta } from '../../../../types/generated/form-meta'
 import { configVariableFormConfig } from '@motor-cms/ui-core/app/types/config/config-variable'
 
-definePageMeta({ layout: 'default', permission: 'config-variables.write' })
+definePageMeta({ layout: 'default', permission: 'config-variables.read' })
 
 const route = useRoute()
-const { t } = useI18n()
-const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, pageTitle, formRef, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/config-variables',
   routePrefix: '/motor-admin/config-variables',
   translationPrefix: 'motor-admin.config_variables',
@@ -19,7 +18,7 @@ const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, 
 
 <template>
   <FormPage
-    :title="t('motor-admin.config_variables.edit_title')"
+    :title="pageTitle"
     back-route="/motor-admin/config-variables"
     :loading="fetching"
     :error="fetchError"

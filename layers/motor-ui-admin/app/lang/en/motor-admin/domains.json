@@ -5,6 +5,7 @@
   "add": "Add Domain",
   "create_title": "Create Domain",
   "edit_title": "Edit Domain",
+  "view_title": "View Domain",
   "created_success": "Domain successfully created.",
   "updated_success": "Domain successfully updated.",
   "host": "Host",

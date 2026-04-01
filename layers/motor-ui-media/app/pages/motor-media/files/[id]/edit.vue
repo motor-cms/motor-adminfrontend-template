@@ -2,7 +2,7 @@
 import { fileFormMeta } from '../../../../types/generated/form-meta'
 import { fileEditFormConfig, fileSelectOptionConfigs } from '@motor-cms/ui-core/app/types/config/file'
 
-definePageMeta({ layout: 'default', permission: 'files.write' })
+definePageMeta({ layout: 'default', permission: 'files.read' })
 
 const route = useRoute()
 const { t } = useI18n()
@@ -10,7 +10,7 @@ const client = useSanctumClient()
 const { success, error: notifyError } = useNotify()
 const router = useRouter()
 
-const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, pageTitle, formRef, selectOptions, selectOptionsLoading, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/files',
   routePrefix: '/motor-media/files',
   translationPrefix: 'motor-media.files',
@@ -130,7 +130,7 @@ async function onSaveAndContinue(event: { data: Record<string, unknown> }) {
 <template>
   <div>
     <FormPage
-      :title="t('motor-media.files.edit_title')"
+      :title="pageTitle"
       back-route="/motor-media/files"
       :loading="fetching"
       :error="fetchError"
