@@ -7,6 +7,7 @@
   "prompt_description": "The system prompt text sent to the AI model",
   "create_title": "Create AI System Prompt",
   "edit_title": "Edit AI System Prompt",
+  "view_title": "View AI System Prompt",
   "created_success": "AI system prompt created successfully.",
   "updated_success": "AI system prompt updated successfully."
 }

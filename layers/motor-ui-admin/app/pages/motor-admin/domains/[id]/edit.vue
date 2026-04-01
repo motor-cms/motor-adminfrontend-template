@@ -3,12 +3,11 @@
 import { domainFormMeta } from '../../../../types/generated/form-meta'
 import { domainFormConfig, domainSelectOptionConfigs, domainProtocolOptions } from '@motor-cms/ui-core/app/types/config/domain'
 
-definePageMeta({ layout: 'default', permission: 'domains.write' })
+definePageMeta({ layout: 'default', permission: 'domains.read' })
 
 const route = useRoute()
-const { t } = useI18n()
 
-const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, pageTitle, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/domains',
   routePrefix: '/motor-admin/domains',
   translationPrefix: 'motor-admin.domains',
@@ -27,7 +26,7 @@ const mergedSelectOptions = computed(() => ({
 
 <template>
   <FormPage
-    :title="t('motor-admin.domains.edit_title')"
+    :title="pageTitle"
     back-route="/motor-admin/domains"
     :loading="fetching"
     :error="fetchError"

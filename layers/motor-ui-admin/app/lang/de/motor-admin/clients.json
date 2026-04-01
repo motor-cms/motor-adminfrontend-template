@@ -6,6 +6,7 @@
   "add": "Mandant hinzufügen",
   "create_title": "Mandant erstellen",
   "edit_title": "Mandant bearbeiten",
+  "view_title": "Mandant ansehen",
   "created_success": "Mandant erfolgreich erstellt.",
   "updated_success": "Mandant erfolgreich aktualisiert.",
   "slug": "Slug",

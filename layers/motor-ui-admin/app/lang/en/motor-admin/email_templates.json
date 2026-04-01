@@ -5,6 +5,7 @@
   "add": "Add Email Template",
   "create_title": "Create Email Template",
   "edit_title": "Edit Email Template",
+  "view_title": "View Email Template",
   "slug": "Slug",
   "slug_description": "URL-friendly identifier, auto-generated from name",
   "subject": "Subject",

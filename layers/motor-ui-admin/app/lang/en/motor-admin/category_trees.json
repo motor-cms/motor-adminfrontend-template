@@ -6,6 +6,7 @@
   "add": "Add Category Tree",
   "create_title": "Create Category Tree",
   "edit_title": "Edit Category Tree",
+  "view_title": "View Category Tree",
   "created_success": "Category tree was created successfully",
   "updated_success": "Category tree was updated successfully",
   "children": "Children",

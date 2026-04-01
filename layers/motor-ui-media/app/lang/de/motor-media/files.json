@@ -6,6 +6,7 @@
   "add": "Datei hinzufuegen",
   "create_title": "Dateien hochladen",
   "edit_title": "Datei bearbeiten",
+  "view_title": "Datei ansehen",
   "created_success": "Dateien wurden erfolgreich hochgeladen",
   "updated_success": "Datei wurde erfolgreich aktualisiert",
   "description": "Beschreibung",

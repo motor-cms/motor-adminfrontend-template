@@ -3,12 +3,12 @@
 import { userFormMeta } from '../../../../types/generated/form-meta'
 import { userEditFormConfig, userSelectOptionConfigs, userEditExtraFields } from '@motor-cms/ui-core/app/types/config/user'
 
-definePageMeta({ layout: 'default', permission: 'users.write' })
+definePageMeta({ layout: 'default', permission: 'users.read' })
 
 const route = useRoute()
 const { t } = useI18n()
 
-const { fields: rawFields, schema, groups, state, loading, fetching, fetchError, canWrite, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
+const { fields: rawFields, schema, groups, state, loading, fetching, fetchError, canWrite, pageTitle, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/users',
   routePrefix: '/motor-admin/users',
   translationPrefix: 'motor-admin.users',
@@ -56,7 +56,7 @@ watchEffect(() => {
 
 <template>
   <FormPage
-    :title="t('motor-admin.users.edit_title')"
+    :title="pageTitle"
     back-route="/motor-admin/users"
     :loading="fetching"
     :error="fetchError"

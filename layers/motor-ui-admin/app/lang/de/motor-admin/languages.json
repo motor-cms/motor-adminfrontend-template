@@ -9,6 +9,7 @@
   "native_name": "Eigenname",
   "create_title": "Sprache erstellen",
   "edit_title": "Sprache bearbeiten",
+  "view_title": "Sprache ansehen",
   "created_success": "Sprache erfolgreich erstellt.",
   "updated_success": "Sprache erfolgreich aktualisiert.",
   "iso_639_1": "ISO 639-1 Code",

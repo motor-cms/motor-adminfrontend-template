@@ -319,6 +319,47 @@ describe('useEntityForm', () => {
     mockCan.mockReturnValue(true)
   })
 
+  it('pageTitle returns create_title in create mode', async () => {
+    const result = await useEntityForm({
+      mode: 'create',
+      apiEndpoint: '/api/v2/users',
+      routePrefix: '/motor-admin/users',
+      translationPrefix: 'motor-admin.users',
+      formMeta: { post: {} as never, patch: {} as never }
+    })
+
+    expect(result.pageTitle).toBe('motor-admin.users.create_title')
+  })
+
+  it('pageTitle returns edit_title when user has write permission', async () => {
+    const result = await useEntityForm({
+      mode: 'edit',
+      id: '10',
+      apiEndpoint: '/api/v2/users',
+      routePrefix: '/motor-admin/users',
+      translationPrefix: 'motor-admin.users',
+      formMeta: { post: {} as never, patch: {} as never }
+    })
+
+    expect(result.pageTitle).toBe('motor-admin.users.edit_title')
+  })
+
+  it('pageTitle returns view_title when user lacks write permission', async () => {
+    mockCan.mockReturnValue(false)
+
+    const result = await useEntityForm({
+      mode: 'edit',
+      id: '10',
+      apiEndpoint: '/api/v2/users',
+      routePrefix: '/motor-admin/users',
+      translationPrefix: 'motor-admin.users',
+      formMeta: { post: {} as never, patch: {} as never }
+    })
+
+    expect(result.pageTitle).toBe('motor-admin.users.view_title')
+    mockCan.mockReturnValue(true)
+  })
+
   it('canWrite respects explicit writePermission override', async () => {
     mockCan.mockImplementation((p: string) => p === 'navigations.write')
 

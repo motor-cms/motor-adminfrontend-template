@@ -10,6 +10,7 @@
   "permissions": "Berechtigungen",
   "create_title": "Benutzer erstellen",
   "edit_title": "Benutzer bearbeiten",
+  "view_title": "Benutzer ansehen",
   "created_success": "Benutzer wurde erfolgreich erstellt",
   "updated_success": "Benutzer wurde erfolgreich aktualisiert",
   "password": "Passwort",

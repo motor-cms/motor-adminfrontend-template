@@ -9,6 +9,7 @@
   "is_invisible": "Hidden",
   "create_title": "Create Config Variable",
   "edit_title": "Edit Config Variable",
+  "view_title": "View Config Variable",
   "created_success": "Config variable created successfully.",
   "updated_success": "Config variable updated successfully."
 }

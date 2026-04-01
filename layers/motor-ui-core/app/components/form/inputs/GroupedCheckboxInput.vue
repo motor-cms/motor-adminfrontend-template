@@ -63,6 +63,11 @@ function translateGroup(key: string): string {
   return key.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 }
 
+function groupDescription(key: string): string | null {
+  const i18nKey = `motor-core.global.perm_desc_${key}`
+  return te(i18nKey) ? t(i18nKey) : null
+}
+
 function translateAction(action: string): string {
   const i18nKey = `motor-core.global.${action}`
   if (te(i18nKey)) return t(i18nKey)
@@ -190,6 +195,15 @@ const selectedCount = computed(() => selected.value.length)
       </div>
     </div>
 
+    <!-- Legend -->
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--ui-text-muted)]">
+      <span class="font-medium">{{ t('motor-core.global.perm_legend_title') }}:</span>
+      <span><strong>{{ t('motor-core.global.read') }}</strong> — {{ t('motor-core.global.perm_legend_read') }}</span>
+      <span><strong>{{ t('motor-core.global.write') }}</strong> — {{ t('motor-core.global.perm_legend_write') }}</span>
+      <span><strong>{{ t('motor-core.global.delete') }}</strong> — {{ t('motor-core.global.perm_legend_delete') }}</span>
+      <span><strong>{{ t('motor-core.global.publish') }}</strong> — {{ t('motor-core.global.perm_legend_publish') }}</span>
+    </div>
+
     <!-- Scrollable rows -->
     <div class="border border-[var(--ui-border)] rounded-[var(--ui-radius)] divide-y divide-[var(--ui-border)] max-h-96 overflow-y-auto">
       <div
@@ -206,6 +220,12 @@ const selectedCount = computed(() => selected.value.length)
             @update:model-value="toggleGroup(group)"
           />
           <span class="text-sm font-medium truncate">{{ group.label }}</span>
+          <UTooltip
+            v-if="groupDescription(group.key)"
+            :text="groupDescription(group.key)!"
+          >
+            <UIcon name="i-lucide-info" class="size-3.5 text-[var(--ui-text-muted)] shrink-0" />
+          </UTooltip>
         </label>
 
         <!-- Action checkboxes spread across remaining space -->

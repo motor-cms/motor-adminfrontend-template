@@ -250,6 +250,7 @@ export async function useEntityForm(options: EntityFormOptions) {
 
   const isCreate = mode === 'create'
   const titleKey = isCreate ? `${translationPrefix}.create_title` : `${translationPrefix}.edit_title`
+  const viewTitleKey = `${translationPrefix}.view_title`
   const successKey = isCreate ? `${translationPrefix}.created_success` : `${translationPrefix}.updated_success`
   const fallbackMessage = isCreate ? t('motor-core.errors.create_failed') : t('motor-core.errors.update_failed')
 
@@ -391,6 +392,8 @@ export async function useEntityForm(options: EntityFormOptions) {
     }
   }
 
+  const pageTitle = isCreate ? t(titleKey) : (canWrite ? t(titleKey) : t(viewTitleKey))
+
   return {
     fields,
     schema,
@@ -407,6 +410,7 @@ export async function useEntityForm(options: EntityFormOptions) {
     onSaveAndNew,
     deleting,
     deleteRecord: canDelete ? deleteRecord : undefined,
-    canWrite
+    canWrite,
+    pageTitle
   }
 }
