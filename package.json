@@ -13,8 +13,7 @@
     "typecheck": "nuxt typecheck",
     "changeset": "changeset",
     "changeset:version": "changeset version",
-    "changeset:publish": "changeset publish",
-    "postinstall": "nuxt prepare playground"
+    "changeset:publish": "changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.30.0",
