@@ -1,0 +1,64 @@
+/* ==========================================================================
+   v-onboarding — Nuxt UI v4 theme integration
+   ========================================================================== */
+
+/* The library (v-onboarding/nuxt) injects its own inline <style> tag after
+   our stylesheet, so we need either !important or higher specificity to win.
+   We use both: [data-v-onboarding-wrapper] adds an attribute selector that
+   raises specificity above the library's class-only selectors. */
+
+:root {
+  --v-onboarding-overlay-z: 99998;
+  --v-onboarding-step-z: 99999;
+}
+
+[data-v-onboarding-wrapper] .v-onboarding-item {
+  background-color: var(--ui-bg-elevated) !important;
+  border: 1px solid var(--ui-border) !important;
+  border-radius: calc(var(--ui-radius) * 2) !important;
+  color: var(--ui-text) !important;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
+}
+
+[data-v-onboarding-wrapper] .v-onboarding-item__header-title {
+  color: var(--ui-text-highlighted) !important;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+[data-v-onboarding-wrapper] .v-onboarding-item__header-close:hover {
+  background-color: var(--ui-bg-accented) !important;
+}
+
+[data-v-onboarding-wrapper] .v-onboarding-item__description {
+  color: var(--ui-text-muted) !important;
+}
+
+[data-v-onboarding-wrapper] .v-onboarding-item__actions button.v-onboarding-btn-primary {
+  background-color: var(--ui-primary) !important;
+  border-color: transparent !important;
+  color: var(--ui-text-inverted) !important;
+  border-radius: calc(var(--ui-radius) * 2) !important;
+}
+
+[data-v-onboarding-wrapper] .v-onboarding-item__actions button.v-onboarding-btn-primary:hover {
+  background-color: color-mix(in srgb, var(--ui-primary) 88%, black) !important;
+}
+
+[data-v-onboarding-wrapper] .v-onboarding-item__actions button.v-onboarding-btn-primary:focus {
+  outline-color: var(--ui-primary) !important;
+}
+
+[data-v-onboarding-wrapper] .v-onboarding-item__actions button.v-onboarding-btn-secondary {
+  border-color: var(--ui-border-accented) !important;
+  color: var(--ui-text) !important;
+  border-radius: calc(var(--ui-radius) * 2) !important;
+}
+
+[data-v-onboarding-wrapper] .v-onboarding-item__actions button.v-onboarding-btn-secondary:hover {
+  background-color: var(--ui-bg-accented) !important;
+}
+
+[data-v-onboarding-wrapper] [data-popper-arrow]::before {
+  background: var(--ui-bg-elevated) !important;
+}

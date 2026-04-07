@@ -9,8 +9,10 @@ definePageMeta({
 })
 
 const { t } = useI18n()
+const router = useRouter()
 const { user, refreshIdentity } = useSanctumAuth<User>()
-const { updateProfile } = useProfileApi()
+const { updateProfile, resetOnboarding } = useProfileApi()
+const { resetAll: resetOnboardingState } = useOnboardingResetAll()
 const { success, error: notifyError, info } = useNotify()
 
 // Test function to demonstrate error notifications
@@ -172,6 +174,33 @@ const passwordState = reactive({
 
 const passwordLoading = ref(false)
 
+// ============================================
+// Onboarding Tour
+// ============================================
+
+const onboardingLoading = ref(false)
+
+async function onRestartTour() {
+  onboardingLoading.value = true
+  try {
+    await resetOnboarding()
+    resetOnboardingState()
+    success(t('motor-core.profile.toast_tour_reset_title'), t('motor-core.profile.toast_tour_reset_message'))
+    await router.push('/')
+  }
+  catch (err: unknown) {
+    const message = err instanceof Error ? err.message : t('motor-core.profile.toast_tour_reset_error')
+    notifyError(t('motor-core.profile.toast_tour_reset_error'), message, {
+      message,
+      stack: err instanceof Error ? err.stack : undefined,
+      url: '/api/profile/reset-onboarding',
+    })
+  }
+  finally {
+    onboardingLoading.value = false
+  }
+}
+
 async function onPasswordSubmit(event: FormSubmitEvent<PasswordSchema>) {
   passwordLoading.value = true
 
@@ -291,6 +320,22 @@ async function onPasswordSubmit(event: FormSubmitEvent<PasswordSchema>) {
               </div>
             </div>
           </UForm>
+        </UPageCard>
+
+        <!-- Onboarding Tour Card -->
+        <UPageCard
+          :title="t('motor-core.profile.onboarding_title')"
+          :description="t('motor-core.profile.onboarding_description')"
+        >
+          <div class="flex justify-end">
+            <UButton
+              :loading="onboardingLoading"
+              icon="i-lucide-graduation-cap"
+              @click="onRestartTour"
+            >
+              {{ t('motor-core.profile.restart_tour') }}
+            </UButton>
+          </div>
         </UPageCard>
 
         <!-- Change Password Card -->
