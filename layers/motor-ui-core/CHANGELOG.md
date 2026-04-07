@@ -1,5 +1,13 @@
 # @motor-cms/ui-core
 
+## 1.8.0
+
+### Minor Changes
+
+- - feat: implement onboarding tour system with profile restart and multi-step chain
+  - fix: restore postinstall for nuxt prepare
+  - fix: make tsconfig self-contained and remove postinstall
+
 ## 1.7.0
 
 ### Minor Changes
