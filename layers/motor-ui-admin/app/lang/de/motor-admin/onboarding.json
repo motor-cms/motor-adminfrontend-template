@@ -1,0 +1,57 @@
+{
+  "next": "Weiter",
+  "previous": "Zurück",
+  "finish": "Fertig",
+  "announcements": {
+    "step1_title": "Meldungen",
+    "step1_desc": "Dieses Panel zeigt wichtige Meldungen von Ihrem Team oder Systemadministratoren.",
+    "step2_title": "Meldungen lesen",
+    "step2_desc": "Jede Karte zeigt eine Nachricht mit ihrem Typ (Info, Warnung oder Fehler). Klicken Sie auf ×, um sie nach dem Lesen auszublenden.",
+    "step3_title": "Meldung erstellen",
+    "step3_desc": "Als Administrator können Sie Meldungen an sich selbst, bestimmte Nutzer oder alle im Mandanten senden."
+  },
+  "notifications": {
+    "step1_title": "Benachrichtigungscenter",
+    "step1_desc": "Der rote Zähler zeigt ungelesene Benachrichtigungen. Klicken Sie auf die Glocke, um das Benachrichtigungscenter zu öffnen — hier sehen Sie alle Meldungen mit Typ und Zeitstempel, können einzelne Einträge entfernen oder alle auf einmal löschen."
+  },
+  "search": {
+    "step1_title": "Globale Suche",
+    "step1_desc": "Mit der Suche finden Sie sofort Seiten, Benutzer, Dateien und weitere Inhalte im gesamten System. Einfach tippen – Ergebnisse erscheinen direkt während der Eingabe.",
+    "step2_title": "Tastaturkürzel",
+    "step2_desc": "Drücken Sie ⌘K (oder Strg+K unter Windows) von überall im Admin, um die Suche ohne Maus zu öffnen. Halten Sie ⌘ gedrückt, um alle verfügbaren Tastenkürzel anzuzeigen."
+  },
+  "admin_nav": {
+    "step1_title": "Navigationsbereich",
+    "step1_desc": "Über die Seitenleiste erreichen Sie alle Verwaltungsbereiche. Klicken Sie auf 'Administration', um Benutzer, Rollen und weitere Einstellungen zu verwalten. Als nächstes öffnen wir die Benutzerliste."
+  },
+  "admin_grid": {
+    "step1_title": "Datensätze bearbeiten",
+    "step1_desc": "In dieser Übersicht sehen Sie alle Benutzer. Klicken Sie einfach auf eine Zeile — der Datensatz öffnet sich direkt zum Bearbeiten."
+  },
+  "builder_pages_list": {
+    "step1_title": "Seite öffnen um die Tour zu starten",
+    "step1_desc": "Klicken Sie auf eine beliebige Zeile, um die Seite im Editor zu öffnen. Die Builder-Tour startet dann automatisch."
+  },
+  "builder_pages": {
+    "step1_title": "Seiteneditor",
+    "step1_desc": "Willkommen im Seiteneditor. Hier können Sie Inhalt und Layout dieser Seite visuell bearbeiten und gestalten.",
+    "step2_title": "Veröffentlichungsstatus",
+    "step2_desc": "Dieses Abzeichen zeigt, ob die Seite veröffentlicht, geplant oder ein Entwurf ist. Klicken Sie darauf, um die Seite zu veröffentlichen, zu planen oder offline zu nehmen.",
+    "step3_title": "Änderungsverlauf",
+    "step3_desc": "Machen Sie Änderungen mit den Pfeilschaltflächen rückgängig oder wiederholen Sie sie. Das Uhrsymbol öffnet den vollständigen Verlauf dieser Bearbeitungssitzung.",
+    "step4_title": "Geräteansicht",
+    "step4_desc": "Wechseln Sie zwischen Desktop-, Tablet- und Mobilansicht, um zu sehen, wie Ihre Seite auf verschiedenen Bildschirmgrößen aussieht.",
+    "step5_title": "Seitenstruktur",
+    "step5_desc": "Das Strukturpanel zeigt alle Zeilen und Komponenten Ihrer Seite als Baumansicht. Klicken Sie auf einen Eintrag, um ihn im Editor auszuwählen.",
+    "step6_title": "Layout-Zeilen",
+    "step6_desc": "Fügen Sie über das Layout-Panel einen neuen Bereich mit 1, 2, 3 oder 4 Spalten ein. Klicken Sie auf ein Layout oder ziehen Sie es auf den Editor.",
+    "step7_title": "Inhaltskomponenten",
+    "step7_desc": "Das Komponentenpanel listet alle verfügbaren Inhaltsbausteine auf — Überschriften, Bilder, Videos, Buttons und mehr. Klicken oder ziehen Sie eine Komponente in eine Spalte.",
+    "step8_title": "Der Editor",
+    "step8_desc": "Klicken Sie auf ein Element, um es auszuwählen und seine Eigenschaften rechts anzuzeigen. Ziehen Sie den Griff links einer Zeile, um Bereiche umzusortieren.",
+    "step9_title": "Element-Eigenschaften",
+    "step9_desc": "Wenn ein Element ausgewählt ist, erscheinen seine Eigenschaften hier. Bearbeiten Sie Inhalt, Darstellung und erweiterte Einstellungen. Der Navigationspfad oben führt zu übergeordneten Elementen.",
+    "step10_title": "Speichern",
+    "step10_desc": "Klicken Sie auf Speichern (oder drücken Sie Cmd+S). Der Dropdown-Pfeil ermöglicht Speichern und Schließen in einem Schritt. Ein pulsierender Punkt zeigt ungespeicherte Änderungen an."
+  }
+}

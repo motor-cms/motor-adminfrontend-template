@@ -47,7 +47,7 @@ const colorClasses: Record<string, string> = {
     :description="t('motor-core.notifications.description')"
   >
     <template #body>
-      <div class="flex flex-col gap-2">
+      <div id="onboarding-notifications-body" class="flex flex-col gap-2">
         <!-- Empty state -->
         <div
           v-if="notificationsStore.notifications.length === 0"
@@ -180,7 +180,7 @@ const colorClasses: Record<string, string> = {
     </template>
 
     <template #footer>
-      <div class="flex justify-between">
+      <div id="onboarding-notifications-footer" class="flex justify-between">
         <UButton
           color="neutral"
           variant="ghost"
