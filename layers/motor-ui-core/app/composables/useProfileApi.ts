@@ -31,7 +31,17 @@ export function useProfileApi() {
     })
   }
 
+  async function resetOnboarding(): Promise<void> {
+    await client('/api/profile/reset-onboarding', { method: 'POST' })
+  }
+
+  async function completeOnboarding(): Promise<void> {
+    await client('/api/profile/complete-onboarding', { method: 'POST' })
+  }
+
   return {
-    updateProfile
+    updateProfile,
+    resetOnboarding,
+    completeOnboarding,
   }
 }

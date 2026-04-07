@@ -52,6 +52,7 @@ export interface UserData {
   id: number
   name: string
   email: string
+  show_onboarding?: boolean
   clients?: Client[]
   roles?: Role[]
   permissions?: Permission[]

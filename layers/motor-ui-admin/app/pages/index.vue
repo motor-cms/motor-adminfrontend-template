@@ -113,5 +113,7 @@ async function onDismiss(id: number) {
       v-model:open="announcementModalOpen"
       @created="onAnnouncementCreated"
     />
+
+    <DashboardOnboarding />
   </div>
 </template>
