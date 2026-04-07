@@ -1,0 +1,57 @@
+{
+  "next": "Next",
+  "previous": "Previous",
+  "finish": "Done",
+  "announcements": {
+    "step1_title": "Announcements",
+    "step1_desc": "This panel shows important announcements from your team or system administrators.",
+    "step2_title": "Reading announcements",
+    "step2_desc": "Each card shows a message with its type (info, warning, or error). Click the × to dismiss it once you have read it.",
+    "step3_title": "Create an announcement",
+    "step3_desc": "As an admin you can post announcements to yourself, specific users, or everyone in your client."
+  },
+  "notifications": {
+    "step1_title": "Notification center",
+    "step1_desc": "The red counter shows unread notifications. Click the bell to open the notification center — here you can see all messages with type and timestamp, remove individual entries, or clear all at once."
+  },
+  "search": {
+    "step1_title": "Global search",
+    "step1_desc": "Use the search to instantly find pages, users, files, and other content across the entire system. Just start typing and results appear as you go.",
+    "step2_title": "Keyboard shortcut",
+    "step2_desc": "Press ⌘K (or Ctrl+K on Windows) from anywhere in the admin to open search without reaching for the mouse. Hold ⌘ to see all available shortcuts."
+  },
+  "admin_nav": {
+    "step1_title": "Navigation",
+    "step1_desc": "Use the sidebar to access all administration areas. Click on 'Administration' to manage users, roles, and other settings. Next, we will open the users list."
+  },
+  "admin_grid": {
+    "step1_title": "Editing records",
+    "step1_desc": "This overview shows all users. Simply click on any row — the record opens directly for editing."
+  },
+  "builder_pages_list": {
+    "step1_title": "Open a page to start the tour",
+    "step1_desc": "Click on any row to open the page in the builder editor. The builder tour will start automatically."
+  },
+  "builder_pages": {
+    "step1_title": "Page Builder",
+    "step1_desc": "Welcome to the page builder. Here you can visually build and edit the content and layout of this page.",
+    "step2_title": "Publishing status",
+    "step2_desc": "This badge shows whether the page is published, scheduled, or a draft. Click it to publish, schedule, or take the page offline.",
+    "step3_title": "Edit history",
+    "step3_desc": "Undo or redo your last changes with the arrow buttons. The clock icon opens the full change history for this editing session.",
+    "step4_title": "Device preview",
+    "step4_desc": "Switch between desktop, tablet, and mobile views to see how your page looks on different screen sizes.",
+    "step5_title": "Page outline",
+    "step5_desc": "The outline panel shows all rows and components on your page as a tree. Click any item to select it on the canvas.",
+    "step6_title": "Layout rows",
+    "step6_desc": "Use the layout panel to add a new section with 1, 2, 3, or 4 columns. Click a layout to insert it, or drag it onto the canvas.",
+    "step7_title": "Content components",
+    "step7_desc": "The components panel lists all available content blocks — headings, images, videos, buttons, and more. Click or drag a component to add it inside a column.",
+    "step8_title": "The canvas",
+    "step8_desc": "Click any element on the canvas to select it and reveal its properties on the right. Drag the handle on the left of a row to reorder sections.",
+    "step9_title": "Element properties",
+    "step9_desc": "When an element is selected, its properties appear here. Edit content, change styling, and configure advanced settings. The breadcrumb at the top lets you navigate to parent elements.",
+    "step10_title": "Save your work",
+    "step10_desc": "Click Save (or press Cmd+S) to save your changes. The dropdown arrow lets you save and close in one step. A pulsing dot indicates unsaved changes."
+  }
+}

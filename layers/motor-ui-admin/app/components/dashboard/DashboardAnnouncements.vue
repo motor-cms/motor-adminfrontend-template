@@ -23,6 +23,7 @@ const borderColors: Record<string, string> = {
 </script>
 
 <template>
+  <div id="onboarding-announcements-card">
   <UPageCard :ui="{ root: 'border-0 shadow-none' }">
     <template #header>
       <div class="flex items-center justify-between w-full">
@@ -40,6 +41,7 @@ const borderColors: Record<string, string> = {
         </div>
         <UButton
           v-if="canCreate"
+          id="onboarding-announcements-create"
           icon="i-lucide-plus"
           size="xs"
           variant="ghost"
@@ -48,6 +50,7 @@ const borderColors: Record<string, string> = {
         />
       </div>
     </template>
+    <div id="onboarding-announcements-body">
     <div v-if="loading" class="flex items-center justify-center py-6 text-muted">
       <UIcon name="i-lucide-loader-2" class="size-5 animate-spin" />
     </div>
@@ -84,5 +87,7 @@ const borderColors: Record<string, string> = {
         </div>
       </div>
     </div>
+    </div>
   </UPageCard>
+  </div>
 </template>

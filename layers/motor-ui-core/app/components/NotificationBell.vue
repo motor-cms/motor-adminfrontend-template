@@ -11,6 +11,7 @@ watch(() => notificationsStore.unreadCount, (count) => {
 
 <template>
   <UButton
+    id="onboarding-notification-bell"
     color="neutral"
     variant="ghost"
     square

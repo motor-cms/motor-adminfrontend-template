@@ -71,17 +71,20 @@ const searchKbds = isMacOS ? ['\u2318', 'K'] : ['Ctrl', 'K']
       <template #default>
         <UDashboardSearchButton
           v-if="can('search.read')"
+          id="onboarding-search-button"
           :collapsed="collapsed"
           :kbds="searchKbds"
         />
 
-        <UNavigationMenu
-          :collapsed="collapsed"
-          :items="navigation"
-          orientation="vertical"
-          tooltip
-          popover
-        />
+        <div id="onboarding-sidebar-nav">
+          <UNavigationMenu
+            :collapsed="collapsed"
+            :items="navigation"
+            orientation="vertical"
+            tooltip
+            popover
+          />
+        </div>
       </template>
 
       <template #footer>

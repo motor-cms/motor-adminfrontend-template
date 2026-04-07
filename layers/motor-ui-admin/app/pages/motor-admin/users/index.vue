@@ -44,6 +44,7 @@ const { fetch: fetchUsers } = useGridData<User>('/api/v2/users')
 </script>
 
 <template>
+  <UsersOnboarding />
   <GridPage
     :title="t('motor-admin.users.title')"
     :subtitle="t('motor-admin.users.subtitle')"
