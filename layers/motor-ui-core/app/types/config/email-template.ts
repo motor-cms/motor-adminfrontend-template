@@ -24,7 +24,9 @@ export const emailTemplateFormConfig: FormFieldsFromMetaOptions = {
     language_id: { input: 'search-select' },
     slug: { input: 'slug' },
     body_html: { class: 'font-mono', inputProps: { rows: 8 } },
-    body_text: { inputProps: { rows: 6 } }
+    body_text: { inputProps: { rows: 6 } },
+    default_cc_email: { input: 'text' },
+    default_bcc_email: { input: 'text' }
   },
   groups: {
     basic: ['client_id', 'language_id', 'name', 'slug', 'subject'],
