@@ -22,6 +22,7 @@ const { can } = usePermissions()
     <!-- Breadcrumbs / Mobile sidebar toggle -->
     <div class="flex items-center gap-2 mb-3">
       <UDashboardSidebarToggle class="lg:hidden shrink-0 -ml-2" />
+      <SidebarToggleButton />
       <UBreadcrumb
         v-if="computedBreadcrumbs.length > 1"
         :items="computedBreadcrumbs"

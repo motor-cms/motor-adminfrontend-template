@@ -41,6 +41,7 @@ const isLoading = computed(() => status.value === 'pending')
     <!-- Breadcrumbs / Mobile sidebar toggle -->
     <div class="flex items-center gap-2 mb-3">
       <UDashboardSidebarToggle class="lg:hidden shrink-0 -ml-2" />
+      <SidebarToggleButton />
       <UBreadcrumb
         v-if="breadcrumbs.length > 1"
         :items="breadcrumbs"

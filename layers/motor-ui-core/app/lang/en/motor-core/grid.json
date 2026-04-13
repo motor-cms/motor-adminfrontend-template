@@ -24,6 +24,7 @@
   "no": "No",
   "fetch_error": "Failed to load data",
   "retry": "Retry",
+  "reset_and_retry": "Reset sort and retry",
   "filter": "Filter",
   "filter_active": "Active",
   "filter_all": "All",

@@ -1,0 +1,37 @@
+import type { SelectOption } from '../types/form'
+
+/** ISO 639-1 language codes with English + native labels */
+export const languageOptions: SelectOption[] = [
+  { value: 'de', label: 'German — Deutsch (de)' },
+  { value: 'en', label: 'English — English (en)' },
+  { value: 'fr', label: 'French — Français (fr)' },
+  { value: 'it', label: 'Italian — Italiano (it)' },
+  { value: 'es', label: 'Spanish — Español (es)' },
+  { value: 'pt', label: 'Portuguese — Português (pt)' },
+  { value: 'nl', label: 'Dutch — Nederlands (nl)' },
+  { value: 'da', label: 'Danish — Dansk (da)' },
+  { value: 'sv', label: 'Swedish — Svenska (sv)' },
+  { value: 'no', label: 'Norwegian — Norsk (no)' },
+  { value: 'fi', label: 'Finnish — Suomi (fi)' },
+  { value: 'pl', label: 'Polish — Polski (pl)' },
+  { value: 'cs', label: 'Czech — Čeština (cs)' },
+  { value: 'sk', label: 'Slovak — Slovenčina (sk)' },
+  { value: 'hu', label: 'Hungarian — Magyar (hu)' },
+  { value: 'sl', label: 'Slovenian — Slovenščina (sl)' },
+  { value: 'hr', label: 'Croatian — Hrvatski (hr)' },
+  { value: 'ro', label: 'Romanian — Română (ro)' },
+  { value: 'bg', label: 'Bulgarian — Български (bg)' },
+  { value: 'el', label: 'Greek — Ελληνικά (el)' },
+  { value: 'et', label: 'Estonian — Eesti (et)' },
+  { value: 'lv', label: 'Latvian — Latviešu (lv)' },
+  { value: 'lt', label: 'Lithuanian — Lietuvių (lt)' },
+  { value: 'mt', label: 'Maltese — Malti (mt)' },
+  { value: 'ga', label: 'Irish — Gaeilge (ga)' },
+  { value: 'tr', label: 'Turkish — Türkçe (tr)' },
+  { value: 'ru', label: 'Russian — Русский (ru)' },
+  { value: 'uk', label: 'Ukrainian — Українська (uk)' },
+  { value: 'ar', label: 'Arabic — العربية (ar)' },
+  { value: 'zh', label: 'Chinese — 中文 (zh)' },
+  { value: 'ja', label: 'Japanese — 日本語 (ja)' },
+  { value: 'ko', label: 'Korean — 한국어 (ko)' }
+]
