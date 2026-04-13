@@ -10,6 +10,7 @@ export const searchConfigFormConfig: FormFieldsFromMetaOptions = {
   omit: ['links', 'image_crop'],
   overrides: {
     domain_id: { input: 'search-select' },
+    url: { input: 'url' },
     is_active: { input: 'toggle' }
   },
   groups: {
