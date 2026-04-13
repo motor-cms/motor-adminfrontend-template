@@ -1,5 +1,13 @@
 # @motor-cms/ui-media
 
+## 1.8.2
+
+### Patch Changes
+
+- - fix: add URL validation to search config link field
+- Updated dependencies
+  - @motor-cms/ui-core@1.8.2
+
 ## 1.8.1
 
 ### Patch Changes
