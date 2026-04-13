@@ -62,6 +62,13 @@ export function zodSchemaForField(field: FormFieldMeta, t: (key: string, params?
         ? z.string().min(1, required).email(invalidEmail)
         : z.string().email(invalidEmail).or(z.literal('')).optional().nullable()
 
+    case 'url': {
+      const invalidUrl = t('motor-core.global.validation_url')
+      return field.required
+        ? z.string().min(1, required).url(invalidUrl)
+        : z.string().url(invalidUrl).or(z.literal('')).optional().nullable()
+    }
+
     case 'number':
       return field.required
         ? z.any().refine(

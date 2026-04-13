@@ -4,8 +4,20 @@ useTheme()
 
 const open = ref(false)
 const collapsed = ref(false)
-const { navigation } = useAdminNavigation()
+provide('sidebar-collapsed', collapsed)
+const { navigation, activeGroups } = useAdminNavigation()
 const { can } = usePermissions()
+
+// Track which nav groups are open; ensure groups with active routes stay open
+const openNavGroups = ref<string[]>([])
+
+watch(activeGroups, (groups) => {
+  for (const group of groups) {
+    if (!openNavGroups.value.includes(group)) {
+      openNavGroups.value.push(group)
+    }
+  }
+}, { immediate: true })
 
 // Resolve ⌘/Ctrl during SSR via User-Agent to avoid hydration glitch
 // (Nuxt UI's useKbd defers this to onMounted, rendering an empty <kbd> on the server)
@@ -32,39 +44,31 @@ const searchKbds = isMacOS ? ['\u2318', 'K'] : ['Ctrl', 'K']
       :max-size="24"
       :ui="{ footer: 'lg:border-t lg:border-default lg:py-4' }"
     >
-      <template #header>
+      <template #header="{ collapsed: isCollapsed }">
         <div
-          v-if="collapsed"
-          class="flex w-full justify-center p-2"
+          v-if="isCollapsed"
+          class="sidebar-header justify-center"
         >
-          <button
+          <NuxtLink
+            to="/"
             class="sidebar-toggle-mark"
-            @click="collapsed = false"
           >
             <MotorLogo
               variant="mark"
-              size="sm"
+              size="xs"
             />
-          </button>
+          </NuxtLink>
         </div>
         <div
           v-else
-          class="sidebar-header group"
+          class="sidebar-header"
         >
-          <MotorLogo
-            variant="horizontal"
-            size="sm"
-          />
-          <div class="flex-1" />
-          <button
-            class="sidebar-toggle-chevron"
-            @click="collapsed = true"
-          >
-            <UIcon
-              name="i-lucide-chevrons-left"
-              class="size-4"
+          <NuxtLink to="/">
+            <MotorLogo
+              variant="horizontal"
+              size="sm"
             />
-          </button>
+          </NuxtLink>
         </div>
       </template>
 
@@ -78,6 +82,7 @@ const searchKbds = isMacOS ? ['\u2318', 'K'] : ['Ctrl', 'K']
 
         <div id="onboarding-sidebar-nav">
           <UNavigationMenu
+            v-model="openNavGroups"
             :collapsed="collapsed"
             :items="navigation"
             orientation="vertical"
@@ -137,26 +142,4 @@ const searchKbds = isMacOS ? ['\u2318', 'K'] : ['Ctrl', 'K']
   background-color: var(--ui-bg-elevated);
 }
 
-.sidebar-toggle-chevron {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  color: var(--ui-text-dimmed);
-  opacity: 0;
-  transition: opacity 0.15s ease, color 0.15s ease;
-}
-
-.group:hover .sidebar-toggle-chevron {
-  opacity: 1;
-}
-
-.sidebar-toggle-chevron:hover {
-  color: var(--ui-text);
-  background-color: var(--ui-bg-elevated);
-}
 </style>

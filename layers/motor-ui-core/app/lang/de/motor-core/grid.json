@@ -24,6 +24,7 @@
   "no": "Nein",
   "fetch_error": "Daten konnten nicht geladen werden",
   "retry": "Erneut versuchen",
+  "reset_and_retry": "Sortierung zurücksetzen",
   "filter": "Filter",
   "filter_active": "Aktiv",
   "filter_all": "Alle",
