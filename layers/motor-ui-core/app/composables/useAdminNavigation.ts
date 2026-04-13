@@ -114,6 +114,7 @@ export function useAdminNavigation() {
 
     const path = routeToPath(item.route)
     const navItem: NavigationMenuItem = {
+      value: item.slug,
       label,
       icon: isChild ? undefined : mapIcon(item.icon),
       to: path,
@@ -143,14 +144,44 @@ export function useAdminNavigation() {
 
     const navData = filterNavItems(data.value.data)
     const sortedKeys = Object.keys(navData).sort((a, b) => Number(a) - Number(b))
-    return sortedKeys
+    const items = sortedKeys
       .map(key => navData[key])
       .filter((item): item is ApiNavigationItem => item !== undefined)
       .map(item => transformNavItem(item))
+
+    // Deduplicate child routes across groups: if the same path appears in
+    // multiple parent groups, only the first occurrence keeps its active state.
+    // This prevents double-highlighting (e.g. email-templates in both Builder and Administration).
+    const seenPaths = new Set<string>()
+    for (const item of items) {
+      if (!item.children) continue
+      for (const child of item.children) {
+        const childPath = child.to ? String(child.to) : null
+        if (!childPath) continue
+        if (seenPaths.has(childPath)) {
+          child.active = false
+        } else {
+          seenPaths.add(childPath)
+        }
+      }
+    }
+
+    return items
+  })
+
+  // Compute which group values (slugs) should be expanded based on the current route
+  const activeGroups = computed<string[]>(() => {
+    return navigation.value
+      .filter(item => item.children?.some(child =>
+        child.to && (String(child.to) === '/' ? route.path === '/' : route.path.startsWith(String(child.to)))
+      ))
+      .map(item => item.value as string)
+      .filter((value): value is string => !!value)
   })
 
   return {
     navigation,
+    activeGroups,
     status,
     error,
     refresh

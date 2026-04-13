@@ -221,9 +221,13 @@ const sortKeyMap = computed(() => {
   const map: Record<string, string> = {}
   for (const col of props.columns) {
     if (col.sortable) {
-      // TanStack derives column id from accessorKey by replacing dots with underscores
+      // Map both the raw key and the underscore variant so lookups work regardless
+      // of how TanStack normalizes the column id
+      map[col.key] = col.sortKey ?? col.key
       const tanstackId = col.key.replace(/\./g, '_')
-      map[tanstackId] = col.sortKey ?? col.key
+      if (tanstackId !== col.key) {
+        map[tanstackId] = col.sortKey ?? col.key
+      }
     }
   }
   return map
@@ -418,13 +422,24 @@ defineExpose({
       <p class="text-sm text-muted">
         {{ fetchError.message || t('motor-core.grid.fetch_error') }}
       </p>
-      <UButton
-        :label="t('motor-core.grid.retry')"
-        icon="i-lucide-refresh-cw"
-        variant="outline"
-        size="sm"
-        @click="fetchData()"
-      />
+      <div class="flex gap-2">
+        <UButton
+          :label="t('motor-core.grid.retry')"
+          icon="i-lucide-refresh-cw"
+          variant="outline"
+          size="sm"
+          @click="fetchData()"
+        />
+        <UButton
+          v-if="gridState.state.sort"
+          :label="t('motor-core.grid.reset_and_retry')"
+          icon="i-lucide-rotate-ccw"
+          variant="outline"
+          color="neutral"
+          size="sm"
+          @click="gridState.setSort(null); fetchData()"
+        />
+      </div>
     </div>
 
     <!-- Screen reader announcements -->

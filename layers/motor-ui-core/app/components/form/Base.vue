@@ -231,7 +231,7 @@ function onError(event: FormErrorEvent) {
 
 // UFormField ui override: make container stretch in horizontal mode
 const formFieldUi = {
-  container: 'w-full max-w-lg'
+  container: 'w-full max-w-2xl'
 }
 const formFieldUiVertical = {
   container: 'w-full'
@@ -321,7 +321,7 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
                   v-if="resolveInput(field.input)"
                   :field="field"
                   :model-value="state[field.key]"
-                  :options="selectOptions?.[field.key]"
+                  :options="selectOptions?.[field.key] ?? field.staticOptions"
                   :options-loading="selectOptionsLoading?.[field.key]"
                   :disabled="disabled"
                   @update:model-value="updateField(field.key, $event)"
