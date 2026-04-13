@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 1.9.0
+
+### Minor Changes
+
+- - feat: enhance liquid glass theme with Apple-style depth and per-background color tinting
+
 ## 1.8.2
 
 ### Patch Changes
