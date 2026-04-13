@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 1.8.1
+
+### Patch Changes
+
+- - fix: improvement report phase 1 — UX fixes and bug fixes
+
 ## 1.8.0
 
 ### Minor Changes

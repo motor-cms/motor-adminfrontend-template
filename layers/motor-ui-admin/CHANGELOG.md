@@ -1,5 +1,13 @@
 # @motor-cms/ui-admin
 
+## 1.8.1
+
+### Patch Changes
+
+- - fix: improvement report phase 1 — UX fixes and bug fixes
+- Updated dependencies
+  - @motor-cms/ui-core@1.8.1
+
 ## 1.8.0
 
 ### Minor Changes
