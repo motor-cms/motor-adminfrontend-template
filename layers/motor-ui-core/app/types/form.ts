@@ -15,6 +15,8 @@ export interface FormFieldConfig {
   inputProps?: Record<string, unknown>
   /** Hide this field from the form UI (state is still tracked) */
   hidden?: boolean
+  /** Static options for select/search-select fields (used instead of API-fetched options) */
+  staticOptions?: SelectOption[]
 }
 
 // ============================================

@@ -13,6 +13,7 @@ import SlugInput from './SlugInput.vue'
 
 export const builtInInputs: Record<string, typeof TextInput> = {
   'text': TextInput,
+  'url': TextInput,
   'email': EmailInput,
   'password': PasswordInput,
   'number': NumberInput,

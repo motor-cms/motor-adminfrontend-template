@@ -25,6 +25,7 @@ const {
 } = useDashboardData()
 
 const announcementModalOpen = ref(false)
+const createPageModalOpen = ref(false)
 
 const currentDate = computed(() => {
   return new Date().toLocaleDateString(locale.value, {
@@ -34,6 +35,10 @@ const currentDate = computed(() => {
     year: 'numeric',
   })
 })
+
+function onPageCreated(page: { id: number }) {
+  navigateTo(`/motor-builder/builder-pages/${page.id}/edit`)
+}
 
 function onAnnouncementCreated() {
   refresh()
@@ -50,6 +55,11 @@ async function onDismiss(id: number) {
 
 <template>
   <div class="p-6">
+    <div class="flex items-center gap-2 mb-3">
+      <UDashboardSidebarToggle class="lg:hidden shrink-0 -ml-2" />
+      <SidebarToggleButton />
+      <UBreadcrumb :items="[{ label: t('motor-core.global.dashboard'), icon: 'i-lucide-home' }]" />
+    </div>
     <div class="flex flex-col mb-6">
       <div>
         <h1 class="text-xl font-heading font-semibold text-highlighted">
@@ -65,7 +75,7 @@ async function onDismiss(id: number) {
           color="primary"
           size="sm"
           :label="t('motor-admin.dashboard.quick_actions.new_page')"
-          @click="navigateTo('/motor-builder/builder-pages/create')"
+          @click="createPageModalOpen = true"
         />
         <UButton
           icon="i-lucide-upload"
@@ -115,5 +125,12 @@ async function onDismiss(id: number) {
     />
 
     <DashboardOnboarding />
+
+    <BuilderPageSettingsModal
+      v-model:open="createPageModalOpen"
+      :page-data="null"
+      :is-create-mode="true"
+      @created="onPageCreated"
+    />
   </div>
 </template>

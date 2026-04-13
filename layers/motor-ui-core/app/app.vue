@@ -14,7 +14,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <UApp :locale="uiLocale" :toaster="{ position: 'top-right' }">
+  <UApp :locale="uiLocale" :toaster="{ position: 'bottom-right' }">
     <Transition name="loader-fade">
       <div
         v-if="loading"
