@@ -12,6 +12,8 @@ const emit = defineEmits<{ 'update:modelValue': [value: FormInputValue] }>()
     :disabled="props.disabled"
     delimiter=","
     add-on-paste
+    add-on-blur
+    add-on-tab
     class="w-full"
     v-bind="props.field.inputProps"
     @update:model-value="emit('update:modelValue', $event)"
