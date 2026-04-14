@@ -24,6 +24,8 @@
   "validation_invalid_email": "Invalid email",
   "validation_min_length": "Minimum {count} characters",
   "validation_url": "Please enter a valid URL",
+  "validation_email": "Please enter a valid email address",
+  "validation_phone": "Please enter a valid phone number",
   "unsaved_changes_title": "Unsaved Changes",
   "unsaved_changes_body": "You have unsaved changes. Are you sure you want to leave?",
   "leave": "Leave",
