@@ -1,5 +1,16 @@
 # @motor-cms/ui-media
 
+## 1.13.0
+
+### Minor Changes
+
+- - feat(motor-ui-core): add email and phone validation i18n keys
+
+### Patch Changes
+
+- Updated dependencies
+  - @motor-cms/ui-core@1.13.0
+
 ## 1.12.2
 
 ### Patch Changes
