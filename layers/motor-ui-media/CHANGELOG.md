@@ -1,5 +1,16 @@
 # @motor-cms/ui-media
 
+## 1.14.0
+
+### Minor Changes
+
+- - feat(motor-ui-core): show shortcut overlay when Alt is held
+
+### Patch Changes
+
+- Updated dependencies
+  - @motor-cms/ui-core@1.14.0
+
 ## 1.13.0
 
 ### Minor Changes
