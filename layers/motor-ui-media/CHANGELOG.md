@@ -1,5 +1,16 @@
 # @motor-cms/ui-media
 
+## 1.11.0
+
+### Minor Changes
+
+- - feat(motor-ui-core): prominent back button and stronger breadcrumbs on admin pages
+
+### Patch Changes
+
+- Updated dependencies
+  - @motor-cms/ui-core@1.11.0
+
 ## 1.10.0
 
 ### Minor Changes
