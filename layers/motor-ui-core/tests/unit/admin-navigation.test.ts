@@ -309,6 +309,72 @@ describe('useAdminNavigation', () => {
     expect(mockClient).toHaveBeenCalledWith('/api/v2/admin-navigations')
   })
 
+  it('drops duplicate child routes from groups whose own path is not a prefix', () => {
+    mockAsyncData.mockReturnValue({
+      data: ref({
+        data: {
+          0: {
+            name: 'motor-core.global.builder',
+            slug: 'builder',
+            route: 'admin.motor-builder',
+            items: {
+              0: { name: 'motor-admin.email_templates.email_templates', slug: 'emails-builder', route: 'admin.motor-admin.email-templates' }
+            }
+          },
+          1: {
+            name: 'motor-core.global.administration',
+            slug: 'admin',
+            route: 'admin.motor-admin',
+            items: {
+              0: { name: 'motor-admin.email_templates.email_templates', slug: 'emails-admin', route: 'admin.motor-admin.email-templates' }
+            }
+          }
+        }
+      }),
+      status: ref('success'),
+      error: ref(null),
+      refresh: vi.fn()
+    })
+
+    const { navigation } = useAdminNavigation()
+    expect(navigation.value[0].children).toHaveLength(0)
+    expect(navigation.value[1].children).toHaveLength(1)
+    expect(navigation.value[1].children![0].value).toBe('emails-admin')
+  })
+
+  it('keeps first occurrence when no parent path is a prefix of the duplicate child', () => {
+    mockAsyncData.mockReturnValue({
+      data: ref({
+        data: {
+          0: {
+            name: 'group-a',
+            slug: 'a',
+            route: null,
+            items: {
+              0: { name: 'shared', slug: 'shared-a', route: 'admin.shared' }
+            }
+          },
+          1: {
+            name: 'group-b',
+            slug: 'b',
+            route: null,
+            items: {
+              0: { name: 'shared', slug: 'shared-b', route: 'admin.shared' }
+            }
+          }
+        }
+      }),
+      status: ref('success'),
+      error: ref(null),
+      refresh: vi.fn()
+    })
+
+    const { navigation } = useAdminNavigation()
+    expect(navigation.value[0].children).toHaveLength(1)
+    expect(navigation.value[0].children![0].value).toBe('shared-a')
+    expect(navigation.value[1].children).toHaveLength(0)
+  })
+
   it('maps all icon keys correctly', () => {
     mockAsyncData.mockReturnValue({
       data: ref({
