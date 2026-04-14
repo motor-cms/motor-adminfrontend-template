@@ -58,7 +58,7 @@ async function onDismiss(id: number) {
     <div class="flex items-center gap-2 mb-3">
       <UDashboardSidebarToggle class="lg:hidden shrink-0 -ml-2" />
       <SidebarToggleButton />
-      <UBreadcrumb :items="[{ label: t('motor-core.global.dashboard'), icon: 'i-lucide-home' }]" />
+      <UBreadcrumb :items="[{ label: t('motor-core.global.dashboard') }]" />
     </div>
     <div class="flex flex-col mb-6">
       <div>
