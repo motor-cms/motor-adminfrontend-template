@@ -37,7 +37,7 @@ export function useBreadcrumbs(explicitBreadcrumbs?: Ref<BreadcrumbItem[] | unde
     const path = route.path
     const segments = path.split('/').filter(Boolean)
     const items: BreadcrumbItem[] = [
-      { label: t('motor-core.global.dashboard'), to: '/', icon: 'i-lucide-house' }
+      { label: t('motor-core.global.dashboard'), to: '/' }
     ]
 
     // Pre-compute: collect visible (non-ID) segment indices
