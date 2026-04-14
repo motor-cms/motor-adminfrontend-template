@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 1.12.0
+
+### Minor Changes
+
+- - feat(motor-ui-core): use grouped-checkbox for user permissions
+
 ## 1.11.0
 
 ### Minor Changes
