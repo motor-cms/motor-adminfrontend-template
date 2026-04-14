@@ -184,6 +184,7 @@ onMounted(() => {
           variant="outline"
           color="neutral"
           aria-label="Filters"
+          :ui="{ leadingIcon: 'size-3.5' }"
         >
           {{ t('motor-core.grid.filter') }}
           <UBadge
