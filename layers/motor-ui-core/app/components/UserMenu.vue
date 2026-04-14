@@ -19,6 +19,15 @@ function changeLocale(code: 'de' | 'en') {
   appSettings.locale = code
 }
 
+const toasterPositionItems = computed(() => [
+  { value: 'top-left', label: g('toaster_position_top_left') },
+  { value: 'top-center', label: g('toaster_position_top_center') },
+  { value: 'top-right', label: g('toaster_position_top_right') },
+  { value: 'bottom-left', label: g('toaster_position_bottom_left') },
+  { value: 'bottom-center', label: g('toaster_position_bottom_center') },
+  { value: 'bottom-right', label: g('toaster_position_bottom_right') }
+])
+
 // Helper to access user data
 const userData = computed(() => user.value?.data)
 
@@ -204,6 +213,16 @@ const items = computed<DropdownMenuItem[][]>(() => [
             :locales="[de, en]"
             class="w-full"
             @update:model-value="changeLocale($event as 'de' | 'en')"
+          />
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-default">{{ g('toaster_position') }}</label>
+          <USelectMenu
+            v-model="appSettings.toasterPosition"
+            :items="toasterPositionItems"
+            value-key="value"
+            :search-input="false"
+            class="w-full"
           />
         </div>
       </div>
