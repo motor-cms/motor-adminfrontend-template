@@ -51,8 +51,11 @@ const _useShortcutRegistry = () => {
   }
 
   if (import.meta.client) {
+    const isOverlayModifier = (e: KeyboardEvent) =>
+      e.key === 'Meta' || e.key === 'Control' || e.key === 'Alt'
+
     useEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key === 'Meta' || e.key === 'Control') {
+      if (isOverlayModifier(e)) {
         if (isModifierHeld) return
         isModifierHeld = true
         holdTimer = setTimeout(() => {
@@ -69,7 +72,7 @@ const _useShortcutRegistry = () => {
     })
 
     useEventListener('keyup', (e: KeyboardEvent) => {
-      if (e.key === 'Meta' || e.key === 'Control') {
+      if (isOverlayModifier(e)) {
         cancelHold()
       }
     })
