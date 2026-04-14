@@ -55,7 +55,7 @@ const searchKbds = isMacOS ? ['\u2318', 'K'] : ['Ctrl', 'K']
           >
             <MotorLogo
               variant="mark"
-              size="xs"
+              size="sm"
             />
           </NuxtLink>
         </div>
@@ -66,7 +66,7 @@ const searchKbds = isMacOS ? ['\u2318', 'K'] : ['Ctrl', 'K']
           <NuxtLink to="/">
             <MotorLogo
               variant="horizontal"
-              size="sm"
+              size="lg"
             />
           </NuxtLink>
         </div>
@@ -125,7 +125,7 @@ const searchKbds = isMacOS ? ['\u2318', 'K'] : ['Ctrl', 'K']
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.625rem 0.5rem 0.625rem 0.75rem;
+  padding: 1.5rem 0.5rem 1rem 0.75rem;
   width: 100%;
 }
 
