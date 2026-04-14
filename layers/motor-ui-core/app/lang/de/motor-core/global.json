@@ -24,6 +24,8 @@
   "validation_invalid_email": "Ungültige E-Mail-Adresse",
   "validation_min_length": "Mindestens {count} Zeichen",
   "validation_url": "Bitte geben Sie eine gültige URL ein",
+  "validation_email": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+  "validation_phone": "Bitte geben Sie eine gültige Telefonnummer ein",
   "unsaved_changes_title": "Ungespeicherte Änderungen",
   "unsaved_changes_body": "Sie haben ungespeicherte Änderungen. Möchten Sie die Seite wirklich verlassen?",
   "leave": "Verlassen",
