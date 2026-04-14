@@ -1,5 +1,13 @@
 # @motor-cms/ui-admin
 
+## 1.14.1
+
+### Patch Changes
+
+- - fix(motor-ui-core): shrink the grid filter button icon
+- Updated dependencies
+  - @motor-cms/ui-core@1.14.1
+
 ## 1.14.0
 
 ### Minor Changes
