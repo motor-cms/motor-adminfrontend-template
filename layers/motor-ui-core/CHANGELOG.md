@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 1.12.1
+
+### Patch Changes
+
+- - fix(motor-ui-core): auto-commit pending tag on blur and tab
+
 ## 1.12.0
 
 ### Minor Changes
