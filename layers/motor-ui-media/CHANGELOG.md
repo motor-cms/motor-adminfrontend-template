@@ -1,5 +1,13 @@
 # @motor-cms/ui-media
 
+## 1.12.2
+
+### Patch Changes
+
+- - fix(motor-ui-core): remove duplicate child routes from admin navigation
+- Updated dependencies
+  - @motor-cms/ui-core@1.12.2
+
 ## 1.12.1
 
 ### Patch Changes
