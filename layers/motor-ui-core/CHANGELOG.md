@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 1.14.2
+
+### Patch Changes
+
+- - fix(motor-ui-core): bigger sidebar logo and cleaner breadcrumb area
+
 ## 1.14.1
 
 ### Patch Changes
