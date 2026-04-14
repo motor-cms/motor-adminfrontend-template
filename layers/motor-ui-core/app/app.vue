@@ -2,6 +2,7 @@
 import { de, en } from '@nuxt/ui/locale'
 
 const { locale } = useI18n()
+const appSettings = useAppSettingsStore()
 
 const uiLocale = computed(() => locale.value === 'de' ? de : en)
 
@@ -14,7 +15,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <UApp :locale="uiLocale" :toaster="{ position: 'bottom-right' }">
+  <UApp :locale="uiLocale" :toaster="{ position: appSettings.toasterPosition }">
     <Transition name="loader-fade">
       <div
         v-if="loading"
