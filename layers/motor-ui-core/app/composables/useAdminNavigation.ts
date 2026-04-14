@@ -149,21 +149,39 @@ export function useAdminNavigation() {
       .filter((item): item is ApiNavigationItem => item !== undefined)
       .map(item => transformNavItem(item))
 
-    // Deduplicate child routes across groups: if the same path appears in
-    // multiple parent groups, only the first occurrence keeps its active state.
-    // This prevents double-highlighting (e.g. email-templates in both Builder and Administration).
-    const seenPaths = new Set<string>()
+    // Resolve duplicate child routes across groups (e.g. "E-Mail-Vorlagen"
+    // appearing under both Builder and Administration). A child is considered
+    // "at home" when the parent group's own path is a prefix of the child's
+    // path; duplicates that aren't at home are dropped. Falls back to first-
+    // seen wins when no parent prefix matches any copy.
+    const childAppearances = new Map<string, Array<{ parent: NavigationMenuItem, child: NavigationMenuItem }>>()
     for (const item of items) {
       if (!item.children) continue
       for (const child of item.children) {
         const childPath = child.to ? String(child.to) : null
         if (!childPath) continue
-        if (seenPaths.has(childPath)) {
-          child.active = false
-        } else {
-          seenPaths.add(childPath)
-        }
+        const list = childAppearances.get(childPath) ?? []
+        list.push({ parent: item, child })
+        childAppearances.set(childPath, list)
       }
+    }
+
+    const toRemove = new Set<NavigationMenuItem>()
+    for (const [childPath, appearances] of childAppearances) {
+      if (appearances.length < 2) continue
+      const athome = appearances.filter(({ parent }) => {
+        const parentPath = parent.to ? String(parent.to) : null
+        return parentPath && childPath.startsWith(parentPath + '/')
+      })
+      const keep = athome[0] ?? appearances[0]
+      for (const appearance of appearances) {
+        if (appearance !== keep) toRemove.add(appearance.child)
+      }
+    }
+
+    for (const item of items) {
+      if (!item.children) continue
+      item.children = item.children.filter(child => !toRemove.has(child))
     }
 
     return items
