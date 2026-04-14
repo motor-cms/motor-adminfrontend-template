@@ -1,5 +1,16 @@
 # @motor-cms/ui-admin
 
+## 1.10.0
+
+### Minor Changes
+
+- - feat(motor-ui-core): add configurable toaster position to app settings
+
+### Patch Changes
+
+- Updated dependencies
+  - @motor-cms/ui-core@1.10.0
+
 ## 1.9.0
 
 ### Minor Changes
