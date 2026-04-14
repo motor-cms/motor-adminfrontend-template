@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 1.14.0
+
+### Minor Changes
+
+- - feat(motor-ui-core): show shortcut overlay when Alt is held
+
 ## 1.13.0
 
 ### Minor Changes
