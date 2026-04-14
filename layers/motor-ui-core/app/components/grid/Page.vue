@@ -23,25 +23,21 @@ const { can } = usePermissions()
     <div class="flex items-center gap-2 mb-3">
       <UDashboardSidebarToggle class="lg:hidden shrink-0 -ml-2" />
       <SidebarToggleButton />
-      <UBreadcrumb
-        v-if="computedBreadcrumbs.length > 1"
-        :items="computedBreadcrumbs"
-      />
+      <div
+        v-if="computedBreadcrumbs.length > 0"
+        class="text-sm"
+      >
+        <UBreadcrumb :items="computedBreadcrumbs" />
+      </div>
     </div>
 
     <div class="flex items-center justify-between gap-4">
       <div class="min-w-0">
-        <NuxtLink
+        <PageBackButton
           v-if="backRoute"
           :to="backRoute"
-          class="inline-flex items-center gap-1 text-xs text-[var(--ui-text-muted)] hover:text-[var(--ui-text)] transition-colors mb-0.5"
-        >
-          <UIcon
-            name="i-lucide-arrow-left"
-            class="size-3"
-          />
-          {{ backLabel }}
-        </NuxtLink>
+          :label="backLabel"
+        />
         <div class="flex items-baseline gap-3">
           <h1 class="text-xl font-semibold">
             {{ title }}
