@@ -23,10 +23,12 @@ const { breadcrumbs: computedBreadcrumbs } = useBreadcrumbs(
       <div class="flex items-center gap-2 mb-3">
         <UDashboardSidebarToggle class="lg:hidden shrink-0 -ml-2" />
         <SidebarToggleButton />
-        <UBreadcrumb
-          v-if="computedBreadcrumbs.length > 1"
-          :items="computedBreadcrumbs"
-        />
+        <div
+          v-if="computedBreadcrumbs.length > 0"
+          class="text-sm"
+        >
+          <UBreadcrumb :items="computedBreadcrumbs" />
+        </div>
       </div>
 
       <h1 class="text-2xl font-bold">
