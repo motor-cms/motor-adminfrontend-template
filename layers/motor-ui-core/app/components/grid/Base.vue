@@ -300,11 +300,14 @@ const tableColumns = computed(() => {
     return column
   })
 
-  // Add actions column if we have row actions
+  // Add actions column if we have row actions. Pinning is handled via
+  // the v-model:column-pinning binding on <UTable> below so the column
+  // stays visible during horizontal scroll on wide grids.
   if (mergedRowActions.value.length > 0) {
     cols.push({
       id: 'actions',
       header: '',
+      size: 48,
       cell: ({ row }) => {
         return h(resolveComponent('GridRowActions') as Component, {
           row: row.original,
@@ -321,6 +324,20 @@ const tableColumns = computed(() => {
 
   return cols
 })
+
+// Keep the actions column pinned to the right edge so it remains
+// visible during horizontal scroll on wide tables.
+const columnPinning = ref<{ left: string[], right: string[] }>({
+  left: [],
+  right: mergedRowActions.value.length > 0 ? ['actions'] : []
+})
+
+watch(
+  () => mergedRowActions.value.length > 0,
+  (hasActions) => {
+    columnPinning.value = { left: [], right: hasActions ? ['actions'] : [] }
+  }
+)
 
 // Sorting state for UTable — use a stable ref to avoid infinite update cycles
 // (a computed get/set creates a new array each evaluation, causing UTable to re-emit)
@@ -454,6 +471,7 @@ defineExpose({
     <!-- Table -->
     <UTable
       v-if="!fetchError"
+      v-model:column-pinning="columnPinning"
       :model-value="selectionModelValue"
       :sorting="sorting"
       :column-visibility="gridState.columnVisibility.value"
@@ -461,7 +479,7 @@ defineExpose({
       :columns="(tableColumns as TableColumn<T>[])"
       :loading="loading"
       sticky
-      :ui="{ base: 'table-fixed w-full', tr: rowClickTo ? 'cursor-pointer' : '' }"
+      :ui="{ root: 'overflow-x-auto', base: 'w-full', tr: rowClickTo ? 'cursor-pointer' : '' }"
       class="w-full flex-1 min-h-0"
       @update:model-value="onSelectionUpdate"
       @update:sorting="onSortingUpdate"

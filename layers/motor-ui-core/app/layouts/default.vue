@@ -142,4 +142,5 @@ const searchKbds = isMacOS ? ['\u2318', 'K'] : ['Ctrl', 'K']
   background-color: var(--ui-bg-elevated);
 }
 
+
 </style>

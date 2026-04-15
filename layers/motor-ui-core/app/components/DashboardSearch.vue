@@ -20,23 +20,18 @@ const moduleFacets = ref<Record<string, number>>({})
 
 const paletteItemsById = ref<Map<string, PaletteItem>>(new Map())
 
-const highlightedItem = ref<string | null>(null)
-
-function onHighlight(payload: { ref: HTMLElement, value: unknown } | undefined) {
-  highlightedItem.value = payload ? String((payload.value as Record<string, unknown>)?.id ?? '') : null
-}
-
-function onEnter() {
-  if (searchTerm.value.length < 2) return
-  if (highlightedItem.value) return
-  showAllResults()
-}
-
+// Enter in the global search palette always goes to the search page —
+// never follows the currently highlighted item. Clicking an item or
+// pressing Cmd/Ctrl+Enter still navigates to that item directly.
 useEventListener('keydown', (e: KeyboardEvent) => {
   if (!open.value) return
   if (e.key !== 'Enter') return
-  onEnter()
-})
+  if (e.metaKey || e.ctrlKey) return // modifier + enter keeps the default "go to highlighted" behavior
+  if (searchTerm.value.length < 2) return
+  e.preventDefault()
+  e.stopPropagation()
+  showAllResults()
+}, { capture: true })
 
 watchDebounced(
   searchTerm,
@@ -167,7 +162,6 @@ function showAllResults(moduleKey?: string) {
     ref="searchRef"
     v-model:open="open"
     v-model:search-term="searchTerm"
-    @highlight="onHighlight"
     :groups="groups"
     :loading="loading"
     :color-mode="false"
@@ -268,7 +262,7 @@ function showAllResults(moduleKey?: string) {
         <div class="flex items-center gap-2.5 text-xs text-[var(--ui-text-dimmed)] shrink-0 ml-auto">
           <span class="inline-flex items-center gap-1">
             <UKbd size="sm" value="enter" />
-            <span>{{ highlightedItem ? t('motor-core.search.keyboard_hint_open') : t('motor-core.search.keyboard_hint_all') }}</span>
+            <span>{{ t('motor-core.search.keyboard_hint_all') }}</span>
           </span>
           <span class="inline-flex items-center gap-1">
             <UKbd size="sm" value="escape" />
