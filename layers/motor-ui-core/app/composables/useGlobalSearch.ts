@@ -49,18 +49,9 @@ const ROUTE_MAP: Record<string, RouteEntry> = {
 type ActionFactory = (result: GlobalSearchResult, t: TFunc) => SearchAction[]
 
 const ACTIONS_MAP: Record<string, ActionFactory> = {
-  'motor-builder/builder_pages': (result, t) => {
-    const isPublished = !!result.meta?.is_published
-    return [
-      { key: 'link-nav', label: t('motor-builder.builder_pages.action_link_navigation'), icon: 'i-lucide-list-tree', emit: 'link-navigation' },
-      {
-        key: 'publish',
-        label: isPublished ? t('motor-builder.builder_pages.action_unpublish') : t('motor-builder.builder_pages.action_publish'),
-        icon: isPublished ? 'i-lucide-globe-lock' : 'i-lucide-globe',
-        emit: 'publish'
-      }
-    ]
-  },
+  // Builder pages intentionally have no quick actions on search results.
+  // Linking and publishing are handled on the builder-pages list / detail
+  // page; surfacing them here was confusing in the search context.
   'motor-media/files': (result, t) => {
     const mime = (result.meta?.mime_type as string) ?? ''
     const actions: SearchAction[] = []
