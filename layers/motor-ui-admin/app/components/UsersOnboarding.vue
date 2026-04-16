@@ -4,10 +4,11 @@ const { t } = useI18n()
 const { isCompleted: adminGridCompleted, markCompleted: markAdminGridDone } = useOnboardingState('admin-grid')
 const { getPending, clearPending, setPending } = usePendingOnboarding()
 const { completeOnboarding } = useProfileApi()
+const { commitDone } = useOnboardingDone()
 const router = useRouter()
 
 const wrapper = ref(null)
-const { start } = useVOnboarding(wrapper)
+const { start, finish: finishWrapper } = useVOnboarding(wrapper)
 
 const steps = computed(() => [
   {
@@ -29,11 +30,32 @@ const options = computed(() => ({
   },
 }))
 
+// Prevents onFinish from navigating when the user clicked skip instead
+const skipping = ref(false)
+
 function onFinish() {
+  if (skipping.value) {
+    skipping.value = false
+    return
+  }
   markAdminGridDone()
+  // commitDone() before the API call — the browser may cancel the in-flight
+  // request if the user reloads before it resolves, and the localStorage flag
+  // must already be present to prevent DashboardOnboarding from resetting
+  // state and restarting the tour when the dashboard remounts after the
+  // builder tour redirects back to '/'.
+  commitDone()
   completeOnboarding().catch(() => {})
   setPending('builder-pages')
   router.push('/motor-builder/builder-pages')
+}
+
+function skipAdminGrid() {
+  commitDone()
+  skipping.value = true
+  markAdminGridDone()
+  completeOnboarding().catch(() => {})
+  finishWrapper()
 }
 
 // Auto-start when the page was reached via the admin-nav onboarding chain.
@@ -46,8 +68,6 @@ const stopWatch = watch(
 
     if (getPending() === 'admin-grid' && !adminGridCompleted.value) {
       clearPending()
-      // Brief delay to let the grid data load before the tooltip appears
-      await new Promise(resolve => setTimeout(resolve, 600))
       start()
     }
   },
@@ -61,5 +81,9 @@ const stopWatch = watch(
     :steps="steps"
     :options="options"
     @finish="onFinish"
-  />
+  >
+    <template #default="{ step, next, previous, isFirst, isLast }">
+      <OnboardingStep :step="step" :next="next" :previous="previous" :skip="skipAdminGrid" :is-first="isFirst" :is-last="isLast" />
+    </template>
+  </VOnboardingWrapper>
 </template>

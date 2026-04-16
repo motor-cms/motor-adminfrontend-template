@@ -2,6 +2,7 @@
   "next": "Weiter",
   "previous": "Zurück",
   "finish": "Fertig",
+  "skip": "Überspringen",
   "announcements": {
     "step1_title": "Meldungen",
     "step1_desc": "Dieses Panel zeigt wichtige Meldungen von Ihrem Team oder Systemadministratoren.",

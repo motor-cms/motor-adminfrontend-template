@@ -12,6 +12,10 @@ export type OnboardingArea =
 
 const STORAGE_KEY = 'motor-onboarding-completed'
 const PENDING_KEY = 'motor-onboarding-pending'
+// Written before the completeOnboarding() API call so a hard reload between
+// skip/complete and the network response does not trigger a false restart.
+// Cleared by resetAll() so "restart tour" from profile overrides any prior done state.
+const DONE_KEY = 'motor-onboarding-done'
 
 function getCompleted(): Set<string> {
   try {
@@ -51,7 +55,8 @@ export function useOnboardingState(area: OnboardingArea) {
 
 /**
  * Clears all completed onboarding areas for the current user from localStorage.
- * Call this before navigating to dashboard to restart the full tour.
+ * Also clears the skip-committed flag so a "restart tour" from profile
+ * correctly overrides any previous skip.
  */
 export function useOnboardingResetAll() {
   const { user } = useSanctumAuth<User>()
@@ -72,6 +77,7 @@ export function useOnboardingResetAll() {
       completed.delete(`${userId.value}:${area}`)
     }
     persistCompleted(completed)
+    localStorage.removeItem(`${DONE_KEY}:${userId.value}`)
   }
 
   return { resetAll }
@@ -98,4 +104,28 @@ export function usePendingOnboarding() {
   }
 
   return { setPending, getPending, clearPending }
+}
+
+/**
+ * Records that the user has intentionally ended the tour (via skip OR normal
+ * completion). Written to localStorage BEFORE the completeOnboarding() API
+ * call so the flag survives a hard reload if the browser cancels the request.
+ * DashboardOnboarding checks this flag before calling resetOnboardingState()
+ * so a stale show_onboarding=true in the sanctum auth cache never triggers a
+ * false restart. Cleared by resetAll() so "restart tour" from the profile
+ * page correctly overrides any prior done state.
+ */
+export function useOnboardingDone() {
+  const { user } = useSanctumAuth<User>()
+  const userId = computed(() => user.value?.data?.id?.toString() ?? 'anonymous')
+
+  function commitDone() {
+    localStorage.setItem(`${DONE_KEY}:${userId.value}`, '1')
+  }
+
+  function isDone(): boolean {
+    return !!localStorage.getItem(`${DONE_KEY}:${userId.value}`)
+  }
+
+  return { commitDone, isDone }
 }
