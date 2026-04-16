@@ -68,7 +68,6 @@
   "logged_in_as": "You are logged in as",
   "dashboard_description": "This is the {clientName} Admin Dashboard. Use the sidebar to navigate.",
   "theme_liquid_glass": "Liquid Glass",
-  "theme_neon_grid": "Neon Grid",
   "url_placeholder": "https://",
   "no_permission": "No Permission",
   "no_permission_edit": "You don't have permission to edit this record. Please contact your administrator.",

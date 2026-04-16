@@ -21,6 +21,15 @@ export default defineNuxtConfig({
     classSuffix: ''
   },
 
+  runtimeConfig: {
+    public: {
+      // Gate the theme picker in the user menu behind an env flag so
+      // work-in-progress themes (liquid-glass, etc.) stay hidden from
+      // customers. Devs enable via NUXT_PUBLIC_SHOW_THEME_PICKER=true.
+      showThemePicker: false
+    }
+  },
+
   i18n: {
     locales: [
       { code: 'de', name: 'Deutsch' },
