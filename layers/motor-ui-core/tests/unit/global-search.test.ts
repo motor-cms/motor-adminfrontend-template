@@ -112,25 +112,10 @@ describe('useGlobalSearch', () => {
   describe('resolveActions', () => {
     const t = vi.fn((key: string) => key)
 
-    it('returns link-navigation and publish actions for builder_pages', () => {
+    it('returns no quick actions for builder_pages (handled on list/detail page)', () => {
       const result = { module: 'motor-builder', index: 'builder_pages', id: 1, title: 'Page', score: 1, meta: {} }
       const actions = resolveActions(result, t)
-      expect(actions).toHaveLength(2)
-      expect(actions[0].key).toBe('link-nav')
-      expect(actions[0].emit).toBe('link-navigation')
-      expect(actions[1].key).toBe('publish')
-      expect(actions[1].emit).toBe('publish')
-    })
-
-    it('returns publish icon based on is_published meta', () => {
-      const published = { module: 'motor-builder', index: 'builder_pages', id: 1, title: 'P', score: 1, meta: { is_published: 1 } }
-      const unpublished = { module: 'motor-builder', index: 'builder_pages', id: 2, title: 'U', score: 1, meta: { is_published: 0 } }
-
-      const pubActions = resolveActions(published, t)
-      const unpubActions = resolveActions(unpublished, t)
-
-      expect(pubActions[1].icon).toBe('i-lucide-globe-lock')
-      expect(unpubActions[1].icon).toBe('i-lucide-globe')
+      expect(actions).toEqual([])
     })
 
     it('returns lightbox, download, copy-url for image files', () => {
