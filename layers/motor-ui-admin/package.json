@@ -17,6 +17,7 @@
     "@tiptap/vue-3": "^3.0.0",
     "@vueuse/core": "^14.0.0",
     "sortablejs": "^1.15.0",
+    "v-onboarding": "^2.12.2",
     "zod": "^4.0.0"
   },
   "peerDependencies": {
