@@ -1,5 +1,19 @@
 # @motor-cms/ui-media
 
+## 1.15.0
+
+### Minor Changes
+
+- - fix: revert tsconfig.json to standalone config (not dependent on .nuxt/)
+  - feat(motor-ui-admin): add skip button to onboarding tours and fix race conditions
+  - feat(motor-ui-core): drop neon-grid theme, gate picker behind env flag
+  - feat(motor-ui-core): admin shell tweaks & grid horizontal scroll
+
+### Patch Changes
+
+- Updated dependencies
+  - @motor-cms/ui-core@1.15.0
+
 ## 1.14.2
 
 ### Patch Changes
