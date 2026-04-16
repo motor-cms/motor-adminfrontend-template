@@ -2,6 +2,7 @@
   "next": "Next",
   "previous": "Previous",
   "finish": "Done",
+  "skip": "Skip",
   "announcements": {
     "step1_title": "Announcements",
     "step1_desc": "This panel shows important announcements from your team or system administrators.",
