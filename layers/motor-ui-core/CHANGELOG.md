@@ -1,5 +1,12 @@
 # @motor-cms/ui-core
 
+## 1.16.0
+
+### Minor Changes
+
+- - fix: re-apply standalone tsconfig (matches 972dcb6)
+  - feat(motor-ui-admin): move v-onboarding ownership to layer
+
 ## 1.15.1
 
 ### Patch Changes
