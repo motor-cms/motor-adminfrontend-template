@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useVOnboarding } from 'v-onboarding'
+
 const { t } = useI18n()
 
 const { isCompleted: adminGridCompleted, markCompleted: markAdminGridDone } = useOnboardingState('admin-grid')
