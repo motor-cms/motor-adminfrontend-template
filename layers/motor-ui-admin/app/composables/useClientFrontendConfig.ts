@@ -47,9 +47,9 @@ export function useClientFrontendConfig(
 
   watch(
     () => options.fetching.value,
-    (isFetching, wasFetching) => {
-      // Trigger when fetching transitions from true → false
-      if (wasFetching && !isFetching && options.entityState.frontend_config) {
+    (isFetching) => {
+      // Hydrate when fetching completes (or data is already loaded)
+      if (!isFetching && options.entityState.frontend_config) {
         const raw = options.entityState.frontend_config
         const parsed = frontendConfigSchema.safeParse(raw)
 
@@ -74,7 +74,8 @@ export function useClientFrontendConfig(
           }
         }
       }
-    }
+    },
+    { immediate: true }
   )
 
   // ============================================
