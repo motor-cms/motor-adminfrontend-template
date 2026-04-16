@@ -52,7 +52,7 @@ export const frontendConfigSchema = z.object({
   colorScheme: z.string().min(1, { message: 'Required' }),
   logoSlug: z.string().min(1, { message: 'Required' }),
   contact: z.object({
-    contactUrl: optionalUrlSchema,
+    contactUrl: z.string().url({ message: 'Must be a valid URL' }),
     email: z.string().email({ message: 'Must be a valid email' }),
     whatsappUrl: optionalUrlSchema.nullable().optional().transform((v) => v ?? null)
   }),
@@ -97,14 +97,14 @@ export function frontendConfigFields(t: (key: string) => string): FormFieldConfi
     {
       key: 'colorScheme',
       label: t('motor-admin.clients.frontend_config.color_scheme'),
-      input: 'text',
+      input: 'select',
       required: true,
       group: 'fc_brand'
     },
     {
       key: 'logoSlug',
       label: t('motor-admin.clients.frontend_config.logo_slug'),
-      input: 'text',
+      input: 'select',
       required: true,
       group: 'fc_brand'
     },
@@ -114,7 +114,7 @@ export function frontendConfigFields(t: (key: string) => string): FormFieldConfi
       key: 'contact.contactUrl',
       label: t('motor-admin.clients.frontend_config.contact_url'),
       input: 'url',
-      required: false,
+      required: true,
       group: 'fc_contact'
     },
     {
