@@ -5,12 +5,11 @@
  * Applies CSS classes directly to document.documentElement.
  */
 
-export type ThemeName = 'default' | 'liquid-glass' | 'neon-grid'
+export type ThemeName = 'default' | 'liquid-glass'
 export type GlassBg = 'mesh' | 'aurora' | 'sunset' | 'ocean' | 'cosmic' | 'abstract' | 'energis'
 
 const THEME_CLASSES: Record<Exclude<ThemeName, 'default'>, string> = {
-  'liquid-glass': 'theme-liquid-glass',
-  'neon-grid': 'theme-neon-grid'
+  'liquid-glass': 'theme-liquid-glass'
 }
 const BG_PREFIX = 'glass-bg-'
 
@@ -36,7 +35,6 @@ export function useTheme() {
   })
 
   const isLiquidGlass = computed(() => themeName.value === 'liquid-glass')
-  const isNeonGrid = computed(() => themeName.value === 'neon-grid')
 
   const htmlClasses = computed(() => {
     const classes: string[] = []
@@ -60,7 +58,7 @@ export function useTheme() {
     themeName.value = name
   }
 
-  const themeOrder: ThemeName[] = ['default', 'liquid-glass', 'neon-grid']
+  const themeOrder: ThemeName[] = ['default', 'liquid-glass']
 
   function toggleTheme() {
     const idx = themeOrder.indexOf(themeName.value)
@@ -75,7 +73,6 @@ export function useTheme() {
     themeName,
     glassBg,
     isLiquidGlass,
-    isNeonGrid,
     toggleTheme,
     setTheme,
     setGlassBg
