@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 @import "./themes/liquid-glass.css";
-@import "./themes/neon-grid.css";
 
 @font-face {
   font-family: "Sora";

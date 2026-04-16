@@ -75,7 +75,6 @@
   "logged_in_as": "Sie sind angemeldet als",
   "dashboard_description": "Dies ist das {clientName} Admin Dashboard. Verwenden Sie die Seitenleiste zur Navigation.",
   "theme_liquid_glass": "Liquid Glass",
-  "theme_neon_grid": "Neon Grid",
   "url_placeholder": "https://",
   "no_permission": "Keine Berechtigung",
   "no_permission_edit": "Sie haben keine Berechtigung, diesen Eintrag zu bearbeiten. Bitte wenden Sie sich an Ihren Administrator.",

@@ -9,10 +9,15 @@ defineProps<{
 
 const { user, logout } = useSanctumAuth<User>()
 const colorMode = useColorMode()
-const { themeName, glassBg, isLiquidGlass, isNeonGrid, setTheme, setGlassBg } = useTheme()
+const { themeName, glassBg, isLiquidGlass, setTheme, setGlassBg } = useTheme()
 const { t, locale, setLocale } = useI18n()
 const appSettings = useAppSettingsStore()
 const { settingsOpen } = useDashboard()
+
+// Theme picker is hidden by default so customers don't see WIP themes.
+// Devs can flip NUXT_PUBLIC_SHOW_THEME_PICKER=true to expose it.
+const runtimeConfig = useRuntimeConfig()
+const showThemePicker = computed(() => Boolean(runtimeConfig.public.showThemePicker))
 
 function changeLocale(code: 'de' | 'en') {
   setLocale(code)
@@ -97,54 +102,47 @@ const items = computed<DropdownMenuItem[][]>(() => [
       }
     ]
   }],
-  [{
-    label: g('theme'),
-    icon: isNeonGrid.value ? 'i-lucide-grid-2x2' : isLiquidGlass.value ? 'i-lucide-gem' : 'i-lucide-palette',
-    children: [
-      {
-        label: g('default'),
-        icon: 'i-lucide-palette',
-        type: 'checkbox',
-        checked: themeName.value === 'default',
-        onUpdateChecked() {
-          setTheme('default')
-        }
-      },
-      {
-        label: g('theme_liquid_glass'),
-        icon: 'i-lucide-gem',
-        type: 'checkbox',
-        checked: themeName.value === 'liquid-glass',
-        onUpdateChecked() {
-          setTheme('liquid-glass')
-        }
-      },
-      {
-        label: g('theme_neon_grid'),
-        icon: 'i-lucide-grid-2x2',
-        type: 'checkbox',
-        checked: themeName.value === 'neon-grid',
-        onUpdateChecked() {
-          setTheme('neon-grid')
-        }
-      }
-    ]
-  },
-  ...(isLiquidGlass.value
-    ? [{
-        label: g('background'),
-        icon: 'i-lucide-image',
-        children: glassBgOptions.map(opt => ({
-          label: opt.label,
-          icon: opt.icon,
-          type: 'checkbox' as const,
-          checked: glassBg.value === opt.key,
-          onUpdateChecked() {
-            setGlassBg(opt.key)
+  ...(showThemePicker.value
+    ? [[{
+        label: g('theme'),
+        icon: isLiquidGlass.value ? 'i-lucide-gem' : 'i-lucide-palette',
+        children: [
+          {
+            label: g('default'),
+            icon: 'i-lucide-palette',
+            type: 'checkbox' as const,
+            checked: themeName.value === 'default',
+            onUpdateChecked() {
+              setTheme('default')
+            }
+          },
+          {
+            label: g('theme_liquid_glass'),
+            icon: 'i-lucide-gem',
+            type: 'checkbox' as const,
+            checked: themeName.value === 'liquid-glass',
+            onUpdateChecked() {
+              setTheme('liquid-glass')
+            }
           }
-        }))
-      }]
-    : [])],
+        ]
+      },
+      ...(isLiquidGlass.value
+        ? [{
+            label: g('background'),
+            icon: 'i-lucide-image',
+            children: glassBgOptions.map(opt => ({
+              label: opt.label,
+              icon: opt.icon,
+              type: 'checkbox' as const,
+              checked: glassBg.value === opt.key,
+              onUpdateChecked() {
+                setGlassBg(opt.key)
+              }
+            }))
+          }]
+        : [])]]
+    : []),
   [{
     label: g('log_out'),
     icon: 'i-lucide-log-out',

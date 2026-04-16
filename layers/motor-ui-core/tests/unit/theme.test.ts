@@ -55,21 +55,12 @@ describe('useTheme', () => {
     expect(isLiquidGlass.value).toBe(true)
   })
 
-  it('theme-isNeonGrid-flag', () => {
-    themeRef.value = 'neon-grid'
-    const { isNeonGrid } = useTheme()
-
-    expect(isNeonGrid.value).toBe(true)
-  })
-
   it('toggleTheme cycles through all themes', () => {
     const { themeName, toggleTheme } = useTheme()
 
     expect(themeName.value).toBe('default')
     toggleTheme()
     expect(themeName.value).toBe('liquid-glass')
-    toggleTheme()
-    expect(themeName.value).toBe('neon-grid')
     toggleTheme()
     expect(themeName.value).toBe('default')
   })
@@ -100,20 +91,6 @@ describe('useTheme', () => {
     const classes = headCall.htmlAttrs.class
     expect(classes.value).toContain('theme-liquid-glass')
     expect(classes.value).toContain('glass-bg-aurora')
-  })
-
-  it('htmlClasses includes theme class for neon-grid without glass bg', () => {
-    themeRef.value = 'neon-grid'
-
-    const mockUseHead = vi.fn()
-    vi.stubGlobal('useHead', mockUseHead)
-
-    useTheme()
-
-    const headCall = mockUseHead.mock.calls[0][0]
-    const classes = headCall.htmlAttrs.class
-    expect(classes.value).toContain('theme-neon-grid')
-    expect(classes.value).not.toContain('glass-bg-')
   })
 
   it('htmlClasses is empty for default theme', () => {
