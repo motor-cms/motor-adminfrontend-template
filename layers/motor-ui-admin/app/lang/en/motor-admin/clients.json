@@ -44,5 +44,17 @@
     "social_instagram": "Instagram",
     "social_facebook": "Facebook",
     "seo_site_name": "Site Name"
+  },
+  "global_components": {
+    "title": "Global Components",
+    "footer": "Footer",
+    "no_footer": "No footer configured",
+    "create_footer": "Create Footer",
+    "edit_footer": "Edit Footer",
+    "unlink_footer": "Unlink",
+    "footer_created": "Footer created successfully.",
+    "published": "Published",
+    "draft": "Draft",
+    "no_languages": "No languages configured for this client. Add navigation trees first."
   }
 }
