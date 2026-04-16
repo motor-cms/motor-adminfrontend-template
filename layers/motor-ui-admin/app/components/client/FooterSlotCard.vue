@@ -23,7 +23,7 @@ const emit = defineEmits<{
 const client = useSanctumClient()
 const router = useRouter()
 const { t, locale } = useI18n()
-const { success } = useNotify()
+const { success, error: notifyError } = useNotify()
 
 // ============================================
 // Page info state
@@ -57,8 +57,10 @@ async function fetchPageInfo(uuid: string): Promise<void> {
       is_published: data.is_published,
       updated_at: data.updated_at,
     }
-  }
-  finally {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : t('motor-core.errors.something_went_wrong')
+    notifyError(t('motor-admin.clients.global_components.footer'), message)
+  } finally {
     loadingPage.value = false
   }
 }
@@ -111,10 +113,12 @@ async function onCreateFooter(): Promise<void> {
     })
     const data = response.data
     emit('linked', data.uuid, data.id)
-    success(t('motor-admin.clients.global_components.footer_created_success'))
+    success(t('motor-admin.clients.global_components.footer_created'))
     await router.push(`/motor-builder/builder-pages/${data.id}/edit`)
-  }
-  finally {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : t('motor-core.errors.create_failed')
+    notifyError(t('motor-admin.clients.global_components.footer'), message)
+  } finally {
     creating.value = false
   }
 }
@@ -139,7 +143,7 @@ function onUnlinkFooter(): void {
       <div class="min-w-0">
         <!-- Label -->
         <div class="text-sm font-medium text-highlighted">
-          {{ t('motor-admin.clients.global_components.footer_label') }}
+          {{ t('motor-admin.clients.global_components.footer') }}
           <span v-if="showLanguageLabel && languageName" class="text-muted font-normal">
             ({{ languageName }})
           </span>
@@ -173,14 +177,14 @@ function onUnlinkFooter(): void {
         <template v-else-if="loadingPage">
           <div class="flex items-center gap-1.5 mt-0.5">
             <UIcon name="i-lucide-loader-2" class="size-3.5 animate-spin text-muted" />
-            <span class="text-sm text-muted">{{ t('motor-admin.clients.global_components.loading') }}</span>
+            <span class="text-sm text-muted">{{ t('motor-core.global.loading') }}</span>
           </div>
         </template>
 
         <!-- No footer configured -->
         <template v-else>
           <div class="text-sm text-dimmed mt-0.5">
-            {{ t('motor-admin.clients.global_components.no_footer_configured') }}
+            {{ t('motor-admin.clients.global_components.no_footer') }}
           </div>
         </template>
       </div>
@@ -205,7 +209,7 @@ function onUnlinkFooter(): void {
           :disabled="disabled"
           @click="onUnlinkFooter"
         >
-          {{ t('motor-admin.clients.global_components.unlink') }}
+          {{ t('motor-admin.clients.global_components.unlink_footer') }}
         </UButton>
       </template>
 

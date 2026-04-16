@@ -64,8 +64,9 @@ export function useClientLanguages(clientId: Ref<string | number>): UseClientLan
           .filter((lang) => distinctLanguageIds.includes(lang.id))
           .map((lang) => ({ id: lang.id, name: lang.english_name }))
           .sort((a, b) => a.id - b.id)
-      }
-      finally {
+      } catch {
+        languages.value = []
+      } finally {
         loading.value = false
       }
     },

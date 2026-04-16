@@ -13,7 +13,7 @@ import {
 // ============================================
 
 export interface UseClientFrontendConfigOptions {
-  entityState: Record<string, unknown>
+  clientRecord: Ref<{ data: Record<string, unknown> } | null | undefined>
   fetching: Ref<boolean>
 }
 
@@ -49,8 +49,10 @@ export function useClientFrontendConfig(
     () => options.fetching.value,
     (isFetching) => {
       // Hydrate when fetching completes (or data is already loaded)
-      if (!isFetching && options.entityState.frontend_config) {
-        const raw = options.entityState.frontend_config
+      if (!isFetching) {
+        const raw = options.clientRecord.value?.data?.frontend_config
+        if (!raw) return
+
         const parsed = frontendConfigSchema.safeParse(raw)
 
         if (parsed.success) {
@@ -107,10 +109,10 @@ export function useClientFrontendConfig(
   function getSubmitData(): Record<string, unknown> {
     const clone = JSON.parse(JSON.stringify(state)) as Record<string, unknown>
 
-    // Preserve globalComponents from the original entity state — these are
+    // Preserve globalComponents from the raw API record — these are
     // footer UUIDs managed separately (e.g. by GlobalComponentsSection) and
     // must not be overwritten by the frontend config form.
-    const originalConfig = options.entityState.frontend_config as
+    const originalConfig = options.clientRecord.value?.data?.frontend_config as
       | { globalComponents?: Record<string, unknown> }
       | undefined
 
