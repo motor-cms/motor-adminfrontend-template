@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 1.15.1
+
+### Patch Changes
+
+- - i18n(onboarding): rephrase builder step 4 and add preview-button step
+
 ## 1.15.0
 
 ### Minor Changes
