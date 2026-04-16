@@ -5,6 +5,8 @@ const { t } = useI18n()
 const { can } = usePermissions()
 const { user } = useSanctumAuth<User>()
 const router = useRouter()
+const { completeOnboarding } = useProfileApi()
+const { commitDone, isDone } = useOnboardingDone()
 
 const { isCompleted: announcementsCompleted, markCompleted: markAnnouncementsDone } = useOnboardingState('dashboard-announcements')
 const { isCompleted: notificationsCompleted, markCompleted: markNotificationsDone } = useOnboardingState('notifications')
@@ -19,10 +21,10 @@ const notificationsWrapper = ref(null)
 const searchWrapper = ref(null)
 const adminNavWrapper = ref(null)
 
-const { start: startAnnouncements } = useVOnboarding(announcementsWrapper)
-const { start: startNotifications } = useVOnboarding(notificationsWrapper)
-const { start: startSearch } = useVOnboarding(searchWrapper)
-const { start: startAdminNav } = useVOnboarding(adminNavWrapper)
+const { start: startAnnouncements, finish: finishAnnouncements } = useVOnboarding(announcementsWrapper)
+const { start: startNotifications, finish: finishNotifications } = useVOnboarding(notificationsWrapper)
+const { start: startSearch, finish: finishSearch } = useVOnboarding(searchWrapper)
+const { start: startAdminNav, finish: finishAdminNav } = useVOnboarding(adminNavWrapper)
 
 // ── Shared options ────────────────────────────────────────────────────────────
 const options = computed(() => ({
@@ -120,7 +122,7 @@ const adminNavSteps = computed(() => [
   },
 ])
 
-// ── Event handlers ────────────────────────────────────────────────────────────
+// ── Finish handlers ───────────────────────────────────────────────────────────
 
 /**
  * Announcements tour finished → chain to notifications.
@@ -169,23 +171,68 @@ function onAdminNavFinish() {
   router.push('/motor-admin/users')
 }
 
+// ── Skip handlers ─────────────────────────────────────────────────────────────
+// Pre-mark all remaining tours as done so @finish chain conditions are false,
+// then call finish() to close the wrapper.
+//
+// finish() is required — exit() from the slot only emits @exit without
+// changing the wrapper's internal currentIndex, so the tooltip stays open.
+//
+// completeOnboarding() clears show_onboarding on the backend so the watch
+// does not trigger another resetOnboardingState() on the next dashboard visit.
+// We also set user.value.data.show_onboarding = false immediately so the
+// in-memory auth cache does not cause another reset before the API response
+// arrives.
+
+function skipAll() {
+  // commitDone() must run BEFORE the API call — if the browser cancels the
+  // in-flight request on a hard reload the localStorage flag still survives
+  // and prevents the show_onboarding watch from resetting state.
+  commitDone()
+  markAnnouncementsDone()
+  markNotificationsDone()
+  markSearchDone()
+  markAdminNavDone()
+  if (user.value?.data) user.value.data.show_onboarding = false
+  completeOnboarding().catch(() => {})
+}
+
+function skipAnnouncements() { skipAll(); finishAnnouncements() }
+function skipNotifications() { skipAll(); finishNotifications() }
+function skipSearch() { skipAll(); finishSearch() }
+function skipAdminNav() { skipAll(); finishAdminNav() }
+
 // ── Start logic ───────────────────────────────────────────────────────────────
-// Announcements is the ONLY entry point. Each tour chains to the next via @finish.
-// VOnboardingWrapper is registered as client-only, so wrapper refs are null
-// until after hydration.
+// Watch both the 4 wrappers AND user.value.data so the show_onboarding check
+// never runs against a null/stale user — solving the race between wrapper mount
+// and the sanctum /api/user response.
+//
+// After resetting we immediately set user.value.data.show_onboarding = false so
+// that if DashboardOnboarding is unmounted and remounted (navigation away/back)
+// the same session does not trigger a second reset from the in-memory cache.
+// completeOnboarding() would clear the backend flag, but that is fire-and-forget
+// and may resolve after a re-render; the local mutation is the reliable guard.
 const stopWatch = watch(
-  [announcementsWrapper, notificationsWrapper, searchWrapper, adminNavWrapper],
-  async ([announcementsW, notificationsW, searchW, adminNavW]) => {
-    if (!announcementsW || !notificationsW || !searchW || !adminNavW) return
+  () => [
+    announcementsWrapper.value,
+    notificationsWrapper.value,
+    searchWrapper.value,
+    adminNavWrapper.value,
+    user.value?.data,
+  ] as const,
+  async ([announcementsW, notificationsW, searchW, adminNavW, userData]) => {
+    if (!announcementsW || !notificationsW || !searchW || !adminNavW || !userData) return
     stopWatch()
 
-    // If the backend flag is set, clear localStorage so the tour runs again
-    if (user.value?.data?.show_onboarding) {
+    // Only reset if the user has NOT already committed a skip.
+    // isSkipCommitted() reads localStorage, so it survives hard reloads even
+    // when the completeOnboarding() API call was cancelled by the browser.
+    // resetAll() in useOnboardingResetAll clears the skip flag, so a
+    // deliberate "restart tour" from the profile page still works correctly.
+    if (userData.show_onboarding && !isDone()) {
+      userData.show_onboarding = false
       resetOnboardingState()
     }
-
-    // Allow initial toasts to clear before starting
-    await new Promise(resolve => setTimeout(resolve, 2500))
 
     if (!announcementsCompleted.value) {
       startAnnouncements()
@@ -201,23 +248,39 @@ const stopWatch = watch(
     :steps="announcementSteps"
     :options="options"
     @finish="onAnnouncementsFinish"
-  />
+  >
+    <template #default="{ step, next, previous, isFirst, isLast }">
+      <OnboardingStep :step="step" :next="next" :previous="previous" :skip="skipAnnouncements" :is-first="isFirst" :is-last="isLast" />
+    </template>
+  </VOnboardingWrapper>
   <VOnboardingWrapper
     ref="notificationsWrapper"
     :steps="notificationsSteps"
     :options="options"
     @finish="onNotificationsFinish"
-  />
+  >
+    <template #default="{ step, next, previous, isFirst, isLast }">
+      <OnboardingStep :step="step" :next="next" :previous="previous" :skip="skipNotifications" :is-first="isFirst" :is-last="isLast" />
+    </template>
+  </VOnboardingWrapper>
   <VOnboardingWrapper
     ref="searchWrapper"
     :steps="searchSteps"
     :options="options"
     @finish="onSearchFinish"
-  />
+  >
+    <template #default="{ step, next, previous, isFirst, isLast }">
+      <OnboardingStep :step="step" :next="next" :previous="previous" :skip="skipSearch" :is-first="isFirst" :is-last="isLast" />
+    </template>
+  </VOnboardingWrapper>
   <VOnboardingWrapper
     ref="adminNavWrapper"
     :steps="adminNavSteps"
     :options="options"
     @finish="onAdminNavFinish"
-  />
+  >
+    <template #default="{ step, next, previous, isFirst, isLast }">
+      <OnboardingStep :step="step" :next="next" :previous="previous" :skip="skipAdminNav" :is-first="isFirst" :is-last="isLast" />
+    </template>
+  </VOnboardingWrapper>
 </template>
