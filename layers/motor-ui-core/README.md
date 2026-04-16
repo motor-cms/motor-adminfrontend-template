@@ -17,7 +17,7 @@ motor-ui-core/
 ├── app/
 │   ├── assets/css/
 │   │   ├── main.css                    # Global styles + Tailwind imports
-│   │   └── themes/                     # Optional visual themes (liquid-glass, neon-grid)
+│   │   └── themes/                     # Optional visual themes (liquid-glass)
 │   ├── components/                     # 11 shared Vue components
 │   ├── composables/                    # 24 composables + formFieldUtils
 │   ├── i18n.config.ts                  # vue-i18n configuration
