@@ -26,7 +26,7 @@
   font-size: 0.9375rem;
 }
 
-[data-v-onboarding-wrapper] .v-onboarding-item__header-close:hover {
+[data-ing-wrapper] .v-onboarding-item__header-close:hover {
   background-color: var(--ui-bg-accented) !important;
 }
 

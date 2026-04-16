@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useVOnboarding } from 'v-onboarding'
 import type { User } from '@motor-cms/ui-core/app/types/auth'
 
 const { t } = useI18n()
