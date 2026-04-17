@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 1.16.1
+
+### Patch Changes
+
+- - refactor: move @motor-cms/ui-core from dependencies to peerDependencies in ui-admin and ui-media
+
 ## 1.16.0
 
 ### Minor Changes
