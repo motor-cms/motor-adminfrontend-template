@@ -129,3 +129,23 @@ export function useOnboardingDone() {
 
   return { commitDone, isDone }
 }
+
+/**
+ * Central guard: should the onboarding tour run for this user?
+ *
+ * Returns true only when BOTH conditions are met:
+ *   1. Backend says show_onboarding=true (fresh user or "restart tour" from profile)
+ *   2. User hasn't already completed/skipped the tour in this browser (isDone=false)
+ *
+ * Use this everywhere instead of hand-rolling the check.
+ */
+export function useOnboardingEnabled() {
+  const { user } = useSanctumAuth<User>()
+  const { isDone } = useOnboardingDone()
+
+  const isEnabled = computed(() => {
+    return !!user.value?.data?.show_onboarding && !isDone()
+  })
+
+  return { isEnabled }
+}
