@@ -1,12 +1,9 @@
-// NOTE: These types mirror @zrmdev/ui-builder/app/types/builder/page-definition.
-// When @zrmdev/ui-builder is available as a dependency of this package, replace
-// the local definitions below with:
-//   import type { PageDefinition, PageRow, PageColumn, PageComponent, ComponentSlot, PageAtom }
-//     from '@zrmdev/ui-builder/app/types/builder/page-definition'
+import { generateUuid } from '@motor-cms/ui-core/app/utils/uuid'
 
-// NOTE: Component and atom names (e.g. 'headline', 'paragraph', 'image', 'cta-button')
-// are placeholders. They must be verified against the running builder's component/atom
-// registries before use in production.
+// Types mirror @zrmdev/ui-builder/app/types/builder/page-definition. Names
+// (HeadlineParagraphComponent, ImageComponent, HeadlineAtom, ParagraphAtom,
+// ButtonAtom, ImageAtom) match the renderer registry in
+// motor-ui-components/app/builder-registry/bootstrap.ts.
 
 // ============================================
 // Local type definitions (mirror page-definition)
@@ -93,7 +90,7 @@ function makeAtom(
   attributes: Record<string, unknown> = {}
 ): PageAtom {
   return {
-    uuid: crypto.randomUUID(),
+    uuid: generateUuid(),
     display_name,
     component_name,
     classes: '',
@@ -111,7 +108,7 @@ function makeSlot(
   atoms: PageAtom[]
 ): ComponentSlot {
   return {
-    uuid: crypto.randomUUID(),
+    uuid: generateUuid(),
     name,
     display_name,
     allowedAtoms,
@@ -122,25 +119,27 @@ function makeSlot(
 function makeComponent(
   name: string,
   display_name: string,
+  cssClassName: string,
   slots: ComponentSlot[],
+  attributes: Record<string, unknown> = {},
   components: PageComponent[] = []
 ): PageComponent {
   return {
-    uuid: crypto.randomUUID(),
+    uuid: generateUuid(),
     name,
     display_name,
     icon: '',
     classes: '',
-    cssClassName: '',
+    cssClassName,
     visible: true,
     disabled: false,
-    attributes: {},
+    attributes,
     component_slot_name: null,
     component_slot_prefix: null,
     is_removable: 1,
     is_duplicatable: 1,
     min_amount_in_another_component: 0,
-    display_viewports: '',
+    display_viewports: 's,t,m,l,xl',
     slots,
     components,
     scorings: [],
@@ -155,7 +154,7 @@ function makeColumn(
   components: PageComponent[]
 ): PageColumn {
   return {
-    uuid: crypto.randomUUID(),
+    uuid: generateUuid(),
     classes: '',
     display_name,
     value_as_grid_column,
@@ -164,11 +163,11 @@ function makeColumn(
   }
 }
 
-function makeRow(display_name: string, cols: PageColumn[]): PageRow {
+function makeRow(display_name: string, cols: PageColumn[], classes = ''): PageRow {
   return {
-    uuid: crypto.randomUUID(),
+    uuid: generateUuid(),
     display_name,
-    classes: '',
+    classes,
     global_css: '',
     cols
   }
@@ -178,73 +177,107 @@ function makeRow(display_name: string, cols: PageColumn[]): PageRow {
 // Footer template factory
 // ============================================
 
+const PLACEHOLDER_IMAGE = '/images/general/frau_mit_kind.jpeg'
+
+const TEXT_SLOT_ALLOWED = ['OverlineAtom', 'HeadlineAtom', 'ParagraphAtom', 'ButtonAtom', 'ImageAtom', 'VideoAtom']
+
+function textContentComponent(
+  display_name: string,
+  atoms: PageAtom[],
+  attributes: Record<string, unknown> = { has_background: false }
+): PageComponent {
+  return makeComponent(
+    'HeadlineParagraphComponent',
+    display_name,
+    'headline-paragraph',
+    [makeSlot('content', 'Content', TEXT_SLOT_ALLOWED, atoms)],
+    attributes
+  )
+}
+
+function headlineAtom(text: string, level: 'h2' | 'h3' | 'h4' = 'h3'): PageAtom {
+  return makeAtom('Headline', 'HeadlineAtom', {
+    text,
+    type: level,
+    displayedLevel: level,
+    weight: 'bold'
+  })
+}
+
+function paragraphAtom(text: string): PageAtom {
+  return makeAtom('Paragraph', 'ParagraphAtom', {
+    text,
+    bullet_type: 'check__default',
+    orderedlist_type: 'decimal'
+  })
+}
+
+function buttonAtom(title: string): PageAtom {
+  return makeAtom('Button', 'ButtonAtom', {
+    title,
+    link: '',
+    variant: 'dark',
+    has_arrow: false
+  })
+}
+
+function imageAtom(display_name: string): PageAtom {
+  return makeAtom(display_name, 'ImageAtom', {
+    src: PLACEHOLDER_IMAGE,
+    alt: display_name
+  })
+}
+
+function imageComponent(display_name: string, extraClasses = ''): PageComponent {
+  const c = makeComponent(
+    'ImageComponent',
+    display_name,
+    'image',
+    [makeSlot('content', 'Content', ['ImageAtom'], [imageAtom(display_name)])]
+  )
+  if (extraClasses) c.classes = extraClasses
+  return c
+}
+
 export function createFooterTemplate(): PageDefinition {
-  // ---- Row 1 ----
-  // Column 1: free text content (Headline + Paragraph)
-  const row1col1Component = makeComponent(
-    'text-content',
-    'Text Content',
-    [
-      makeSlot('content', 'Content', ['headline', 'paragraph'], [
-        makeAtom('Headline', 'headline'),
-        makeAtom('Paragraph', 'paragraph')
-      ])
-    ]
-  )
-
-  // Column 2: award badge images (3 × Image)
-  const row1col2Component = makeComponent(
-    'image-group',
-    'Image Group',
-    [
-      makeSlot('images', 'Images', ['image'], [
-        makeAtom('Badge 1', 'image'),
-        makeAtom('Badge 2', 'image'),
-        makeAtom('Badge 3', 'image')
-      ])
-    ]
-  )
-
+  // ---- Row 1: 6/6 split ----
+  // Col 1: intro text (Headline + Paragraph)
+  // Col 2: three award badges, each its own ImageComponent
   const row1 = makeRow('Row 1', [
-    makeColumn('Column 1', 6, [row1col1Component]),
-    makeColumn('Column 2', 6, [row1col2Component])
-  ])
-
-  // ---- Row 2 ----
-  // Column 1: Kontakt section (pre-filled headline + paragraph)
-  const row2col1Component = makeComponent(
-    'text-content',
-    'Kontakt',
-    [
-      makeSlot('content', 'Content', ['headline', 'paragraph'], [
-        makeAtom('Headline', 'headline', { text: 'Kontakt' }),
-        makeAtom('Paragraph', 'paragraph')
+    makeColumn('Column 1', 6, [
+      textContentComponent('Intro', [
+        headlineAtom('Headline', 'h2'),
+        paragraphAtom('Paragraph')
       ])
-    ]
-  )
-
-  // Columns 2–4: each has Headline + Paragraph + CTA button
-  function makeNavColumn(display_name: string): PageColumn {
-    const component = makeComponent(
-      'text-content',
-      display_name,
-      [
-        makeSlot('content', 'Content', ['headline', 'paragraph', 'cta-button'], [
-          makeAtom('Headline', 'headline'),
-          makeAtom('Paragraph', 'paragraph'),
-          makeAtom('CTA Button', 'cta-button')
-        ])
-      ]
-    )
-    return makeColumn(display_name, 3, [component])
-  }
-
-  const row2 = makeRow('Row 2', [
-    makeColumn('Column 1', 3, [row2col1Component]),
-    makeNavColumn('Column 2'),
-    makeNavColumn('Column 3'),
-    makeNavColumn('Column 4')
+    ]),
+    makeColumn('Column 2', 6, [
+      imageComponent('Badge 1', 'footer-badge'),
+      imageComponent('Badge 2', 'footer-badge'),
+      imageComponent('Badge 3', 'footer-badge')
+    ])
   ])
+
+  // ---- Row 2: four 3/12 columns ----
+  // Col 1: Kontakt (pre-filled headline)
+  // Col 2-4: nav-style headline + paragraph + CTA button
+  // Row gets the white inset card chrome inside the peach FooterFrame.
+  const row2 = makeRow('Row 2', [
+    makeColumn('Column 1', 3, [
+      textContentComponent('Kontakt', [
+        headlineAtom('Kontakt', 'h3'),
+        paragraphAtom('Paragraph')
+      ])
+    ]),
+    ...['Column 2', 'Column 3', 'Column 4'].map((label) =>
+      makeColumn(label, 3, [
+        textContentComponent(label, [
+          headlineAtom('Headline', 'h3'),
+          paragraphAtom('Paragraph'),
+          buttonAtom('CTA Button')
+        ])
+      ])
+    )
+  ], 'footer-content-card')
 
   return [row1, row2]
 }

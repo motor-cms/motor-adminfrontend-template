@@ -65,11 +65,17 @@ async function fetchPageInfo(uuid: string): Promise<void> {
   }
 }
 
-onMounted(async () => {
-  if (props.builderPageUuid) {
-    await fetchPageInfo(props.builderPageUuid)
-  }
-})
+watch(
+  () => props.builderPageUuid,
+  (uuid) => {
+    if (uuid) {
+      void fetchPageInfo(uuid)
+    } else {
+      pageInfo.value = null
+    }
+  },
+  { immediate: true }
+)
 
 // ============================================
 // Helpers
@@ -100,18 +106,43 @@ function buildPageName(): string {
 async function onCreateFooter(): Promise<void> {
   creating.value = true
   try {
+    // Step 1: create the empty page. The backend's createBuilderPage service
+    // hard-codes page_definition to []; the template is installed via the
+    // separate definition endpoint below.
     const response = await client<{ data: BuilderPageResource }>('/api/v2/builder-pages', {
       method: 'POST',
       body: {
         name: buildPageName(),
         client_id: props.clientId,
         language_id: props.languageId,
+        type: 'global_component',
         cache_type: 'always',
         ttl: 0,
-        page_definition: JSON.stringify(createFooterTemplate()),
+        is_excluded_from_search_index: false,
+        is_excluded_from_search: false,
+        is_excluded_from_cookie_banner: false,
       },
     })
     const data = response.data
+
+    // Step 2: install the template via the definition endpoint.
+    try {
+      await client(`/api/v2/builder-pages/${data.id}/definition`, {
+        method: 'PUT',
+        body: {
+          id: data.id,
+          page_definition: JSON.stringify(createFooterTemplate()),
+          is_published: false,
+        },
+      })
+    } catch (defErr: unknown) {
+      // Page exists but the template install failed. Surface a warning so the
+      // user knows to populate it manually, but still link + navigate so the
+      // empty page isn't orphaned.
+      const message = defErr instanceof Error ? defErr.message : t('motor-core.errors.update_failed')
+      notifyError(t('motor-admin.clients.global_components.footer'), message)
+    }
+
     emit('linked', data.uuid, data.id)
     success(t('motor-admin.clients.global_components.footer_created'))
     await router.push(`/motor-builder/builder-pages/${data.id}/edit`)
