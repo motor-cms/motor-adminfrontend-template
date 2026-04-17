@@ -12,6 +12,9 @@ const { error: notifyError } = useNotify()
 const route = useRoute()
 const clientId = route.params.id as string
 
+const isFrontendConfigEnabled
+  = useRuntimeConfig().public.featureClientFrontendConfig === true
+
 const {
   fields,
   schema,
@@ -37,6 +40,7 @@ const {
   mode: 'edit',
   id: clientId,
   beforeSubmit: (data) => {
+    if (!isFrontendConfigEnabled) return
     if (!validateFrontendConfig()) {
       throw new Error(t('motor-core.global.validation_failed'))
     }
@@ -59,15 +63,19 @@ const {
 
 const colorSchemeOptions = [
   { label: 'energis', value: 'energis' },
+  { label: 'highspeed', value: 'highspeed' },
   { label: 'jaeckel', value: 'jaeckel' }
 ]
 
 const logoSlugOptions = [
   { label: 'energis', value: 'energis' },
+  { label: 'highspeed', value: 'highspeed' },
   { label: 'jaeckel', value: 'jaeckel' }
 ]
 
-const clientIdRef = computed(() => route.params.id as string)
+const clientIdRef = computed(() =>
+  isFrontendConfigEnabled ? (route.params.id as string) : ''
+)
 const { languages, isMultiLanguage, loading: languagesLoading } = useClientLanguages(clientIdRef)
 
 const footerMap = computed(() => {
@@ -91,6 +99,8 @@ async function onFooterLinked(languageId: number, uuid: string, _pageId: number)
     await sanctumClient(`/api/v2/clients/${clientId}`, {
       method: 'PATCH',
       body: {
+        name: freshClient.data.name,
+        slug: freshClient.data.slug,
         frontend_config: {
           ...freshConfig,
           globalComponents: { ...freshGc, footer: freshFooter }
@@ -98,17 +108,7 @@ async function onFooterLinked(languageId: number, uuid: string, _pageId: number)
       }
     })
 
-    // Update cached record to reflect the change
-    if (clientRecord.value?.data) {
-      const record = clientRecord.value.data
-      if (!record.frontend_config) record.frontend_config = {}
-      const fc = record.frontend_config as Record<string, unknown>
-      if (!fc.globalComponents) fc.globalComponents = {}
-      const gc = fc.globalComponents as Record<string, unknown>
-      if (!gc.footer) gc.footer = {}
-      const footer = gc.footer as Record<string, string>
-      footer[String(languageId)] = uuid
-    }
+    await refreshNuxtData(`entity-form-/api/v2/clients-${clientId}`)
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : t('motor-core.errors.update_failed')
     notifyError(t('motor-admin.clients.edit_title'), message)
@@ -128,6 +128,8 @@ async function onFooterUnlinked(languageId: number) {
     await sanctumClient(`/api/v2/clients/${clientId}`, {
       method: 'PATCH',
       body: {
+        name: freshClient.data.name,
+        slug: freshClient.data.slug,
         frontend_config: {
           ...freshConfig,
           globalComponents: { ...freshGc, footer: freshFooter }
@@ -135,14 +137,7 @@ async function onFooterUnlinked(languageId: number) {
       }
     })
 
-    // Update cached record
-    if (clientRecord.value?.data) {
-      const record = clientRecord.value.data
-      const fc = record.frontend_config as Record<string, unknown>
-      const gc = fc?.globalComponents as Record<string, unknown>
-      const footer = gc?.footer as Record<string, string>
-      if (footer) delete footer[String(languageId)]
-    }
+    await refreshNuxtData(`entity-form-/api/v2/clients-${clientId}`)
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : t('motor-core.errors.update_failed')
     notifyError(t('motor-admin.clients.edit_title'), message)
@@ -175,7 +170,10 @@ async function onFooterUnlinked(languageId: number) {
       @save-and-continue="onSaveAndContinue"
       @save-and-new="onSaveAndNew"
     >
-      <template #after-fields>
+      <template
+        v-if="isFrontendConfigEnabled"
+        #after-fields
+      >
         <ClientFrontendConfigSection
           :state="frontendConfigState"
           :fields="frontendConfigFields"
