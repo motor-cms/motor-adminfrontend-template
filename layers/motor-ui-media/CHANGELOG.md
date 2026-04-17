@@ -1,5 +1,13 @@
 # @motor-cms/ui-media
 
+## 1.16.2
+
+### Patch Changes
+
+- - fix: defer login success toast until dashboard is visible
+- Updated dependencies
+  - @motor-cms/ui-core@1.16.2
+
 ## 1.16.1
 
 ### Patch Changes
