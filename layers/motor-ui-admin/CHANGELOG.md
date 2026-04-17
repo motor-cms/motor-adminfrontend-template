@@ -1,5 +1,15 @@
 # @motor-cms/ui-admin
 
+## 1.16.3
+
+### Patch Changes
+
+- - fix: snapshot isEnabled before mutating show_onboarding to prevent computed invalidation
+  - fix: centralize onboarding guard into useOnboardingEnabled, respect backend show_onboarding flag
+  - fix: onboarding only starts when backend show_onboarding flag is true, revert login toast to original behavior, refresh identity after tour reset
+- Updated dependencies
+  - @motor-cms/ui-core@1.16.3
+
 ## 1.16.2
 
 ### Patch Changes
