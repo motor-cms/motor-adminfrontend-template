@@ -226,12 +226,14 @@ const stopWatch = watch(
     if (!announcementsW || !notificationsW || !searchW || !adminNavW || !userData) return
     stopWatch()
 
-    if (isEnabled.value) {
+    const shouldRun = isEnabled.value
+
+    if (shouldRun) {
       userData.show_onboarding = false
       resetOnboardingState()
     }
 
-    if (isEnabled.value && !announcementsCompleted.value) {
+    if (shouldRun && !announcementsCompleted.value) {
       startAnnouncements()
     }
   },
