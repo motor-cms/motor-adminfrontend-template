@@ -23,5 +23,38 @@
   "contact_phone": "Telefon",
   "group_address": "Adresse",
   "group_contact": "Kontakt",
-  "group_other": "Sonstiges"
+  "group_other": "Sonstiges",
+  "frontend_config": {
+    "group_brand": "Marke",
+    "group_contact": "Kontakt (Frontend)",
+    "group_features": "Funktionen",
+    "group_social": "Social Media",
+    "group_seo": "SEO",
+    "brand_name": "Markenname",
+    "brand_logo_alt": "Logo Alt-Text",
+    "color_scheme": "Farbschema",
+    "logo_slug": "Logo",
+    "contact_url": "Kontaktseiten-URL",
+    "contact_email": "Kontakt-E-Mail",
+    "contact_whatsapp_url": "WhatsApp-URL",
+    "features_order_line": "Bestellstrecke",
+    "features_appointments": "Terminbuchung",
+    "features_clickpath": "Clickpath",
+    "features_footer_menu": "Footer-Menü",
+    "social_instagram": "Instagram",
+    "social_facebook": "Facebook",
+    "seo_site_name": "Seitenname"
+  },
+  "global_components": {
+    "title": "Globale Komponenten",
+    "footer": "Footer",
+    "no_footer": "Kein Footer konfiguriert",
+    "create_footer": "Footer erstellen",
+    "edit_footer": "Footer bearbeiten",
+    "unlink_footer": "Verknüpfung lösen",
+    "footer_created": "Footer erfolgreich erstellt.",
+    "published": "Veröffentlicht",
+    "draft": "Entwurf",
+    "no_languages": "Keine Sprachen für diesen Mandanten konfiguriert. Erstellen Sie zuerst Navigationsbäume."
+  }
 }

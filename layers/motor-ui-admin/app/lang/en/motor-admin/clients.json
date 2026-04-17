@@ -23,5 +23,38 @@
   "contact_phone": "Phone",
   "group_address": "Address",
   "group_contact": "Contact",
-  "group_other": "Other"
+  "group_other": "Other",
+  "frontend_config": {
+    "group_brand": "Brand",
+    "group_contact": "Contact (Frontend)",
+    "group_features": "Features",
+    "group_social": "Social Media",
+    "group_seo": "SEO",
+    "brand_name": "Brand Name",
+    "brand_logo_alt": "Logo Alt Text",
+    "color_scheme": "Color Scheme",
+    "logo_slug": "Logo",
+    "contact_url": "Contact Page URL",
+    "contact_email": "Contact Email",
+    "contact_whatsapp_url": "WhatsApp URL",
+    "features_order_line": "Order Line",
+    "features_appointments": "Appointments",
+    "features_clickpath": "Clickpath",
+    "features_footer_menu": "Footer Menu",
+    "social_instagram": "Instagram",
+    "social_facebook": "Facebook",
+    "seo_site_name": "Site Name"
+  },
+  "global_components": {
+    "title": "Global Components",
+    "footer": "Footer",
+    "no_footer": "No footer configured",
+    "create_footer": "Create Footer",
+    "edit_footer": "Edit Footer",
+    "unlink_footer": "Unlink",
+    "footer_created": "Footer created successfully.",
+    "published": "Published",
+    "draft": "Draft",
+    "no_languages": "No languages configured for this client. Add navigation trees first."
+  }
 }
