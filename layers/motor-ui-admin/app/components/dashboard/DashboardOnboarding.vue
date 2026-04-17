@@ -230,12 +230,18 @@ const stopWatch = watch(
     // when the completeOnboarding() API call was cancelled by the browser.
     // resetAll() in useOnboardingResetAll clears the skip flag, so a
     // deliberate "restart tour" from the profile page still works correctly.
-    if (userData.show_onboarding && !isDone()) {
+    // show_onboarding=true from backend means: fresh user or "restart tour"
+    // from profile. Reset local state and start fresh.
+    // If show_onboarding=false AND isDone()=false (e.g. localStorage cleared),
+    // do NOT start — the backend is the source of truth.
+    const shouldRun = userData.show_onboarding && !isDone()
+
+    if (shouldRun) {
       userData.show_onboarding = false
       resetOnboardingState()
     }
 
-    if (!announcementsCompleted.value) {
+    if (shouldRun && !announcementsCompleted.value) {
       startAnnouncements()
     }
   },
