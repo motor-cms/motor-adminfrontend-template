@@ -185,6 +185,7 @@ async function onRestartTour() {
   try {
     await resetOnboarding()
     resetOnboardingState()
+    await refreshIdentity()
     success(t('motor-core.profile.toast_tour_reset_title'), t('motor-core.profile.toast_tour_reset_message'))
     await router.push('/')
   }

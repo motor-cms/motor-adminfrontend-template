@@ -47,17 +47,6 @@ function onAnnouncementCreated() {
 
 const toast = useToast()
 
-onMounted(() => {
-  if (sessionStorage.getItem('motor:login-success')) {
-    sessionStorage.removeItem('motor:login-success')
-    toast.add({
-      title: t('motor-core.login.login_success'),
-      color: 'success',
-      icon: 'i-lucide-check-circle'
-    })
-  }
-})
-
 async function onDismiss(id: number) {
   await dismissAnnouncement(id)
   toast.add({ title: t('motor-admin.dashboard.announcement_dismissed'), icon: 'i-lucide-check', color: 'success' })
