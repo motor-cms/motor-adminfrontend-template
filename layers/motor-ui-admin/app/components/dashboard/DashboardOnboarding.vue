@@ -7,7 +7,8 @@ const { can } = usePermissions()
 const { user } = useSanctumAuth<User>()
 const router = useRouter()
 const { completeOnboarding } = useProfileApi()
-const { commitDone, isDone } = useOnboardingDone()
+const { commitDone } = useOnboardingDone()
+const { isEnabled } = useOnboardingEnabled()
 
 const { isCompleted: announcementsCompleted, markCompleted: markAnnouncementsDone } = useOnboardingState('dashboard-announcements')
 const { isCompleted: notificationsCompleted, markCompleted: markNotificationsDone } = useOnboardingState('notifications')
@@ -225,23 +226,12 @@ const stopWatch = watch(
     if (!announcementsW || !notificationsW || !searchW || !adminNavW || !userData) return
     stopWatch()
 
-    // Only reset if the user has NOT already committed a skip.
-    // isSkipCommitted() reads localStorage, so it survives hard reloads even
-    // when the completeOnboarding() API call was cancelled by the browser.
-    // resetAll() in useOnboardingResetAll clears the skip flag, so a
-    // deliberate "restart tour" from the profile page still works correctly.
-    // show_onboarding=true from backend means: fresh user or "restart tour"
-    // from profile. Reset local state and start fresh.
-    // If show_onboarding=false AND isDone()=false (e.g. localStorage cleared),
-    // do NOT start — the backend is the source of truth.
-    const shouldRun = userData.show_onboarding && !isDone()
-
-    if (shouldRun) {
+    if (isEnabled.value) {
       userData.show_onboarding = false
       resetOnboardingState()
     }
 
-    if (shouldRun && !announcementsCompleted.value) {
+    if (isEnabled.value && !announcementsCompleted.value) {
       startAnnouncements()
     }
   },
