@@ -4,6 +4,7 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 
 const { t } = useI18n()
 const { login } = useSanctumAuth()
+const toast = useToast()
 
 definePageMeta({
   layout: 'auth',
@@ -53,7 +54,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       email: event.data.email,
       password: event.data.password
     })
-    sessionStorage.setItem('motor:login-success', '1')
+    toast.add({
+      title: t('motor-core.login.login_success'),
+      color: 'success',
+      icon: 'i-lucide-check-circle'
+    })
   } catch {
     error.value = t('motor-core.login.login_failed')
   } finally {
