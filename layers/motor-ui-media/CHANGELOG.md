@@ -1,5 +1,13 @@
 # @motor-cms/ui-media
 
+## 3.0.1
+
+### Patch Changes
+
+- - fix: sort direction now actually sent to backend (colon syntax)
+- Updated dependencies
+  - @motor-cms/ui-core@3.0.1
+
 ## 3.0.0
 
 ### Minor Changes
