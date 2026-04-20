@@ -45,8 +45,8 @@ importers:
   layers/motor-ui-admin:
     dependencies:
       '@motor-cms/ui-core':
-        specifier: '>=2.0.1'
-        version: 2.0.1(b8f9feab4ede71482cc8ecb6bccdaa36)
+        specifier: '>=3.0.0'
+        version: 3.0.0(b8f9feab4ede71482cc8ecb6bccdaa36)
       '@tiptap/extension-link':
         specifier: ^3.0.0
         version: 3.20.4(@tiptap/core@3.20.4(@tiptap/pm@3.20.4))(@tiptap/pm@3.20.4)
@@ -120,8 +120,8 @@ importers:
   layers/motor-ui-media:
     dependencies:
       '@motor-cms/ui-core':
-        specifier: '>=2.0.1'
-        version: 2.0.1(b8f9feab4ede71482cc8ecb6bccdaa36)
+        specifier: '>=3.0.0'
+        version: 3.0.0(b8f9feab4ede71482cc8ecb6bccdaa36)
       '@vueuse/core':
         specifier: ^14.0.0
         version: 14.2.1(vue@3.5.30(typescript@5.9.3))
@@ -902,8 +902,8 @@ packages:
     peerDependencies:
       rollup: ^1.20.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
 
-  '@motor-cms/ui-core@2.0.1':
-    resolution: {integrity: sha512-NJoplbgu3kmfK68RBmXeafPzllFHG0rjqSbNDrQWgGwdX+nbj2iguAWFt+qm+W+XLqssI+sXpPAV2r/opk2ftg==}
+  '@motor-cms/ui-core@3.0.0':
+    resolution: {integrity: sha512-tZSXg04lGdaHG5HHwD39/bEqSOGxIKsr8UEcbJxEvozj7QyRqI7+a1BMfFYolOze4coz/ArHZbxRTrBGG+3ibw==}
     peerDependencies:
       nuxt: ^4.0.0
       vue: ^3.5.0
@@ -6554,7 +6554,7 @@ snapshots:
       json5: 2.2.3
       rollup: 4.60.0
 
-  '@motor-cms/ui-core@2.0.1(b8f9feab4ede71482cc8ecb6bccdaa36)':
+  '@motor-cms/ui-core@3.0.0(b8f9feab4ede71482cc8ecb6bccdaa36)':
     dependencies:
       '@iconify-json/lucide': 1.2.98
       '@nuxt/ui': 4.6.0(@tiptap/extensions@3.20.4(@tiptap/core@3.20.4(@tiptap/pm@3.20.4))(@tiptap/pm@3.20.4))(db0@0.3.4)(focus-trap@7.8.0)(ioredis@5.10.1)(magicast@0.5.2)(sortablejs@1.15.7)(tailwindcss@4.2.2)(typescript@5.9.3)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(vue-router@5.0.4(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))(zod@4.3.6)
