@@ -28,6 +28,8 @@ export interface ResourceFormMeta {
 export interface FormGroupOptions {
   fields: string[]
   orientation?: 'horizontal' | 'vertical'
+  /** Default column span (1–12) for fields in this group. Fields can override individually. */
+  defaultSpan?: number
 }
 
 export interface FormFieldsFromMetaOptions {
@@ -202,10 +204,11 @@ export function formFieldsFromMeta(
   if (groups) {
     for (const [groupKey, groupValue] of Object.entries(groups)) {
       const orientation = Array.isArray(groupValue) ? undefined : groupValue.orientation
+      const defaultSpan = Array.isArray(groupValue) ? undefined : groupValue.defaultSpan
       const fieldOrder = Array.isArray(groupValue) ? groupValue : groupValue.fields
       const groupLabelKey = `${prefix}.group_${groupKey}`
       if (teCheck(groupLabelKey)) {
-        groupConfigs.push({ key: groupKey, label: t(groupLabelKey), orientation, fieldOrder })
+        groupConfigs.push({ key: groupKey, label: t(groupLabelKey), orientation, defaultSpan, fieldOrder })
       } else {
         // Try global fallback (e.g. motor-core.global.group_basic)
         const globalGroupKey = `motor-core.global.group_${groupKey}`
@@ -213,6 +216,7 @@ export function formFieldsFromMeta(
           key: groupKey,
           label: teCheck(globalGroupKey) ? t(globalGroupKey) : humanizeKey(groupKey),
           orientation,
+          defaultSpan,
           fieldOrder
         })
       }
