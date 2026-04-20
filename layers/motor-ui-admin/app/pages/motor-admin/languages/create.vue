@@ -13,6 +13,19 @@ const { fields, schema, groups, state, loading, formRef, onSubmit, onSaveAndNew 
   formConfig: languageFormConfig,
   mode: 'create'
 })
+
+const isoField = fields.find(f => f.key === 'iso_639_1')
+watch(() => state.iso_639_1, (code) => {
+  const opt = isoField?.staticOptions?.find(o => o.value === code)
+  if (opt) {
+    const match = opt.label.match(/^(.+?)\s*—\s*(.+?)\s*\(/)
+    state.english_name = match?.[1]?.trim() ?? ''
+    state.native_name = match?.[2]?.trim() ?? ''
+  } else {
+    state.english_name = ''
+    state.native_name = ''
+  }
+})
 </script>
 
 <template>
