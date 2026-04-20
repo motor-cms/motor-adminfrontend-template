@@ -33,6 +33,11 @@ const toasterPositionItems = computed(() => [
   { value: 'bottom-right', label: g('toaster_position_bottom_right') }
 ])
 
+const formLayoutItems = computed(() => [
+  { value: 'comfortable', label: g('form_layout_comfortable') },
+  { value: 'compact', label: g('form_layout_compact') }
+])
+
 // Helper to access user data
 const userData = computed(() => user.value?.data)
 
@@ -218,6 +223,16 @@ const items = computed<DropdownMenuItem[][]>(() => [
           <USelectMenu
             v-model="appSettings.toasterPosition"
             :items="toasterPositionItems"
+            value-key="value"
+            :search-input="false"
+            class="w-full"
+          />
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-default">{{ g('form_layout') }}</label>
+          <USelectMenu
+            v-model="appSettings.formLayout"
+            :items="formLayoutItems"
             value-key="value"
             :search-input="false"
             class="w-full"

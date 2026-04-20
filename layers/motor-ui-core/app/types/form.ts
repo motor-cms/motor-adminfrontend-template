@@ -17,6 +17,8 @@ export interface FormFieldConfig {
   hidden?: boolean
   /** Static options for select/search-select fields (used instead of API-fetched options) */
   staticOptions?: SelectOption[]
+  /** Grid column span (1–12). Defaults to the group's defaultSpan or 12 (full width). */
+  span?: number
 }
 
 // ============================================
@@ -39,6 +41,8 @@ export interface FormGroupConfig {
   orientation?: 'horizontal' | 'vertical'
   /** Field keys in display order */
   fieldOrder?: string[]
+  /** Default column span for fields in this group (1–12). Defaults to 12 (full width). */
+  defaultSpan?: number
 }
 
 // ============================================

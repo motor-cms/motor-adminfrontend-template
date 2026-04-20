@@ -18,7 +18,7 @@ const { breadcrumbs: computedBreadcrumbs } = useBreadcrumbs(
 
 <template>
   <div class="min-h-full flex flex-col">
-    <div class="px-6 pt-6 pb-4">
+    <div class="px-6 pt-4 pb-3">
       <!-- Breadcrumbs / Mobile sidebar toggle -->
       <div class="flex items-center gap-2 mb-3">
         <UDashboardSidebarToggle class="lg:hidden shrink-0 -ml-2" />
