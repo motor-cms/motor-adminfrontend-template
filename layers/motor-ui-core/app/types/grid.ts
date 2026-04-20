@@ -232,6 +232,8 @@ export interface BaseGridProps<T = Record<string, unknown>> {
   basePath?: string
   perPage?: number
   perPageOptions?: number[]
+  defaultSort?: string
+  defaultDirection?: 'asc' | 'desc'
   searchable?: boolean
   disableDefaultActions?: boolean
   emptyText?: string

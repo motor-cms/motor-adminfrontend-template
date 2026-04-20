@@ -66,7 +66,9 @@ const defaultColumnVisibility = Object.fromEntries(
 const gridState = useGridState({
   gridId: props.id,
   defaultPerPage: props.perPage,
-  defaultColumnVisibility
+  defaultColumnVisibility,
+  defaultSort: props.defaultSort,
+  defaultDirection: props.defaultDirection
 })
 
 // Initialize filter keys synchronously before watcher to prevent double fetch
@@ -479,6 +481,7 @@ defineExpose({
       :columns="(tableColumns as TableColumn<T>[])"
       :loading="loading"
       sticky
+      manual-sorting
       :ui="{ root: 'overflow-x-auto', base: 'w-full', tr: rowClickTo ? 'cursor-pointer' : '' }"
       class="w-full flex-1 min-h-0"
       @update:model-value="onSelectionUpdate"
