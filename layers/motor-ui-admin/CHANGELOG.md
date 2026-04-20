@@ -1,5 +1,28 @@
 # @motor-cms/ui-admin
 
+## 2.0.0
+
+### Minor Changes
+
+- - fix: regenerate lockfile and restore standalone tsconfig for CI
+  - feat: client frontend config and global footer editing on client edit page
+  - fix(clients): fix hydration, submit, translations, and error handling
+  - feat(clients): wire GlobalComponentsSection with footer create/edit/unlink
+  - feat(clients): add FooterSlotCard component
+  - feat(clients): add GlobalComponentsSection component
+  - feat(clients): add default footer template PageDefinition
+  - feat(clients): add useClientLanguages composable
+  - feat(clients): add FrontendConfigSection and wire into client edit page
+  - feat(clients): add useClientFrontendConfig composable
+  - feat(clients): add useClientFrontendConfig composable
+  - feat(clients): add FrontendConfig types, Zod schema, and field definitions
+  - feat(clients): add FrontendConfig types, Zod schema, and field definitions
+
+### Patch Changes
+
+- Updated dependencies
+  - @motor-cms/ui-core@2.0.0
+
 ## 1.16.3
 
 ### Patch Changes
