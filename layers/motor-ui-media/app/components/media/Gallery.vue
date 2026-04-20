@@ -73,9 +73,12 @@ const hasMore = computed(() => currentPage.value < lastPage.value)
 
 // Build fetch params combining filters with internal page
 function buildParams(page: number): GridParams {
+  const sortField = gridState.state.sort ?? 'created_at'
+  const sortDirection = gridState.state.sort ? gridState.state.direction : 'desc'
   const params: GridParams = {
     page,
-    per_page: props.perPage
+    per_page: props.perPage,
+    sort: sortDirection === 'desc' ? `${sortField}:desc` : sortField
   }
   if (gridState.state.search) params.search = gridState.state.search
   Object.entries(gridState.state.filters).forEach(([key, value]) => {
@@ -146,9 +149,11 @@ const { error: ssrError } = await useAsyncData(
 if (ssrError.value) fetchError.value = ssrError.value
 initialLoading.value = false
 
-// Watch filter/search changes — reset accumulated data
+// Watch filter/search/sort changes — reset accumulated data
 const filterKey = computed(() => JSON.stringify({
   search: gridState.state.search,
+  sort: gridState.state.sort,
+  direction: gridState.state.direction,
   filters: gridState.state.filters
 }))
 
