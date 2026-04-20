@@ -1,5 +1,13 @@
 # @motor-cms/ui-core
 
+## 3.0.0
+
+### Minor Changes
+
+- - fix: add type dropdown options to SEO redirect form config
+  - feat: auto-fill language name fields from ISO-639 selection and make them readonly
+  - feat: add configurable form layout (comfortable/compact) with grid-based compact mode, field span support, and 2-column card layout
+
 ## 2.0.1
 
 ### Patch Changes
