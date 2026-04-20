@@ -121,9 +121,27 @@ describe('useGridState', () => {
     expect(params.page).toBe(1)
     expect(params.per_page).toBe(25)
     expect(params.search).toBe('query')
-    expect(params.sort).toBe('name')
-    expect(params.direction).toBe('desc')
+    // Backend SortRenderer expects colon-joined `field:direction`
+    expect(params.sort).toBe('name:desc')
+    expect(params.direction).toBeUndefined()
     expect(params.client_id).toBe(5)
+  })
+
+  it('toParams emits plain sort field when direction is asc', () => {
+    const { setSort, toParams } = useGridState({ gridId: 'test-grid' })
+    setSort('name', 'asc')
+    const params = toParams()
+    expect(params.sort).toBe('name')
+  })
+
+  it('defaultSort/defaultDirection apply when nothing is set', () => {
+    const { toParams } = useGridState({
+      gridId: 'test-grid',
+      defaultSort: 'created_at',
+      defaultDirection: 'desc'
+    })
+    const params = toParams()
+    expect(params.sort).toBe('created_at:desc')
   })
 
   it('toParams omits empty values', () => {
