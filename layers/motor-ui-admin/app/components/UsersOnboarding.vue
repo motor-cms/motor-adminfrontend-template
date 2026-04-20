@@ -41,13 +41,6 @@ function onFinish() {
     return
   }
   markAdminGridDone()
-  // commitDone() before the API call — the browser may cancel the in-flight
-  // request if the user reloads before it resolves, and the localStorage flag
-  // must already be present to prevent DashboardOnboarding from resetting
-  // state and restarting the tour when the dashboard remounts after the
-  // builder tour redirects back to '/'.
-  commitDone()
-  completeOnboarding().catch(() => {})
   setPending('builder-pages')
   router.push('/motor-builder/builder-pages')
 }
