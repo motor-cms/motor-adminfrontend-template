@@ -11,6 +11,8 @@ export const userSelectOptionConfigs: Record<string, SelectOptionConfig> = {
 export const userFormConfig: FormFieldsFromMetaOptions = {
   omit: ['avatar'],
   overrides: {
+    name: { span: 6 },
+    email: { span: 6 },
     permissions: {
       input: 'grouped-checkbox',
       inputProps: { presetsEndpoint: '/api/v2/permission-groups?per_page=0' }
@@ -26,6 +28,10 @@ export const userFormConfig: FormFieldsFromMetaOptions = {
 export const userEditFormConfig: FormFieldsFromMetaOptions = {
   omit: ['avatar', 'password'],
   overrides: {
+    name: { span: 6 },
+    email: { span: 6 },
+    password: { span: 6 },
+    password_confirmation: { span: 6 },
     permissions: {
       input: 'grouped-checkbox',
       inputProps: { presetsEndpoint: '/api/v2/permission-groups?per_page=0' }
