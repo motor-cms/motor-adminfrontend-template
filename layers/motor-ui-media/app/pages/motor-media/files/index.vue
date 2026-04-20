@@ -120,7 +120,7 @@ const fetchFiles = useGridFetch<File>('/api/v2/files')
       <!-- Gallery view -->
       <MediaGallery
         v-if="viewMode === 'gallery'"
-        id="files-gallery"
+        id="files"
         :fetch="fetchFiles"
         :filters="filters"
         :bulk-actions="bulkActions"
@@ -140,7 +140,7 @@ const fetchFiles = useGridFetch<File>('/api/v2/files')
       <!-- Table view -->
       <GridBase
         v-else
-        id="files-grid"
+        id="files"
         :fetch="fetchFiles"
         :columns="columns"
         :filters="filters"
@@ -150,6 +150,8 @@ const fetchFiles = useGridFetch<File>('/api/v2/files')
         :row-actions="rowActions"
         write-permission="files.write"
         delete-permission="files.delete"
+        default-sort="created_at"
+        default-direction="desc"
         :row-click-to="(row: any) => `/motor-media/files/${row.id}/edit`"
       />
   </GridPage>

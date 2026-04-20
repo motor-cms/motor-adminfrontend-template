@@ -8,10 +8,18 @@ interface UseGridStateOptions {
   gridId: string
   defaultPerPage?: number
   defaultColumnVisibility?: Record<string, boolean>
+  defaultSort?: string
+  defaultDirection?: 'asc' | 'desc'
 }
 
 export function useGridState(options: UseGridStateOptions) {
-  const { gridId, defaultPerPage = 25, defaultColumnVisibility = {} } = options
+  const {
+    gridId,
+    defaultPerPage = 25,
+    defaultColumnVisibility = {},
+    defaultSort,
+    defaultDirection = 'asc'
+  } = options
 
   const route = useRoute()
   const router = useRouter()
@@ -24,8 +32,8 @@ export function useGridState(options: UseGridStateOptions) {
     page: Number(route.query.page) || 1,
     perPage: Number(route.query.per_page) || persistedSettings?.perPage || defaultPerPage,
     search: (route.query.search as string) || '',
-    sort: (route.query.sort as string) || persistedSettings?.sort || null,
-    direction: (route.query.direction as 'asc' | 'desc') || persistedSettings?.direction || 'asc',
+    sort: (route.query.sort as string) || persistedSettings?.sort || defaultSort || null,
+    direction: (route.query.direction as 'asc' | 'desc') || persistedSettings?.direction || defaultDirection,
     filters: {}
   })
 
@@ -124,8 +132,8 @@ export function useGridState(options: UseGridStateOptions) {
 
     if (state.search) params.search = state.search
     if (state.sort) {
-      params.sort = state.sort
-      params.direction = state.direction
+      // Backend SortRenderer expects `sort=field:direction` (colon-separated)
+      params.sort = state.direction === 'desc' ? `${state.sort}:desc` : state.sort
     }
 
     // Add filters
