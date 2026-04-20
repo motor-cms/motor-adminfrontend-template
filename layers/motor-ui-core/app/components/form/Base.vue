@@ -229,12 +229,34 @@ function onError(event: FormErrorEvent) {
   }
 }
 
-// UFormField ui override: make container stretch in horizontal mode
-const formFieldUi = {
-  container: 'w-full max-w-2xl'
+// Form layout setting
+const appSettings = useAppSettingsStore()
+const isCompact = computed(() => appSettings.formLayout === 'compact')
+
+// UFormField ui override
+const formFieldUi = computed(() => isCompact.value
+  ? { container: 'w-full' }
+  : { container: 'w-full max-w-2xl' }
+)
+
+const spanClass: Record<number, string> = {
+  1: 'col-span-1',
+  2: 'col-span-2',
+  3: 'col-span-3',
+  4: 'col-span-4',
+  5: 'col-span-5',
+  6: 'col-span-6',
+  7: 'col-span-7',
+  8: 'col-span-8',
+  9: 'col-span-9',
+  10: 'col-span-10',
+  11: 'col-span-11',
+  12: 'col-span-12'
 }
-const formFieldUiVertical = {
-  container: 'w-full'
+
+function fieldSpanClass(field: FormFieldConfig, group?: FormGroupConfig): string {
+  const span = field.span ?? group?.defaultSpan ?? 12
+  return spanClass[span] ?? 'col-span-12'
 }
 
 const hasSaveMenu = computed(() => props.showSaveAndContinue || props.showSaveAndNew)
@@ -272,25 +294,81 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
     ref="uFormRef"
     :schema="schema"
     :state="state"
-    class="flex-1 flex flex-col gap-6"
+    class="flex-1 flex flex-col"
     @submit="markSubmitted(); submitAction === 'saveAndContinue' ? emit('saveAndContinue', $event) : submitAction === 'saveAndNew' ? emit('saveAndNew', $event) : emit('submit', $event); submitAction = 'save'"
     @error="onError"
   >
+    <div :class="isCompact ? 'grid grid-cols-2 gap-4 pb-4' : 'flex flex-col gap-4 pb-4'">
     <template
-      v-for="{ group, fields: groupFields } in groupedFields"
+      v-for="({ group, fields: groupFields }, groupIdx) in groupedFields"
       :key="group?.key ?? '_ungrouped'"
     >
       <UPageCard
         v-if="group"
+        :class="isCompact && groupedFields.length % 2 === 1 && groupIdx === groupedFields.length - 1 ? 'col-span-2' : ''"
         :title="group.label"
         :description="group.description"
+        :ui="isCompact ? { root: 'relative flex rounded-lg items-start', container: 'relative flex flex-col p-4 sm:p-6 gap-x-8 gap-y-4', wrapper: 'flex flex-col items-start', body: '' } : undefined"
       >
-        <div class="space-y-4">
+        <div :class="isCompact ? 'grid grid-cols-12 gap-x-4 gap-y-3' : 'space-y-4'">
           <template
             v-for="field in groupFields"
             :key="field.key"
           >
             <!-- Slot escape hatch: #field-{key} -->
+            <div :class="isCompact ? fieldSpanClass(field, group) : ''">
+              <slot
+                :name="`field-${field.key}`"
+                :field="field"
+                :value="state[field.key]"
+                :update="(v: unknown) => updateField(field.key, v)"
+              >
+                <UFormField
+                  :name="field.key"
+                  :label="field.label"
+                  :required="field.required"
+                  :description="field.description"
+                  :orientation="isCompact ? (group?.orientation ?? 'vertical') : (group?.orientation ?? 'horizontal')"
+                  :ui="formFieldUi"
+                >
+                  <template
+                    v-if="field.help"
+                    #label
+                  >
+                    {{ field.label }}
+                    <span
+                      v-if="field.required"
+                      class="text-[var(--ui-error)]"
+                    >*</span>
+                    <FormHelpTooltip :text="field.help" />
+                  </template>
+                  <component
+                    :is="resolveInput(field.input)"
+                    v-if="resolveInput(field.input)"
+                    :field="field"
+                    :model-value="state[field.key]"
+                    :options="selectOptions?.[field.key] ?? field.staticOptions"
+                    :options-loading="selectOptionsLoading?.[field.key]"
+                    :disabled="disabled"
+                    @update:model-value="updateField(field.key, $event)"
+                  />
+                </UFormField>
+              </slot>
+            </div>
+          </template>
+        </div>
+      </UPageCard>
+
+      <!-- Ungrouped fields (no card wrapper) -->
+      <div
+        v-else
+        :class="isCompact ? 'grid grid-cols-12 gap-x-4 gap-y-3' : 'space-y-4'"
+      >
+        <template
+          v-for="field in groupFields"
+          :key="field.key"
+        >
+          <div :class="isCompact ? fieldSpanClass(field) : ''">
             <slot
               :name="`field-${field.key}`"
               :field="field"
@@ -302,8 +380,8 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
                 :label="field.label"
                 :required="field.required"
                 :description="field.description"
-                :orientation="group?.orientation ?? 'horizontal'"
-                :ui="group?.orientation === 'vertical' ? formFieldUiVertical : formFieldUi"
+                :orientation="isCompact ? 'vertical' : 'horizontal'"
+                :ui="formFieldUi"
               >
                 <template
                   v-if="field.help"
@@ -321,65 +399,17 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
                   v-if="resolveInput(field.input)"
                   :field="field"
                   :model-value="state[field.key]"
-                  :options="selectOptions?.[field.key] ?? field.staticOptions"
-                  :options-loading="selectOptionsLoading?.[field.key]"
+                  :options="selectOptions?.[field.key]"
                   :disabled="disabled"
                   @update:model-value="updateField(field.key, $event)"
                 />
               </UFormField>
             </slot>
-          </template>
-        </div>
-      </UPageCard>
-
-      <!-- Ungrouped fields (no card wrapper) -->
-      <div
-        v-else
-        class="space-y-4"
-      >
-        <template
-          v-for="field in groupFields"
-          :key="field.key"
-        >
-          <slot
-            :name="`field-${field.key}`"
-            :field="field"
-            :value="state[field.key]"
-            :update="(v: unknown) => updateField(field.key, v)"
-          >
-            <UFormField
-              :name="field.key"
-              :label="field.label"
-              :required="field.required"
-              :description="field.description"
-              orientation="horizontal"
-              :ui="formFieldUi"
-            >
-              <template
-                v-if="field.help"
-                #label
-              >
-                {{ field.label }}
-                <span
-                  v-if="field.required"
-                  class="text-[var(--ui-error)]"
-                >*</span>
-                <FormHelpTooltip :text="field.help" />
-              </template>
-              <component
-                :is="resolveInput(field.input)"
-                v-if="resolveInput(field.input)"
-                :field="field"
-                :model-value="state[field.key]"
-                :options="selectOptions?.[field.key]"
-                :disabled="disabled"
-                @update:model-value="updateField(field.key, $event)"
-              />
-            </UFormField>
-          </slot>
+          </div>
         </template>
       </div>
     </template>
+    </div>
 
     <!-- Extra fields not in form-meta (e.g. API intersection types) -->
     <slot name="after-fields" />
