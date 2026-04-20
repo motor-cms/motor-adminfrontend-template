@@ -45,8 +45,8 @@ importers:
   layers/motor-ui-admin:
     dependencies:
       '@motor-cms/ui-core':
-        specifier: '>=1.16.3'
-        version: 1.16.3(a1771bf1d861478247087b5e79e75fb2)
+        specifier: '>=2.0.0'
+        version: 2.0.0(a1771bf1d861478247087b5e79e75fb2)
       '@tiptap/extension-link':
         specifier: ^3.0.0
         version: 3.20.4(@tiptap/core@3.20.4(@tiptap/pm@3.20.4))(@tiptap/pm@3.20.4)
@@ -120,8 +120,8 @@ importers:
   layers/motor-ui-media:
     dependencies:
       '@motor-cms/ui-core':
-        specifier: '>=1.16.3'
-        version: 1.16.3(a1771bf1d861478247087b5e79e75fb2)
+        specifier: '>=2.0.0'
+        version: 2.0.0(a1771bf1d861478247087b5e79e75fb2)
       '@vueuse/core':
         specifier: ^14.0.0
         version: 14.2.1(vue@3.5.30(typescript@5.9.3))
@@ -902,8 +902,8 @@ packages:
     peerDependencies:
       rollup: ^1.20.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
 
-  '@motor-cms/ui-core@1.16.3':
-    resolution: {integrity: sha512-BrjDu0CACqWhbfuqksGAzOQlw6OnKnZiD9HmeNgD3EVmeLwvjpbkVDl2NWnWb1L77H7z6d/EaCU2oauokBYVfw==}
+  '@motor-cms/ui-core@2.0.0':
+    resolution: {integrity: sha512-s853vl7r7x2GvAJ0tz8DYl8PrxQlE96Dloa83c59WMeikQKWonFCh6eVaVCsKfYMvJURy6ud0d2+E2Rm62eVxA==}
     peerDependencies:
       nuxt: ^4.0.0
       vue: ^3.5.0
@@ -6554,7 +6554,7 @@ snapshots:
       json5: 2.2.3
       rollup: 4.60.0
 
-  '@motor-cms/ui-core@1.16.3(a1771bf1d861478247087b5e79e75fb2)':
+  '@motor-cms/ui-core@2.0.0(a1771bf1d861478247087b5e79e75fb2)':
     dependencies:
       '@iconify-json/lucide': 1.2.98
       '@nuxt/ui': 4.6.0(@tiptap/extensions@3.20.4(@tiptap/core@3.20.4(@tiptap/pm@3.20.4))(@tiptap/pm@3.20.4))(@tiptap/y-tiptap@3.0.2(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.7)(y-protocols@1.0.7(yjs@13.6.30))(yjs@13.6.30))(db0@0.3.4)(embla-carousel@8.6.0)(focus-trap@7.8.0)(ioredis@5.10.1)(magicast@0.5.2)(sortablejs@1.15.7)(tailwindcss@4.2.2)(typescript@5.9.3)(vite@7.3.1(@types/node@25.5.0)(jiti@2.6.1)(lightningcss@1.32.0)(terser@5.46.1)(yaml@2.8.3))(vue-router@5.0.4(@vue/compiler-sfc@3.5.30)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3)))(vue@3.5.30(typescript@5.9.3))(yjs@13.6.30)(zod@4.3.6)
