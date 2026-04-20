@@ -12,11 +12,17 @@ export const seoRedirectHttpStatusOptions = [
   { label: '410 - Gone', value: 410 }
 ]
 
+export const seoRedirectTypeOptions = [
+  { label: 'Redirect', value: 'redirect' },
+  { label: 'Short Link', value: 'short_link' }
+]
+
 export const seoRedirectFormConfig: FormFieldsFromMetaOptions = {
   translationPrefix: 'motor-builder.seo_redirects',
   overrides: {
     domain_id: { input: 'search-select' },
-    http_status_code: { input: 'select' }
+    http_status_code: { input: 'select', staticOptions: seoRedirectHttpStatusOptions },
+    type: { input: 'select', staticOptions: seoRedirectTypeOptions }
   },
   groups: {
     basic: ['domain_id', 'request_url', 'target_url', 'http_status_code', 'type']
