@@ -1,5 +1,13 @@
 # @motor-cms/ui-admin
 
+## 2.0.1
+
+### Patch Changes
+
+- - fix: defer commitDone/completeOnboarding to BuilderOnboarding so tour chain completes fully
+- Updated dependencies
+  - @motor-cms/ui-core@2.0.1
+
 ## 2.0.0
 
 ### Minor Changes
