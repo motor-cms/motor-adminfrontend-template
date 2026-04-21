@@ -8,6 +8,12 @@ import type {
 } from '@motor-cms/ui-core/app/types/grid'
 import type { FileResource } from '../../types/media'
 
+export interface GallerySortOption {
+  label: string
+  field: string
+  direction: 'asc' | 'desc'
+}
+
 const props = withDefaults(defineProps<{
   id: string
   fetch: (params: GridParams) => Promise<PaginatedResponse<FileResource>>
@@ -15,9 +21,11 @@ const props = withDefaults(defineProps<{
   bulkActions?: BulkActionDef[]
   searchable?: boolean
   perPage?: number
+  sortOptions?: GallerySortOption[]
 }>(), {
   searchable: true,
-  perPage: 25
+  perPage: 25,
+  sortOptions: () => []
 })
 
 const emit = defineEmits<{
@@ -34,6 +42,26 @@ const gridState = useGridState({
 
 if (props.filters) {
   gridState.initFilters(props.filters.map(f => f.key))
+}
+
+// Sort dropdown — option key is `${field}:${direction}`
+function sortKey(opt: GallerySortOption): string {
+  return `${opt.field}:${opt.direction}`
+}
+const sortSelectItems = computed(() =>
+  props.sortOptions.map(opt => ({ label: opt.label, value: sortKey(opt) }))
+)
+const activeSortKey = computed(() => {
+  const field = gridState.state.sort
+  if (!field) {
+    // Pick the first option as the visible default so the dropdown isn't empty
+    return props.sortOptions[0] ? sortKey(props.sortOptions[0]) : ''
+  }
+  return `${field}:${gridState.state.direction}`
+})
+function onSortChange(value: string): void {
+  const opt = props.sortOptions.find(o => sortKey(o) === value)
+  if (opt) gridState.setSort(opt.field, opt.direction)
 }
 
 // Accumulated items + internal pagination
@@ -189,6 +217,16 @@ useIntersectionObserver(
       @reset-filters="gridState.resetFilters()"
     >
       <template #toolbar-extra>
+        <USelect
+          v-if="sortOptions.length > 0"
+          :model-value="activeSortKey"
+          :items="sortSelectItems"
+          value-key="value"
+          label-key="label"
+          :aria-label="t('motor-core.grid.sort')"
+          class="w-44"
+          @update:model-value="onSortChange"
+        />
         <span
           v-if="totalItems > 0"
           class="text-sm text-muted whitespace-nowrap"
