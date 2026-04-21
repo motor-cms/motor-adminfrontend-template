@@ -5402,35 +5402,35 @@ export interface components {
         ClientPatchRequest: {
             name: string;
             slug: string;
-            address?: string | null;
-            zip?: string | null;
-            city?: string | null;
-            country_iso_3166_1?: string | null;
+            address: string;
+            zip: string;
+            city: string;
+            country_iso_3166_1: string;
+            is_active: boolean;
+            contact_name: string;
+            /** Format: email */
+            contact_email: string;
+            contact_phone: string;
             /** Format: uri */
             website?: string | null;
             description?: string | null;
-            is_active?: boolean | null;
-            contact_name?: string | null;
-            /** Format: email */
-            contact_email?: string | null;
-            contact_phone?: string | null;
         };
         /** ClientPostRequest */
         ClientPostRequest: {
             name: string;
             slug: string;
-            address?: string | null;
-            zip?: string | null;
-            city?: string | null;
-            country_iso_3166_1?: string | null;
+            address: string;
+            zip: string;
+            city: string;
+            country_iso_3166_1: string;
+            is_active: boolean;
+            contact_name: string;
+            /** Format: email */
+            contact_email: string;
+            contact_phone: string;
             /** Format: uri */
             website?: string | null;
             description?: string | null;
-            is_active?: boolean | null;
-            contact_name?: string | null;
-            /** Format: email */
-            contact_email?: string | null;
-            contact_phone?: string | null;
         };
         /** ClientResource */
         ClientResource: {
@@ -6090,35 +6090,35 @@ export interface components {
         "Motor.Admin.Http.Requests.Api.V2.ClientPatchRequest": {
             name: string;
             slug: string;
-            address?: string | null;
-            zip?: string | null;
-            city?: string | null;
-            country_iso_3166_1?: string | null;
+            address: string;
+            zip: string;
+            city: string;
+            country_iso_3166_1: string;
+            is_active: boolean;
+            contact_name: string;
+            /** Format: email */
+            contact_email: string;
+            contact_phone: string;
             /** Format: uri */
             website?: string | null;
             description?: string | null;
-            is_active?: boolean | null;
-            contact_name?: string | null;
-            /** Format: email */
-            contact_email?: string | null;
-            contact_phone?: string | null;
         };
         /** Motor.Admin.Http.Requests.Api.V2.ClientPostRequest */
         "Motor.Admin.Http.Requests.Api.V2.ClientPostRequest": {
             name: string;
             slug: string;
-            address?: string | null;
-            zip?: string | null;
-            city?: string | null;
-            country_iso_3166_1?: string | null;
+            address: string;
+            zip: string;
+            city: string;
+            country_iso_3166_1: string;
+            is_active: boolean;
+            contact_name: string;
+            /** Format: email */
+            contact_email: string;
+            contact_phone: string;
             /** Format: uri */
             website?: string | null;
             description?: string | null;
-            is_active?: boolean | null;
-            contact_name?: string | null;
-            /** Format: email */
-            contact_email?: string | null;
-            contact_phone?: string | null;
         };
         /** Motor.Admin.Http.Requests.Api.V2.DomainPatchRequest */
         "Motor.Admin.Http.Requests.Api.V2.DomainPatchRequest": {
