@@ -28,16 +28,16 @@ export const clientFormMeta = {
     fields: {
       name: { input: 'text', required: true },
       slug: { input: 'text', required: true },
-      address: { input: 'text' },
-      zip: { input: 'text' },
-      city: { input: 'text' },
-      country_iso_3166_1: { input: 'text' },
+      address: { input: 'text', required: true },
+      zip: { input: 'text', required: true },
+      city: { input: 'text', required: true },
+      country_iso_3166_1: { input: 'text', required: true },
+      is_active: { input: 'toggle', required: true },
+      contact_name: { input: 'text', required: true },
+      contact_email: { input: 'email', required: true },
+      contact_phone: { input: 'text', required: true },
       website: { input: 'text' },
-      description: { input: 'textarea' },
-      is_active: { input: 'toggle' },
-      contact_name: { input: 'text' },
-      contact_email: { input: 'email' },
-      contact_phone: { input: 'text' }
+      description: { input: 'textarea' }
     }
   },
   patch: {
@@ -45,16 +45,16 @@ export const clientFormMeta = {
     fields: {
       name: { input: 'text', required: true },
       slug: { input: 'text', required: true },
-      address: { input: 'text' },
-      zip: { input: 'text' },
-      city: { input: 'text' },
-      country_iso_3166_1: { input: 'text' },
+      address: { input: 'text', required: true },
+      zip: { input: 'text', required: true },
+      city: { input: 'text', required: true },
+      country_iso_3166_1: { input: 'text', required: true },
+      is_active: { input: 'toggle', required: true },
+      contact_name: { input: 'text', required: true },
+      contact_email: { input: 'email', required: true },
+      contact_phone: { input: 'text', required: true },
       website: { input: 'text' },
-      description: { input: 'textarea' },
-      is_active: { input: 'toggle' },
-      contact_name: { input: 'text' },
-      contact_email: { input: 'email' },
-      contact_phone: { input: 'text' }
+      description: { input: 'textarea' }
     }
   }
 } as const
