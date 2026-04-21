@@ -1,5 +1,11 @@
 # @motor-cms/ui-admin
 
+## 4.0.2
+
+### Patch Changes
+
+- - refactor(motor-ui-core): align form header spacing and typography with grid
+
 ## 4.0.1
 
 ### Patch Changes
