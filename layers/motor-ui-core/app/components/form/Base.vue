@@ -420,9 +420,9 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
     <div class="flex-1" />
 
     <!-- Actions (sticky bottom bar) -->
-    <div class="sticky bottom-0 z-10 -mx-6 px-6 py-4 backdrop-blur-sm bg-[var(--ui-bg)]/80 border-t border-[var(--ui-border)]">
+    <div class="sticky bottom-0 z-10 -mx-6 px-6 py-4 min-h-[69px] flex items-center backdrop-blur-sm bg-[var(--ui-bg)]/80 border-t border-[var(--ui-border)]">
       <slot name="actions">
-        <div v-if="disabled" class="flex items-center gap-2">
+        <div v-if="disabled" class="flex items-center gap-2 w-full">
           <div class="flex items-center gap-2 text-sm text-[var(--ui-text-muted)]">
             <UIcon name="i-lucide-lock" class="size-4" />
             {{ t('motor-core.global.no_permission_edit') }}
@@ -438,7 +438,7 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
             {{ t('motor-core.global.back') }}
           </UButton>
         </div>
-        <div v-else class="flex items-center gap-2">
+        <div v-else class="flex items-center gap-2 w-full">
           <UButton
             v-if="canDelete"
             color="error"
