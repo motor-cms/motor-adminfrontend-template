@@ -18,7 +18,7 @@ const { breadcrumbs: computedBreadcrumbs } = useBreadcrumbs(
 
 <template>
   <div class="min-h-full flex flex-col">
-    <div class="px-6 pt-4 pb-3">
+    <div class="p-6">
       <!-- Breadcrumbs / Mobile sidebar toggle -->
       <div class="flex items-center gap-2 mb-3">
         <UDashboardSidebarToggle class="lg:hidden shrink-0 -ml-2" />
@@ -31,9 +31,15 @@ const { breadcrumbs: computedBreadcrumbs } = useBreadcrumbs(
         </div>
       </div>
 
-      <h1 class="text-2xl font-bold">
-        {{ title }}
-      </h1>
+      <div class="flex items-center justify-between gap-4">
+        <div class="min-w-0">
+          <div class="flex items-baseline gap-3">
+            <h1 class="text-xl font-semibold">
+              {{ title }}
+            </h1>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Loading state -->
