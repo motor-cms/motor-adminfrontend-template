@@ -1,5 +1,12 @@
 # @motor-cms/ui-media
 
+## 4.0.1
+
+### Patch Changes
+
+- - refactor(motor-ui-core): unify typography on Plus Jakarta Sans, drop Sora
+  - fix(changeset): prevent peer-dep cascade from forcing major version bumps
+
 ## 4.0.0
 
 ### Minor Changes
