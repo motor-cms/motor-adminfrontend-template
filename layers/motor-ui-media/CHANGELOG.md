@@ -1,5 +1,13 @@
 # @motor-cms/ui-media
 
+## 3.0.2
+
+### Patch Changes
+
+- - fix(forms): apply comfortable/compact layout to client config sections
+- Updated dependencies
+  - @motor-cms/ui-core@3.0.2
+
 ## 3.0.1
 
 ### Patch Changes
