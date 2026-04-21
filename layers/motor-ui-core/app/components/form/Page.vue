@@ -31,7 +31,7 @@ const { breadcrumbs: computedBreadcrumbs } = useBreadcrumbs(
         </div>
       </div>
 
-      <div class="flex items-center justify-between gap-4">
+      <div class="flex items-center justify-between gap-4 min-h-9">
         <div class="min-w-0">
           <div class="flex items-baseline gap-3">
             <h1 class="text-xl font-semibold">
