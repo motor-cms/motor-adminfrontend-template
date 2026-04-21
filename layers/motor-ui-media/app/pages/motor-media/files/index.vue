@@ -76,6 +76,11 @@ const bulkActions: BulkActionDef[] = [
 ]
 
 const fetchFiles = useGridFetch<File>('/api/v2/files')
+
+const gallerySortOptions = computed(() => [
+  { label: t('motor-core.grid.sort_newest_first'), field: 'created_at', direction: 'desc' as const },
+  { label: t('motor-core.grid.sort_oldest_first'), field: 'created_at', direction: 'asc' as const }
+])
 </script>
 
 <template>
@@ -125,6 +130,7 @@ const fetchFiles = useGridFetch<File>('/api/v2/files')
         :filters="filters"
         :bulk-actions="bulkActions"
         :per-page="25"
+        :sort-options="gallerySortOptions"
         @show-usage="openUsageModal"
       >
         <template #empty-action>

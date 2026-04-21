@@ -67,5 +67,10 @@
   "next_page": "Nächste Seite",
   "delete_selected": "Ausgewählte löschen",
   "confirm_delete": "Sind Sie sicher, dass Sie {count} Eintrag/Einträge löschen möchten?",
-  "reset_count": "Zurücksetzen ({count})"
+  "reset_count": "Zurücksetzen ({count})",
+  "sort": "Sortierung",
+  "sort_newest_first": "Neueste zuerst",
+  "sort_oldest_first": "Älteste zuerst",
+  "sort_name_asc": "Name A–Z",
+  "sort_name_desc": "Name Z–A"
 }
