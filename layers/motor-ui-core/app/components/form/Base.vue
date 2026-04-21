@@ -412,7 +412,9 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
     </div>
 
     <!-- Extra fields not in form-meta (e.g. API intersection types) -->
-    <slot name="after-fields" />
+    <div class="flex flex-col gap-4 pb-4">
+      <slot name="after-fields" />
+    </div>
 
     <!-- Spacer pushes actions to bottom when form content is short -->
     <div class="flex-1" />
