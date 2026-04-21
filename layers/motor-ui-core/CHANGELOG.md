@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 4.0.4
+
+### Patch Changes
+
+- - refactor(motor-ui-core): match form action bar height to sidebar footer (69px)
+
 ## 4.0.3
 
 ### Patch Changes
