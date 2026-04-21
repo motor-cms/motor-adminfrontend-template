@@ -336,7 +336,7 @@ const textColor = computed(() => isDark.value ? '#FFFFFF' : '#1C1D24')
 }
 
 .motor-logo-hz__name {
-  font-family: "Sora", system-ui, sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
   font-weight: 300;
   letter-spacing: 2px;
 }
@@ -385,7 +385,7 @@ const textColor = computed(() => isDark.value ? '#FFFFFF' : '#1C1D24')
 }
 
 .motor-logo-st__name {
-  font-family: "Sora", system-ui, sans-serif;
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
   font-weight: 300;
   letter-spacing: 2.5px;
 }
