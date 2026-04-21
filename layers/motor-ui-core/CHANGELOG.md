@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 4.0.0
+
+### Minor Changes
+
+- - feat(media-gallery): add sort dropdown + fix German umlauts
+
 ## 3.0.2
 
 ### Patch Changes

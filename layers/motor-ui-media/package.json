@@ -1,6 +1,6 @@
 {
   "name": "@motor-cms/ui-media",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "type": "module",
   "main": "./nuxt.config.ts",
   "files": [
@@ -13,7 +13,7 @@
     "@vueuse/core": "^14.0.0"
   },
   "peerDependencies": {
-    "@motor-cms/ui-core": ">=3.0.2",
+    "@motor-cms/ui-core": ">=4.0.0",
     "nuxt": "^4.0.0",
     "vue": "^3.5.0"
   }
