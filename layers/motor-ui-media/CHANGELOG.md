@@ -1,5 +1,11 @@
 # @motor-cms/ui-media
 
+## 4.0.3
+
+### Patch Changes
+
+- - refactor(motor-ui-core): lock page header title-row height to prevent jump
+
 ## 4.0.2
 
 ### Patch Changes
