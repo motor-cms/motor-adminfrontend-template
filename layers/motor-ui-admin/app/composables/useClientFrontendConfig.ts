@@ -53,7 +53,7 @@ export function useClientFrontendConfig(
         const raw = options.clientRecord.value?.data?.frontend_config
         if (!raw) return
 
-        const parsed = frontendConfigSchema.safeParse(raw)
+        const parsed = frontendConfigSchema(t).safeParse(raw)
 
         if (parsed.success) {
           Object.assign(state, parsed.data)
@@ -85,7 +85,7 @@ export function useClientFrontendConfig(
   // ============================================
 
   function validate(): boolean {
-    const result = frontendConfigSchema.safeParse(state)
+    const result = frontendConfigSchema(t).safeParse(state)
     if (result.success) {
       errors.value = {}
       return true

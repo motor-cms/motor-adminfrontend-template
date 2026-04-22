@@ -55,6 +55,8 @@
     "footer_created": "Footer erfolgreich erstellt.",
     "published": "Veröffentlicht",
     "draft": "Entwurf",
+    "unlink_confirm": "Möchten Sie die Verknüpfung zu diesem Footer wirklich lösen?",
+    "unlink_effect": "Der Footer wird nicht gelöscht, sondern nur die Verknüpfung zum Mandanten entfernt.",
     "no_languages": "Keine Sprachen für diesen Mandanten konfiguriert. Erstellen Sie zuerst Navigationsbäume."
   }
 }
