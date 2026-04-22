@@ -1,5 +1,11 @@
 # @motor-cms/ui-admin
 
+## 4.0.5
+
+### Patch Changes
+
+- - fix(motor-ui-admin): i18n for client frontend config validation, footer link icon and unlink confirmation
+
 ## 4.0.4
 
 ### Patch Changes
