@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 4.0.6
+
+### Patch Changes
+
+- - refactor(motor-ui-admin): extract frontend config into extension registry
+
 ## 4.0.5
 
 ### Patch Changes
