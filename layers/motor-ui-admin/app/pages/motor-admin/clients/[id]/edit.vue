@@ -2,7 +2,6 @@
 <script setup lang="ts">
 import { clientFormMeta } from '../../../../types/generated/form-meta'
 import { clientFormConfig } from '@motor-cms/ui-core/app/types/config/client'
-import { useClientFrontendConfig } from '../../../../composables/useClientFrontendConfig'
 import { useClientLanguages } from '../../../../composables/useClientLanguages'
 
 definePageMeta({ layout: 'default', permission: 'clients.read' })
@@ -14,6 +13,8 @@ const clientId = route.params.id as string
 
 const isFrontendConfigEnabled
   = useRuntimeConfig().public.featureClientFrontendConfig === true
+
+const { extensions, allExtensionsValid, validateAll, getAllSubmitData } = useClientFormExtensions()
 
 const {
   fields,
@@ -39,39 +40,23 @@ const {
   formConfig: clientFormConfig,
   mode: 'edit',
   id: clientId,
-  beforeSubmit: (data) => {
-    if (!isFrontendConfigEnabled) return
-    if (!validateFrontendConfig()) {
+  beforeSubmit: async (data) => {
+    if (!isFrontendConfigEnabled || extensions.value.length === 0) return
+    const valid = await validateAll()
+    if (!valid) {
       throw new Error(t('motor-core.global.validation_failed'))
     }
-    data.frontend_config = getFrontendConfigSubmitData()
+    data.frontend_config = {
+      ...getAllSubmitData(),
+      globalComponents: (data.frontend_config as Record<string, unknown>)?.globalComponents
+        ?? (clientRecord.value?.data?.frontend_config as Record<string, unknown>)?.globalComponents,
+    }
   }
 })
 
 const { data: clientRecord } = useNuxtData<{ data: Record<string, unknown> }>(
   `entity-form-/api/v2/clients-${clientId}`
 )
-
-const {
-  state: frontendConfigState,
-  errors: frontendConfigErrors,
-  fields: frontendConfigFields,
-  groups: frontendConfigGroups,
-  validate: validateFrontendConfig,
-  getSubmitData: getFrontendConfigSubmitData
-} = useClientFrontendConfig({ clientRecord, fetching })
-
-const colorSchemeOptions = [
-  { label: 'energis', value: 'energis' },
-  { label: 'highspeed', value: 'highspeed' },
-  { label: 'jaeckel', value: 'jaeckel' }
-]
-
-const logoSlugOptions = [
-  { label: 'energis', value: 'energis' },
-  { label: 'highspeed', value: 'highspeed' },
-  { label: 'jaeckel', value: 'jaeckel' }
-]
 
 const clientIdRef = computed(() =>
   isFrontendConfigEnabled ? (route.params.id as string) : ''
@@ -99,8 +84,7 @@ async function onFooterLinked(languageId: number, uuid: string, _pageId: number)
     await sanctumClient(`/api/v2/clients/${clientId}`, {
       method: 'PATCH',
       body: {
-        name: freshClient.data.name,
-        slug: freshClient.data.slug,
+        ...freshClient.data,
         frontend_config: {
           ...freshConfig,
           globalComponents: { ...freshGc, footer: freshFooter }
@@ -128,8 +112,7 @@ async function onFooterUnlinked(languageId: number) {
     await sanctumClient(`/api/v2/clients/${clientId}`, {
       method: 'PATCH',
       body: {
-        name: freshClient.data.name,
-        slug: freshClient.data.slug,
+        ...freshClient.data,
         frontend_config: {
           ...freshConfig,
           globalComponents: { ...freshGc, footer: freshFooter }
@@ -143,7 +126,6 @@ async function onFooterUnlinked(languageId: number) {
     notifyError(t('motor-admin.clients.edit_title'), message)
   }
 }
-
 </script>
 
 <template>
@@ -171,17 +153,20 @@ async function onFooterUnlinked(languageId: number) {
       @save-and-new="onSaveAndNew"
     >
       <template
-        v-if="isFrontendConfigEnabled"
+        v-if="isFrontendConfigEnabled && extensions.length > 0"
         #after-fields
       >
-        <ClientFrontendConfigSection
-          :state="frontendConfigState"
-          :fields="frontendConfigFields"
-          :groups="frontendConfigGroups"
-          :errors="frontendConfigErrors"
+        <h2 class="text-lg font-semibold text-highlighted mt-2">
+          {{ t('motor-admin.clients.frontend_config_title') }}
+        </h2>
+        <component
+          v-for="ext in extensions"
+          :key="ext.key"
+          :is="ext.component"
+          :client-id="clientId"
+          :client-record="clientRecord"
           :disabled="!canWrite"
-          :color-scheme-options="colorSchemeOptions"
-          :logo-slug-options="logoSlugOptions"
+          mode="edit"
         />
         <ClientGlobalComponentsSection
           :client-id="route.params.id"
@@ -190,7 +175,7 @@ async function onFooterUnlinked(languageId: number) {
           :languages="languages"
           :is-multi-language="isMultiLanguage"
           :languages-loading="languagesLoading"
-          :disabled="!canWrite"
+          :disabled="!canWrite || !allExtensionsValid"
           @footer-linked="onFooterLinked"
           @footer-unlinked="onFooterUnlinked"
         />
