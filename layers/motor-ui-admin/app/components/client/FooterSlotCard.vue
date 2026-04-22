@@ -22,6 +22,7 @@ const emit = defineEmits<{
 
 const client = useSanctumClient()
 const router = useRouter()
+const route = useRoute()
 const { t, locale } = useI18n()
 const { success, error: notifyError } = useNotify()
 
@@ -145,7 +146,7 @@ async function onCreateFooter(): Promise<void> {
 
     emit('linked', data.uuid, data.id)
     success(t('motor-admin.clients.global_components.footer_created'))
-    await router.push(`/motor-builder/builder-pages/${data.id}/edit`)
+    await router.push(`/motor-builder/builder-pages/${data.id}/edit?returnTo=${encodeURIComponent(route.fullPath)}`)
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : t('motor-core.errors.create_failed')
     notifyError(t('motor-admin.clients.global_components.footer'), message)
@@ -156,7 +157,7 @@ async function onCreateFooter(): Promise<void> {
 
 function onEditFooter(): void {
   if (pageInfo.value) {
-    router.push(`/motor-builder/builder-pages/${pageInfo.value.id}/edit`)
+    router.push(`/motor-builder/builder-pages/${pageInfo.value.id}/edit?returnTo=${encodeURIComponent(route.fullPath)}`)
   }
 }
 
