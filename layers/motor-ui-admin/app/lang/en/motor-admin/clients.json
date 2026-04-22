@@ -55,6 +55,8 @@
     "footer_created": "Footer created successfully.",
     "published": "Published",
     "draft": "Draft",
+    "unlink_confirm": "Are you sure you want to unlink this footer?",
+    "unlink_effect": "The footer will not be deleted, only the link to the client will be removed.",
     "no_languages": "No languages configured for this client. Add navigation trees first."
   }
 }

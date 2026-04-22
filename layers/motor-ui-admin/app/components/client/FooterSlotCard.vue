@@ -160,7 +160,14 @@ function onEditFooter(): void {
   }
 }
 
+const unlinkConfirmOpen = ref(false)
+
 function onUnlinkFooter(): void {
+  unlinkConfirmOpen.value = true
+}
+
+function executeUnlink(): void {
+  unlinkConfirmOpen.value = false
   emit('unlinked')
 }
 </script>
@@ -169,7 +176,7 @@ function onUnlinkFooter(): void {
   <div class="flex items-center justify-between gap-4 rounded-lg border border-default px-4 py-3">
     <!-- Left: info -->
     <div class="flex items-center gap-3 min-w-0">
-      <UIcon name="i-lucide-panel-bottom" class="size-5 text-muted shrink-0" />
+      <UIcon :name="pageInfo ? 'i-lucide-link' : 'i-lucide-unlink'" class="size-5 shrink-0" :class="pageInfo ? 'text-primary' : 'text-dimmed'" />
 
       <div class="min-w-0">
         <!-- Label -->
@@ -234,6 +241,7 @@ function onUnlinkFooter(): void {
           {{ t('motor-admin.clients.global_components.edit_footer') }}
         </UButton>
         <UButton
+          icon="i-lucide-unlink"
           variant="ghost"
           color="error"
           size="sm"
@@ -258,4 +266,47 @@ function onUnlinkFooter(): void {
       </template>
     </div>
   </div>
+
+  <!-- Unlink confirmation modal -->
+  <UModal v-model:open="unlinkConfirmOpen">
+    <template #header>
+      {{ t('motor-admin.clients.global_components.unlink_footer') }}
+    </template>
+    <template #body>
+      <div class="space-y-3 text-sm">
+        <p>{{ t('motor-admin.clients.global_components.unlink_confirm') }}</p>
+        <div
+          v-if="pageInfo"
+          class="rounded-md bg-[var(--ui-bg-elevated)] px-3 py-2"
+        >
+          <div class="flex items-center gap-1.5">
+            <UIcon
+              name="i-lucide-panel-bottom"
+              class="size-3.5 shrink-0 text-muted"
+            />
+            <span class="font-medium">{{ pageInfo.name }}</span>
+          </div>
+        </div>
+        <p class="text-muted">{{ t('motor-admin.clients.global_components.unlink_effect') }}</p>
+      </div>
+    </template>
+    <template #footer>
+      <div class="flex justify-end gap-2">
+        <UButton
+          color="neutral"
+          variant="outline"
+          @click="unlinkConfirmOpen = false"
+        >
+          {{ t('motor-core.global.cancel') }}
+        </UButton>
+        <UButton
+          color="error"
+          icon="i-lucide-unlink"
+          @click="executeUnlink"
+        >
+          {{ t('motor-admin.clients.global_components.unlink_footer') }}
+        </UButton>
+      </div>
+    </template>
+  </UModal>
 </template>
