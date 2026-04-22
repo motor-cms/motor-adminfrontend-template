@@ -39,39 +39,45 @@ export interface FrontendConfig {
 // Zod Schema (editable fields only, no globalComponents)
 // ============================================
 
-const optionalUrlSchema = z.string().refine(
-  (val) => val === '' || val === null || (() => { try { new URL(val); return true } catch { return false } })(),
-  { message: 'Must be a valid URL or empty' }
-)
+type TranslateFunction = (key: string) => string
 
-export const frontendConfigSchema = z.object({
-  brand: z.object({
-    name: z.string().min(1, { message: 'Required' }),
-    logoAlt: z.string().min(1, { message: 'Required' })
-  }),
-  colorScheme: z.string().min(1, { message: 'Required' }),
-  logoSlug: z.string().min(1, { message: 'Required' }),
-  contact: z.object({
-    contactUrl: z.string().url({ message: 'Must be a valid URL' }),
-    email: z.string().email({ message: 'Must be a valid email' }),
-    whatsappUrl: optionalUrlSchema.nullable().optional().transform((v) => v ?? null)
-  }),
-  features: z.object({
-    orderLine: z.boolean().default(false),
-    appointments: z.boolean().default(false),
-    clickpath: z.boolean().default(false),
-    footerMenu: z.boolean().default(false)
-  }),
-  social: z.object({
-    instagram: optionalUrlSchema.nullable().optional().transform((v) => v ?? null),
-    facebook: optionalUrlSchema.nullable().optional().transform((v) => v ?? null)
-  }),
-  seo: z.object({
-    siteName: z.string().min(1, { message: 'Required' })
+function optionalUrlSchema(t: TranslateFunction) {
+  return z.string().refine(
+    (val) => val === '' || val === null || (() => { try { new URL(val); return true } catch { return false } })(),
+    { message: t('motor-core.global.validation_url') }
+  )
+}
+
+export function frontendConfigSchema(t: TranslateFunction) {
+  return z.object({
+    brand: z.object({
+      name: z.string().min(1, { message: t('motor-core.global.validation_required') }),
+      logoAlt: z.string().min(1, { message: t('motor-core.global.validation_required') })
+    }),
+    colorScheme: z.string().min(1, { message: t('motor-core.global.validation_required') }),
+    logoSlug: z.string().min(1, { message: t('motor-core.global.validation_required') }),
+    contact: z.object({
+      contactUrl: z.string().url({ message: t('motor-core.global.validation_url') }),
+      email: z.string().email({ message: t('motor-core.global.validation_email') }),
+      whatsappUrl: optionalUrlSchema(t).nullable().optional().transform((v) => v ?? null)
+    }),
+    features: z.object({
+      orderLine: z.boolean().default(false),
+      appointments: z.boolean().default(false),
+      clickpath: z.boolean().default(false),
+      footerMenu: z.boolean().default(false)
+    }),
+    social: z.object({
+      instagram: optionalUrlSchema(t).nullable().optional().transform((v) => v ?? null),
+      facebook: optionalUrlSchema(t).nullable().optional().transform((v) => v ?? null)
+    }),
+    seo: z.object({
+      siteName: z.string().min(1, { message: t('motor-core.global.validation_required') })
+    })
   })
-})
+}
 
-export type FrontendConfigFormState = z.infer<typeof frontendConfigSchema>
+export type FrontendConfigFormState = z.infer<ReturnType<typeof frontendConfigSchema>>
 
 // ============================================
 // Form Field Definitions
