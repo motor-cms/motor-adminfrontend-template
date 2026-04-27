@@ -92,7 +92,8 @@ export const domainFormMeta = {
       protocol: { input: 'text', required: true },
       host: { input: 'text', required: true },
       port: { input: 'number', required: true },
-      path: { input: 'text', required: true }
+      path: { input: 'text', required: true },
+      is_preview_domain: { input: 'toggle' }
     }
   },
   patch: {
@@ -104,7 +105,8 @@ export const domainFormMeta = {
       protocol: { input: 'text', required: true },
       host: { input: 'text', required: true },
       port: { input: 'number', required: true },
-      path: { input: 'text', required: true }
+      path: { input: 'text', required: true },
+      is_preview_domain: { input: 'toggle' }
     }
   }
 } as const

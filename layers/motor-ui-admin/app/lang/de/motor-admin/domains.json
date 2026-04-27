@@ -15,6 +15,7 @@
   "path": "Pfad",
   "target": "Ziel",
   "parameters": "Parameter",
+  "is_preview_domain": "Vorschau-Domain",
   "group_connection": "Verbindung",
   "group_routing": "Routing"
 }
