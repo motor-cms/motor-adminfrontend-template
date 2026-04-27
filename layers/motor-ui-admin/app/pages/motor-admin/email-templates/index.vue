@@ -10,6 +10,7 @@ definePageMeta({ permission: 'email-templates.read' })
 type EmailTemplate = components['schemas']['EmailTemplateResource']
 
 const { t } = useI18n()
+const client = useSanctumClient()
 
 const usageModalOpen = ref(false)
 const usageEndpoint = ref('')
@@ -27,6 +28,18 @@ const rowActions: RowActionDef<EmailTemplate>[] = [
     handler: (row: EmailTemplate) => {
       usageEndpoint.value = `/api/v2/email-templates/${row.id}/usage`
       usageModalOpen.value = true
+    }
+  },
+  {
+    key: 'duplicate',
+    label: t('motor-core.grid.duplicate'),
+    icon: 'i-lucide-copy',
+    handler: async (row: EmailTemplate) => {
+      const response = await client<{ data: EmailTemplate }>(
+        `/api/v2/email-templates/${row.id}/duplicate`,
+        { method: 'POST' }
+      )
+      await navigateTo(`/motor-admin/email-templates/${response.data.id}/edit`)
     }
   }
 ]
