@@ -1,5 +1,11 @@
 # @motor-cms/ui-media
 
+## 4.0.7
+
+### Patch Changes
+
+- - Surface is_preview_domain on domain form (EN-2068); duplicate email templates with navigation
+
 ## 4.0.6
 
 ### Patch Changes
