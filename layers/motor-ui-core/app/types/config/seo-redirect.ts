@@ -19,10 +19,12 @@ export const seoRedirectTypeOptions = [
 
 export const seoRedirectFormConfig: FormFieldsFromMetaOptions = {
   translationPrefix: 'motor-builder.seo_redirects',
+  omit: ['categories'],
   overrides: {
     domain_id: { input: 'search-select' },
     http_status_code: { input: 'select', staticOptions: seoRedirectHttpStatusOptions },
-    type: { input: 'select', staticOptions: seoRedirectTypeOptions }
+    type: { input: 'select', staticOptions: seoRedirectTypeOptions },
+    categories: { hidden: true }
   },
   groups: {
     basic: ['domain_id', 'request_url', 'target_url', 'http_status_code', 'type']

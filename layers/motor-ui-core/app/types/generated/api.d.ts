@@ -2937,6 +2937,7 @@ export interface components {
             http_status_code?: number | null;
             type?: string | null;
             domain_id: number;
+            categories?: number[];
         };
         /** SeoRedirectPostRequest */
         SeoRedirectPostRequest: {
@@ -2945,6 +2946,7 @@ export interface components {
             http_status_code?: number | null;
             type?: string | null;
             domain_id: number;
+            categories?: number[];
         };
         /** SeoRedirectResource */
         SeoRedirectResource: {
@@ -2955,6 +2957,7 @@ export interface components {
             type: string;
             client_id: string;
             domain_id: number | null;
+            categories: components["schemas"]["CategorySummaryResource"][];
             created_at: string;
             updated_at: string;
         };
