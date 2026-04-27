@@ -1,5 +1,11 @@
 # @motor-cms/ui-admin
 
+## 4.0.8
+
+### Patch Changes
+
+- - Wire categories into seo-redirects form (EN-2063)
+
 ## 4.0.7
 
 ### Patch Changes
