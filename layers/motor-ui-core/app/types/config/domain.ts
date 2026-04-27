@@ -16,7 +16,7 @@ export const domainFormConfig: FormFieldsFromMetaOptions = {
     protocol: { input: 'select' }
   },
   groups: {
-    basic: ['client_id', 'name', 'is_active'],
+    basic: ['client_id', 'name', 'is_active', 'is_preview_domain'],
     connection: ['protocol', 'host', 'port'],
     routing: ['path']
   }
