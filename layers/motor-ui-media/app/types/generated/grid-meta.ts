@@ -12,7 +12,7 @@ export const fileMeta = {
     description: { type: 'string' },
     author: { type: 'string' },
     source: { type: 'string' },
-    is_global: { type: 'integer', renderer: 'number' },
+    is_global: { type: 'boolean', renderer: 'boolean' },
     alt_text: { type: 'string' },
     file: { type: 'unknown' },
     categories: { type: 'ref[]', renderer: 'list', ref: 'CategoryResource', labelKey: 'name' },
