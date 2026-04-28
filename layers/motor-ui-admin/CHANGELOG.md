@@ -1,5 +1,11 @@
 # @motor-cms/ui-admin
 
+## 4.2.1
+
+### Patch Changes
+
+- - fix: reactive plugin nav labels and visual sidebar separation
+
 ## 4.2.0
 
 ### Minor Changes
