@@ -159,5 +159,8 @@
   "perm_group_scoring": "Scoring",
   "perm_group_topics": "Themen",
   "perm_group_assistant": "Assistent",
-  "perm_group_clickpaths": "Klickpfade"
+  "perm_group_clickpaths": "Klickpfade",
+  "perm_group_analytics": "Analytik",
+  "perm_desc_analytics": "Zugriff auf Webseitenanalyse und Besucherstatistiken",
+  "plugins": "Erweiterungen"
 }
