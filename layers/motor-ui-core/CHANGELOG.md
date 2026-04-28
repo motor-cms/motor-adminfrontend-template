@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 4.1.0
+
+### Minor Changes
+
+- - feat: add plugin nav registry for frontend-only sidebar navigation
+
 ## 4.0.8
 
 ### Patch Changes
