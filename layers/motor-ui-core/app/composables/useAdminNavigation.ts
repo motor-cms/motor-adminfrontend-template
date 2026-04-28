@@ -2,8 +2,11 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 
 // Frontend-only layers can register sidebar nav items via this registry.
 // Items appear under a "Plugins" separator at the bottom of the sidebar.
+// Use `labelKey` (i18n key) instead of `label` so translations stay reactive.
 export interface PluginNavItem extends NavigationMenuItem {
   permission?: string
+  labelKey?: string
+  children?: (NavigationMenuItem & { labelKey?: string })[]
 }
 
 const _pluginNavItems = ref<PluginNavItem[]>([])
@@ -197,35 +200,41 @@ export function useAdminNavigation() {
       item.children = item.children.filter(child => !toRemove.has(child))
     }
 
+    return items
+  })
+
+  const pluginNavigation = computed<NavigationMenuItem[]>(() => {
     const visiblePlugins = _pluginNavItems.value.filter(pi =>
       !pi.permission || can(pi.permission)
     )
 
-    if (visiblePlugins.length > 0) {
-      const pluginLabel = t('motor-core.global.plugins')
-      items.push({
-        type: 'separator' as const,
-        label: pluginLabel !== 'motor-core.global.plugins' ? pluginLabel : 'Plugins'
-      })
-      for (const pluginItem of visiblePlugins) {
-        const pi = { ...pluginItem }
-        if (pi.children) {
-          const hasActiveChild = pi.children.some(child =>
-            child.to && (String(child.to) === '/' ? route.path === '/' : route.path.startsWith(String(child.to)))
-          )
-          pi.defaultOpen = hasActiveChild
-        }
-        pi.active = pi.to ? route.path.startsWith(String(pi.to)) : false
-        items.push(pi)
+    return visiblePlugins.map(pluginItem => {
+      const pi = { ...pluginItem }
+      if (pi.labelKey) {
+        pi.label = t(pi.labelKey)
       }
-    }
-
-    return items
+      if (pi.children) {
+        pi.children = pi.children.map(child => {
+          const c = { ...child } as PluginNavItem
+          if (c.labelKey) {
+            c.label = t(c.labelKey)
+          }
+          return c
+        })
+        const hasActiveChild = pi.children.some(child =>
+          child.to && (String(child.to) === '/' ? route.path === '/' : route.path.startsWith(String(child.to)))
+        )
+        pi.defaultOpen = hasActiveChild
+        pi.active = false
+      } else {
+        pi.active = pi.to ? route.path.startsWith(String(pi.to)) : false
+      }
+      return pi
+    })
   })
 
-  // Compute which group values (slugs) should be expanded based on the current route
   const activeGroups = computed<string[]>(() => {
-    return navigation.value
+    return [...navigation.value, ...pluginNavigation.value]
       .filter(item => item.children?.some(child =>
         child.to && (String(child.to) === '/' ? route.path === '/' : route.path.startsWith(String(child.to)))
       ))
@@ -235,6 +244,7 @@ export function useAdminNavigation() {
 
   return {
     navigation,
+    pluginNavigation,
     activeGroups,
     status,
     error,

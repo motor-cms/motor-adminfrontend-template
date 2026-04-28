@@ -5,7 +5,7 @@ useTheme()
 const open = ref(false)
 const collapsed = ref(false)
 provide('sidebar-collapsed', collapsed)
-const { navigation, activeGroups } = useAdminNavigation()
+const { navigation, pluginNavigation, activeGroups } = useAdminNavigation()
 const { can } = usePermissions()
 
 // Track which nav groups are open; ensure groups with active routes stay open
@@ -80,11 +80,33 @@ const searchKbds = isMacOS ? ['\u2318', 'K'] : ['Ctrl', 'K']
           :kbds="searchKbds"
         />
 
-        <div id="onboarding-sidebar-nav">
+        <div id="onboarding-sidebar-nav" class="flex-1 min-h-0 overflow-y-auto">
           <UNavigationMenu
             v-model="openNavGroups"
             :collapsed="collapsed"
             :items="navigation"
+            orientation="vertical"
+            tooltip
+            popover
+          />
+        </div>
+
+        <div
+          v-if="pluginNavigation.length > 0"
+          class="sidebar-plugins"
+        >
+          <div
+            v-if="!collapsed"
+            class="sidebar-plugins-label"
+          >
+            <UIcon name="i-lucide-puzzle" class="size-3.5 text-[var(--ui-text-dimmed)]" />
+            <span>{{ $t('motor-core.global.plugins') }}</span>
+          </div>
+          <hr v-else class="border-[var(--ui-border)]">
+          <UNavigationMenu
+            v-model="openNavGroups"
+            :collapsed="collapsed"
+            :items="pluginNavigation"
             orientation="vertical"
             tooltip
             popover
@@ -142,5 +164,21 @@ const searchKbds = isMacOS ? ['\u2318', 'K'] : ['Ctrl', 'K']
   background-color: var(--ui-bg-elevated);
 }
 
+.sidebar-plugins {
+  border-top: 1px solid var(--ui-border);
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+}
 
+.sidebar-plugins-label {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem 0.375rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ui-text-dimmed);
+}
 </style>
