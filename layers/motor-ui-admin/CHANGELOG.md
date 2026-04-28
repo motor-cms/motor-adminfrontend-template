@@ -1,5 +1,11 @@
 # @motor-cms/ui-admin
 
+## 4.2.0
+
+### Minor Changes
+
+- - feat: add EntityConfigurationsPanel to domain edit page
+
 ## 4.1.0
 
 ### Minor Changes
