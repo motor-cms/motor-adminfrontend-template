@@ -1,0 +1,12 @@
+{
+  "title": "Entity Configurations",
+  "config_variable": "Config Variable",
+  "value": "Value",
+  "add": "Add Configuration",
+  "save": "Save",
+  "saved": "Configuration saved",
+  "removed": "Configuration removed",
+  "no_configurations": "No configurations assigned yet.",
+  "select_variable": "Select a config variable",
+  "confirm_remove": "Remove this configuration?"
+}

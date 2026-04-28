@@ -22,6 +22,9 @@ const mergedSelectOptions = computed(() => ({
   ...selectOptions?.value,
   protocol: domainProtocolOptions
 }))
+
+const { can } = usePermissions()
+const showEntityConfigs = computed(() => can('entity-configurations.read'))
 </script>
 
 <template>
@@ -49,6 +52,16 @@ const mergedSelectOptions = computed(() => ({
       @submit="onSubmit"
       @save-and-continue="onSaveAndContinue"
       @save-and-new="onSaveAndNew"
-    />
+    >
+      <template
+        v-if="showEntityConfigs"
+        #after-fields
+      >
+        <FormInputsEntityConfigurationsPanel
+          configurable-type="Motor\Admin\Models\Domain"
+          :configurable-id="Number(route.params.id)"
+        />
+      </template>
+    </FormBase>
   </FormPage>
 </template>
