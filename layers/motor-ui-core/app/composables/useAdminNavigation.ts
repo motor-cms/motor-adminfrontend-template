@@ -1,5 +1,18 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 
+// Frontend-only layers can register sidebar nav items via this registry.
+// Items appear under a "Plugins" separator at the bottom of the sidebar.
+export interface PluginNavItem extends NavigationMenuItem {
+  permission?: string
+}
+
+const _pluginNavItems = ref<PluginNavItem[]>([])
+
+export function registerPluginNavigation(item: PluginNavItem) {
+  const exists = _pluginNavItems.value.some(i => i.value === item.value)
+  if (!exists) _pluginNavItems.value.push(item)
+}
+
 interface ApiNavigationItem {
   name: string
   slug: string
@@ -182,6 +195,29 @@ export function useAdminNavigation() {
     for (const item of items) {
       if (!item.children) continue
       item.children = item.children.filter(child => !toRemove.has(child))
+    }
+
+    const visiblePlugins = _pluginNavItems.value.filter(pi =>
+      !pi.permission || can(pi.permission)
+    )
+
+    if (visiblePlugins.length > 0) {
+      const pluginLabel = t('motor-core.global.plugins')
+      items.push({
+        type: 'separator' as const,
+        label: pluginLabel !== 'motor-core.global.plugins' ? pluginLabel : 'Plugins'
+      })
+      for (const pluginItem of visiblePlugins) {
+        const pi = { ...pluginItem }
+        if (pi.children) {
+          const hasActiveChild = pi.children.some(child =>
+            child.to && (String(child.to) === '/' ? route.path === '/' : route.path.startsWith(String(child.to)))
+          )
+          pi.defaultOpen = hasActiveChild
+        }
+        pi.active = pi.to ? route.path.startsWith(String(pi.to)) : false
+        items.push(pi)
+      }
     }
 
     return items
