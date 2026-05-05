@@ -1,5 +1,11 @@
 # @motor-cms/ui-media
 
+## 4.2.2
+
+### Patch Changes
+
+- - Merge branch 'feature/EN-2065' into production
+
 ## 4.2.1
 
 ### Patch Changes
