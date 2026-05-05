@@ -21,12 +21,14 @@ const linkEditorProps = ref<{
   target: string
   anchor: string
   navigation: number | null
+  nofollow: boolean
 }>({
   linkType: 'url',
   url: '',
   target: '_self',
   anchor: '',
-  navigation: null
+  navigation: null,
+  nofollow: false
 })
 
 const editor = useEditor({
@@ -38,7 +40,7 @@ const editor = useEditor({
     }),
     Link.configure({
       openOnClick: false,
-      HTMLAttributes: { class: 'text-primary underline' },
+      HTMLAttributes: { class: 'text-primary underline', rel: 'noopener noreferrer' },
       protocols: [
         { scheme: 'tel', optionalSlashes: true },
         'mailto'
@@ -74,25 +76,27 @@ function toggleLink() {
   const attrs = ed.getAttributes('link')
   const href = attrs.href ?? ''
   const target = attrs.target ?? '_self'
+  const rel = attrs.rel ?? ''
 
   if (href) {
-    linkEditorProps.value = parseLinkProps(href, target)
+    linkEditorProps.value = { ...parseLinkProps(href, target), nofollow: rel.includes('nofollow') }
   } else {
     linkEditorProps.value = {
       linkType: 'url',
       url: '',
       target: '_self',
       anchor: '',
-      navigation: null
+      navigation: null,
+      nofollow: false
     }
   }
   linkEditorOpen.value = true
 }
 
-function handleLinkApply(data: { link_type: string, url: string, target: string, anchor: string, navigation: number | null, href: string }) {
+function handleLinkApply(data: { link_type: string, url: string, target: string, anchor: string, navigation: number | null, href: string, rel: string }) {
   const ed = editor.value
   if (!ed) return
-  ed.chain().focus().extendMarkRange('link').setLink({ href: data.href, target: data.target }).run()
+  ed.chain().focus().extendMarkRange('link').setLink({ href: data.href, target: data.target, rel: data.rel }).run()
 }
 
 function handleLinkRemove() {
@@ -192,6 +196,7 @@ function handleLinkRemove() {
     :target="linkEditorProps.target"
     :anchor="linkEditorProps.anchor"
     :navigation="linkEditorProps.navigation"
+    :nofollow="linkEditorProps.nofollow"
     @update:open="linkEditorOpen = $event"
     @apply="handleLinkApply"
     @remove="handleLinkRemove"
