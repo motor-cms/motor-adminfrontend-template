@@ -81,10 +81,51 @@ onMounted(() => {
 })
 
 // UForm template ref for programmatic error setting
-const uFormRef = ref<{ $el: HTMLFormElement, setErrors: (errors: Array<{ path: string, message: string }>) => void } | null>(null)
+const uFormRef = ref<{
+  $el: HTMLFormElement
+  setErrors: (errors: Array<{ name?: string, message: string }>) => void
+  getErrors: (name?: string) => Array<{ id?: string, name?: string, message: string }>
+} | null>(null)
 
-function setErrors(errors: Array<{ path: string, message: string }>) {
-  uFormRef.value?.setErrors(errors)
+function scrollToFirstFieldError(fieldPath: string) {
+  let path = fieldPath
+  while (path.length > 0) {
+    const el = document.getElementById(`form-field-${path}`)
+    if (el) {
+      const focusable = el.querySelector<HTMLElement>(
+        'input:not([type="hidden"]), textarea, select, button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+      focusable?.focus({ preventScroll: true })
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      return
+    }
+    const lastDot = path.lastIndexOf('.')
+    if (lastDot === -1) break
+    path = path.slice(0, lastDot)
+  }
+}
+
+function setErrors(errors: Array<{ path: string, message: string } | { name: string, message: string }>) {
+  const normalized = errors.map((e) =>
+    'path' in e
+      ? { name: e.path, message: e.message }
+      : { name: e.name, message: e.message }
+  )
+  uFormRef.value?.setErrors(normalized)
+  nextTick(() => {
+    const fromForm = uFormRef.value?.getErrors?.() ?? []
+    const withId = fromForm.find(err => err.id)
+    if (withId?.id) {
+      const element = document.getElementById(withId.id)
+      element?.focus({ preventScroll: true })
+      element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      return
+    }
+    const firstName = normalized[0]?.name
+    if (firstName) {
+      scrollToFirstFieldError(firstName)
+    }
+  })
 }
 
 defineExpose({ captureSnapshot, isDirty, setErrors })
@@ -316,7 +357,10 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
             :key="field.key"
           >
             <!-- Slot escape hatch: #field-{key} -->
-            <div :class="isCompact ? fieldSpanClass(field, group) : ''">
+            <div
+              :id="`form-field-${field.key}`"
+              :class="isCompact ? fieldSpanClass(field, group) : ''"
+            >
               <slot
                 :name="`field-${field.key}`"
                 :field="field"
@@ -368,7 +412,10 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
           v-for="field in groupFields"
           :key="field.key"
         >
-          <div :class="isCompact ? fieldSpanClass(field) : ''">
+          <div
+            :id="`form-field-${field.key}`"
+            :class="isCompact ? fieldSpanClass(field) : ''"
+          >
             <slot
               :name="`field-${field.key}`"
               :field="field"

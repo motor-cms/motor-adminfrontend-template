@@ -46,7 +46,13 @@ watchDebounced(
 // Reset filters handler
 function onReset(): void {
   searchInput.value = ''
+  emit('update:searchValue', '')
   emit('reset-filters')
+}
+
+function clearSearch(): void {
+  searchInput.value = ''
+  emit('update:searchValue', '')
 }
 
 // Track loaded async options
@@ -173,9 +179,22 @@ onMounted(() => {
         v-model="searchInput"
         icon="i-lucide-search"
         :placeholder="t('motor-core.grid.search_placeholder')"
-        aria-label="Search"
+        :aria-label="t('motor-core.grid.search_placeholder')"
         class="w-48"
-      />
+        :ui="{ trailing: 'pe-0.5' }"
+      >
+        <template v-if="searchInput?.length" #trailing>
+          <UButton
+            color="neutral"
+            variant="ghost"
+            size="xs"
+            icon="i-lucide-x"
+            :aria-label="t('motor-core.grid.clear_search')"
+            class="p-0.5"
+            @click="clearSearch"
+          />
+        </template>
+      </UInput>
 
       <!-- Filter Popover -->
       <UPopover v-if="filters?.length">
