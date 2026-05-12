@@ -193,7 +193,7 @@ export async function useEntityForm(options: EntityFormOptions) {
   // Edit-mode specific refs
   const formRef = ref<{
     captureSnapshot: () => void
-    setErrors: (errors: Array<{ path: string, message: string }>) => void
+    setErrors: (errors: Array<{ path: string, message: string } | { name: string, message: string }>) => void
   } | null>(null)
   const fetching = ref(mode === 'edit')
   const fetchError = ref(false)
