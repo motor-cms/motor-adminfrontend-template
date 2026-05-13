@@ -16,6 +16,9 @@
   "target": "Ziel",
   "parameters": "Parameter",
   "is_preview_domain": "Vorschau-Domain",
+  "is_canonical": "Kanonische Domain für SEO",
+  "is_canonical_description": "Wenn dieser Client mehrere Domains hat (z. B. Vanity-URLs): Diese ist die kanonische Domain — Canonical-Tags zeigen darauf und konsolidieren das SEO-Signal. Nur eine Domain pro Client kann kanonisch sein.",
   "group_connection": "Verbindung",
-  "group_routing": "Routing"
+  "group_routing": "Routing",
+  "group_seo": "SEO"
 }

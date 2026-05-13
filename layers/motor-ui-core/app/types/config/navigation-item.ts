@@ -5,6 +5,7 @@ export const navigationItemFormConfig: FormFieldsFromMetaOptions = {
   pick: [
     'name', 'slug', 'is_active', 'is_visible', 'hide_slug_from_url',
     'link_type', 'link_url', 'builder_page_uuid', 'link_target', 'click_event', 'assistant_clickpath_id',
+    'is_canonical',
     'tags', 'css_classes',
     'parent_id', 'previous_sibling_id', 'next_sibling_id'
   ],
@@ -22,6 +23,7 @@ export const navigationItemFormConfig: FormFieldsFromMetaOptions = {
   groups: {
     basic: ['name', 'slug', 'is_active', 'is_visible', 'hide_slug_from_url'],
     link: ['link_type', 'link_url', 'builder_page_uuid', 'link_target', 'click_event', 'assistant_clickpath_id'],
+    seo: ['is_canonical'],
     extra: ['tags', 'css_classes'],
     tree: ['parent_id', 'previous_sibling_id', 'next_sibling_id']
   }
