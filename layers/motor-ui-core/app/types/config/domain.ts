@@ -18,6 +18,7 @@ export const domainFormConfig: FormFieldsFromMetaOptions = {
   groups: {
     basic: ['client_id', 'name', 'is_active', 'is_preview_domain'],
     connection: ['protocol', 'host', 'port'],
-    routing: ['path']
+    routing: ['path'],
+    seo: ['is_canonical']
   }
 }

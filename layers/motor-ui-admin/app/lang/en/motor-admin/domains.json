@@ -15,6 +15,9 @@
   "target": "Target",
   "parameters": "Parameters",
   "is_preview_domain": "Preview Domain",
+  "is_canonical": "Canonical Domain for SEO",
+  "is_canonical_description": "When this client has multiple domains (e.g. vanity URLs): this is the canonical domain — canonical tags point here and consolidate SEO signal. Only one domain per client can be canonical.",
   "group_connection": "Connection",
-  "group_routing": "Routing"
+  "group_routing": "Routing",
+  "group_seo": "SEO"
 }
