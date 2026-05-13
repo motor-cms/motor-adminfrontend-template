@@ -1,5 +1,12 @@
 # @motor-cms/ui-admin
 
+## 4.3.0
+
+### Minor Changes
+
+- - feat: domain + navigation canonical toggles
+  - feat(ui-core): grid search clear and form validation error focus (ZRMDEV-167, ZRMDEV-168)
+
 ## 4.2.2
 
 ### Patch Changes
