@@ -93,7 +93,8 @@ export const domainFormMeta = {
       host: { input: 'text', required: true },
       port: { input: 'number', required: true },
       path: { input: 'text', required: true },
-      is_preview_domain: { input: 'toggle' }
+      is_preview_domain: { input: 'toggle' },
+      is_canonical: { input: 'toggle' }
     }
   },
   patch: {
@@ -106,7 +107,8 @@ export const domainFormMeta = {
       host: { input: 'text', required: true },
       port: { input: 'number', required: true },
       path: { input: 'text', required: true },
-      is_preview_domain: { input: 'toggle' }
+      is_preview_domain: { input: 'toggle' },
+      is_canonical: { input: 'toggle' }
     }
   }
 } as const
