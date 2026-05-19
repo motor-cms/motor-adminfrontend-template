@@ -21,5 +21,5 @@ const formatted = computed(() => {
 </script>
 
 <template>
-  <span>{{ formatted }}</span>
+  <span class="whitespace-nowrap">{{ formatted }}</span>
 </template>
