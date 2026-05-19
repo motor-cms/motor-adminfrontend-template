@@ -1,5 +1,11 @@
 # @motor-cms/ui-admin
 
+## 4.4.0
+
+### Minor Changes
+
+- - feat(grid): add generic EnumRenderer for translated enum values (ZRMDEV-213)
+
 ## 4.3.0
 
 ### Minor Changes
