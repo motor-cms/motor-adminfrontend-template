@@ -1,5 +1,11 @@
 # @motor-cms/ui-media
 
+## 4.5.1
+
+### Patch Changes
+
+- - fix(roles): inject guard_name into POST body via beforeSubmit (ZRMDEV-211)
+
 ## 4.5.0
 
 ### Minor Changes
