@@ -516,7 +516,7 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
             <UButton
               type="submit"
               :loading="loading"
-              :disabled="deleting"
+              :disabled="deleting || !isDirty"
               icon="i-lucide-save"
               class="rounded-r-none"
             >
@@ -528,7 +528,7 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
             >
               <UButton
                 icon="i-lucide-chevron-up"
-                :disabled="deleting || loading"
+                :disabled="deleting || loading || !isDirty"
                 class="rounded-l-none -ml-px"
               />
             </UDropdownMenu>
@@ -537,7 +537,7 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
             v-else
             type="submit"
             :loading="loading"
-            :disabled="deleting"
+            :disabled="deleting || !isDirty"
             icon="i-lucide-save"
           >
             {{ t('motor-core.global.save') }}
