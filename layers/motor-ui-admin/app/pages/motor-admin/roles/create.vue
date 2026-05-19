@@ -13,7 +13,10 @@ const { fields, schema, groups, state, loading, selectOptions, selectOptionsLoad
   formConfig: roleFormConfig,
   mode: 'create',
   selectOptionConfigs: roleSelectOptionConfigs,
-  extraState: { guard_name: 'web' }
+  extraState: { guard_name: 'web' },
+  beforeSubmit: (data, formState) => {
+    data.guard_name = formState.guard_name
+  }
 })
 </script>
 
