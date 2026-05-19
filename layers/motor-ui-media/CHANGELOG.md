@@ -1,5 +1,13 @@
 # @motor-cms/ui-media
 
+## 4.5.0
+
+### Minor Changes
+
+- - fix(media): wrap description + filename in file grid (ZRMDEV-221 follow-up)
+  - fix(grid): prevent date columns from wrapping/clipping (ZRMDEV-221)
+  - feat(content-types): cleaner grid + form ordering (ZRMDEV-206, ZRMDEV-208)
+
 ## 4.4.0
 
 ### Minor Changes
