@@ -32,10 +32,21 @@ columns.unshift({
   width: 'w-36'
 })
 
+// Constrain description + filename so they wrap rather than forcing the
+// table to horizontal-scroll on long unbroken filenames (ZRMDEV-221 follow-up).
+const wrappingTextCell = {
+  width: 'max-w-xs',
+  class: 'whitespace-normal break-words'
+}
+
 const descIdx = columns.findIndex(c => c.key === 'description')
+if (descIdx >= 0) {
+  columns[descIdx] = { ...columns[descIdx], ...wrappingTextCell }
+}
 columns.splice(descIdx + 1, 0, {
   key: 'file.file_name',
-  label: t('motor-media.files.file_name')
+  label: t('motor-media.files.file_name'),
+  ...wrappingTextCell
 })
 
 columns.push({
