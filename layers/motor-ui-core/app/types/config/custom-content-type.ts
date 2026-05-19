@@ -7,7 +7,7 @@ export const customContentTypeSelectOptionConfigs: Record<string, SelectOptionCo
 }
 
 export const customContentTypeGridConfig: ColumnsFromMetaOptions<Record<string, unknown>> = {
-  pick: ['name', 'slug', 'client'],
+  pick: ['name', 'client'],
   overrides: {
     name: { sortable: true, hideable: false },
     client: { key: 'client.name' }
@@ -21,6 +21,6 @@ export const customContentTypeFormConfig: FormFieldsFromMetaOptions = {
     slug: { input: 'slug' }
   },
   groups: {
-    basic: ['client_id', 'name', 'slug']
+    basic: ['name', 'client_id', 'slug']
   }
 }
