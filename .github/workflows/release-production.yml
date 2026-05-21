@@ -131,31 +131,33 @@ jobs:
           pnpm changeset version
           echo "versioned=true" >> "$GITHUB_OUTPUT"
 
-      # TEMP DIAGNOSTIC: inspect post-version state to see why 4.5.2 fails
-      # where 4.5.1 succeeds. Remove after diagnosis.
-      - name: Diagnose post-version state
-        if: steps.version.outputs.versioned == 'true'
-        continue-on-error: true
-        run: |
-          echo "--- package.json after changeset version ---"
-          for pkg in layers/motor-ui-core layers/motor-ui-admin layers/motor-ui-media; do
-            echo "=== $pkg/package.json ==="
-            cat "$pkg/package.json"
-            echo ""
-          done
-          echo "--- npm publish --dry-run --verbose for ui-media (post-version) ---"
-          cd layers/motor-ui-media
-          npm publish --dry-run --access public --verbose 2>&1 | tail -80 || echo "(dry-run failed)"
-          cd ../..
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
+      # Direct npm publish loop. We bypass `pnpm changeset publish` here
+      # because the changesets/pnpm-11/npm-10.9 combo silently returns
+      # "E404 undefined" — changeset reads json.error.summary from npm's
+      # --json output and finds it missing. Vanilla `npm publish` works
+      # fine with the exact same token+registry+package state.
       - name: Publish to npm
         if: steps.version.outputs.versioned == 'true'
         id: publish
         run: |
-          pnpm changeset publish
+          set -e
+          FAILED=()
+          for pkg in layers/motor-ui-core layers/motor-ui-admin layers/motor-ui-media; do
+            NAME=$(node -p "require('./$pkg/package.json').name")
+            VERSION=$(node -p "require('./$pkg/package.json').version")
+            echo "::group::Publishing $NAME@$VERSION"
+            if ( cd "$pkg" && npm publish --access public --tag latest ); then
+              echo "✓ $NAME@$VERSION"
+            else
+              echo "✗ $NAME@$VERSION failed"
+              FAILED+=("$NAME@$VERSION")
+            fi
+            echo "::endgroup::"
+          done
+          if [ ${#FAILED[@]} -gt 0 ]; then
+            echo "::error::Packages failed to publish: ${FAILED[*]}"
+            exit 1
+          fi
           echo "published=true" >> "$GITHUB_OUTPUT"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
