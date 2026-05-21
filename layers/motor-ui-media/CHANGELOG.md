@@ -1,5 +1,12 @@
 # @motor-cms/ui-media
 
+## 4.6.0
+
+### Minor Changes
+
+- - fix(forms): forward translationPrefix to formFieldsFromMeta
+  - feat(media): explain "ist global" toggle via help tooltip (ZRMDEV-224)
+
 ## 4.5.2
 
 ### Patch Changes
