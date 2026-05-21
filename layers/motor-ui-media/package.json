@@ -1,6 +1,6 @@
 {
   "name": "@motor-cms/ui-media",
-  "version": "4.5.2",
+  "version": "4.6.0",
   "type": "module",
   "main": "./nuxt.config.ts",
   "files": [
