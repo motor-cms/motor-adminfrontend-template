@@ -1,5 +1,13 @@
 # @motor-cms/ui-core
 
+## 4.5.2
+
+### Patch Changes
+
+- - fix(ci): replace changeset publish with direct npm publish loop
+  - fix(media): localize remaining hardcoded labels (ZRMDEV-223)
+  - fix(category-trees): rename "Kinder" row action to "Kategorien" (ZRMDEV-227)
+
 ## 4.5.1
 
 ### Patch Changes
