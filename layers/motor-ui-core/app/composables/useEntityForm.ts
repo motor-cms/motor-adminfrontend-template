@@ -96,7 +96,7 @@ export async function useEntityForm(options: EntityFormOptions) {
     writePermission: writePermissionOverride
   } = options
 
-  const { t, te } = useI18n()
+  const { t, te } = useI18n({ useScope: 'global' })
   const router = useRouter()
   const { success, error: notifyError } = useNotify()
   const { mutate } = useApiMutation()
@@ -111,7 +111,15 @@ export async function useEntityForm(options: EntityFormOptions) {
 
   if (formMeta) {
     const meta = mode === 'create' ? formMeta.post : formMeta.patch
-    const result = formFieldsFromMeta(meta, t, formConfig, te)
+    // Forward translationPrefix into formConfig so formFieldsFromMeta uses
+    // the namespace the page actually owns (e.g. 'motor-media.files') rather
+    // than schemaNameToPrefix's hardcoded 'motor-admin.{plural}' fallback.
+    const result = formFieldsFromMeta(
+      meta,
+      t,
+      { ...formConfig, translationPrefix: translationPrefix ?? formConfig?.translationPrefix },
+      te
+    )
     fields = result.fields
     schema = result.schema
     groups = result.groups

@@ -51,7 +51,7 @@ export function columnsFromMeta<T = Record<string, unknown>>(
     teCheck = teProp
   } else {
     try {
-      const { te: i18nTe } = useI18n()
+      const { te: i18nTe } = useI18n({ useScope: 'global' })
       teCheck = (key: string) => i18nTe(key)
     } catch {
       teCheck = (key: string) => t(key) !== key
