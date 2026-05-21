@@ -38,18 +38,28 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # TEMP DIAGNOSTIC: identify which npm user the token authenticates as.
-      # Remove after diagnosis.
-      - name: Diagnose npm token
+      # TEMP DIAGNOSTIC: token is verified working (npm whoami=dfox288,
+      # @motor-cms/* read-write). Now isolating whether the 404 is from
+      # pnpm/changeset or from npm publish itself. Remove after diagnosis.
+      - name: Diagnose publish path
         continue-on-error: true
         run: |
+          echo "--- versions ---"
+          echo "node: $(node -v)"
+          echo "npm: $(npm -v)"
+          echo "pnpm: $(pnpm -v)"
           echo "--- npm whoami ---"
-          npm whoami || echo "(whoami failed)"
-          echo "--- npm token introspection ---"
-          npm access list packages @motor-cms 2>&1 || echo "(access list failed)"
-          echo "--- npm config sources ---"
-          npm config get registry
-          npm config get //registry.npmjs.org/:_authToken | sed 's/./*/g'
+          npm whoami
+          echo "--- pnpm whoami ---"
+          pnpm whoami || echo "(pnpm whoami failed)"
+          echo "--- direct npm publish --dry-run for ui-media ---"
+          cd layers/motor-ui-media
+          npm publish --dry-run --access public 2>&1 || echo "(npm dry-run exited non-zero)"
+          cd ../..
+          echo "--- direct pnpm publish --dry-run for ui-media ---"
+          cd layers/motor-ui-media
+          pnpm publish --dry-run --access public --no-git-checks 2>&1 || echo "(pnpm dry-run exited non-zero)"
+          cd ../..
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
