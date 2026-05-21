@@ -4,7 +4,7 @@ import type { FormInputProps, FormInputValue, SelectOption } from '@motor-cms/ui
 const props = defineProps<FormInputProps>()
 const emit = defineEmits<{ 'update:modelValue': [value: FormInputValue] }>()
 
-const { t, te } = useI18n()
+const { t, te } = useI18n({ useScope: 'global' })
 
 const separator = (props.field.inputProps?.separator as string) ?? '.'
 const presetsEndpoint = props.field.inputProps?.presetsEndpoint as string | undefined

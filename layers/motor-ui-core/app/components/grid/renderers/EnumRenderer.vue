@@ -3,7 +3,7 @@ import type { RendererProps, EnumRendererProps } from '@motor-cms/ui-core/app/ty
 
 const props = defineProps<RendererProps<string | number | null>>()
 
-const { t, te } = useI18n()
+const { t, te } = useI18n({ useScope: 'global' })
 
 const rp = computed(() => props.column.rendererProps as EnumRendererProps | undefined)
 
