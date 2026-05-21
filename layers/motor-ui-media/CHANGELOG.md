@@ -1,5 +1,11 @@
 # @motor-cms/ui-media
 
+## 4.8.0
+
+### Minor Changes
+
+- - feat(media): show search-index exclusion in files overview (ZRMDEV-222)
+
 ## 4.7.0
 
 ### Minor Changes
