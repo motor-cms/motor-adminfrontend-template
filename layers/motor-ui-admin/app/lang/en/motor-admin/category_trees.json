@@ -9,7 +9,7 @@
   "view_title": "View Category Tree",
   "created_success": "Category tree was created successfully",
   "updated_success": "Category tree was updated successfully",
-  "children": "Children",
+  "children": "Categories",
   "children_title": "Categories in \"{name}\"",
   "children_subtitle": "Manage categories within this tree"
 }
