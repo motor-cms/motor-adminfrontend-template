@@ -16,6 +16,7 @@
     "./app/types/grid": "./app/types/grid.ts",
     "./app/types/search": "./app/types/search.ts",
     "./app/types/tree": "./app/types/tree.ts",
+    "./app/types/link-target": "./app/types/link-target.ts",
     "./app/types/generated/api": "./app/types/generated/api.d.ts",
     "./app/types/generated/form-meta": "./app/types/generated/form-meta.ts",
     "./app/types/generated/grid-meta": "./app/types/generated/grid-meta.ts",
