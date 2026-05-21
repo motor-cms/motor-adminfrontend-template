@@ -85,7 +85,7 @@ function handleSubmitError(err: unknown) {
       errorEl?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     })
   } else {
-    const message = err instanceof Error ? err.message : 'Failed to update file'
+    const message = err instanceof Error ? err.message : t('motor-media.files.update_failed')
     notifyError(t('motor-media.files.edit_title'), message)
   }
 }
