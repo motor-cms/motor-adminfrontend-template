@@ -38,32 +38,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # TEMP DIAGNOSTIC: token is verified working (npm whoami=dfox288,
-      # @motor-cms/* read-write). Now isolating whether the 404 is from
-      # pnpm/changeset or from npm publish itself. Remove after diagnosis.
-      - name: Diagnose publish path
-        continue-on-error: true
-        run: |
-          echo "--- versions ---"
-          echo "node: $(node -v)"
-          echo "npm: $(npm -v)"
-          echo "pnpm: $(pnpm -v)"
-          echo "--- npm whoami ---"
-          npm whoami
-          echo "--- pnpm whoami ---"
-          pnpm whoami || echo "(pnpm whoami failed)"
-          echo "--- direct npm publish --dry-run for ui-media ---"
-          cd layers/motor-ui-media
-          npm publish --dry-run --access public 2>&1 || echo "(npm dry-run exited non-zero)"
-          cd ../..
-          echo "--- direct pnpm publish --dry-run for ui-media ---"
-          cd layers/motor-ui-media
-          pnpm publish --dry-run --access public --no-git-checks 2>&1 || echo "(pnpm dry-run exited non-zero)"
-          cd ../..
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Run tests
         run: pnpm test
 
@@ -156,6 +130,26 @@ jobs:
         run: |
           pnpm changeset version
           echo "versioned=true" >> "$GITHUB_OUTPUT"
+
+      # TEMP DIAGNOSTIC: inspect post-version state to see why 4.5.2 fails
+      # where 4.5.1 succeeds. Remove after diagnosis.
+      - name: Diagnose post-version state
+        if: steps.version.outputs.versioned == 'true'
+        continue-on-error: true
+        run: |
+          echo "--- package.json after changeset version ---"
+          for pkg in layers/motor-ui-core layers/motor-ui-admin layers/motor-ui-media; do
+            echo "=== $pkg/package.json ==="
+            cat "$pkg/package.json"
+            echo ""
+          done
+          echo "--- npm publish --dry-run --verbose for ui-media (post-version) ---"
+          cd layers/motor-ui-media
+          npm publish --dry-run --access public --verbose 2>&1 | tail -80 || echo "(dry-run failed)"
+          cd ../..
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to npm
         if: steps.version.outputs.versioned == 'true'
