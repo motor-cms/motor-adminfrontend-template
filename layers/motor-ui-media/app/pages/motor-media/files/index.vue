@@ -54,6 +54,12 @@ columns.push({
   label: t('motor-media.files.mime_type')
 })
 
+columns.push({
+  key: 'is_excluded_from_search_index',
+  label: t('motor-media.files.is_excluded_from_search_index'),
+  renderer: 'boolean'
+})
+
 columns.push(createdAtColumn(t, { key: 'file.created_at', sortKey: 'created_at' }))
 
 const rowActions: RowActionDef<File>[] = [
