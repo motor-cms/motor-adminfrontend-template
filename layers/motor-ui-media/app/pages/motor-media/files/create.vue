@@ -119,7 +119,7 @@ async function onSubmit(event: { data: Record<string, unknown> }) {
         })
       } catch (err: unknown) {
         if (!handleServerError(err)) {
-          const message = err instanceof Error ? err.message : `Failed to upload ${pending.file.name}`
+          const message = err instanceof Error ? err.message : t('motor-media.files.upload_failed', { name: pending.file.name })
           errors.push(`${pending.file.name}: ${message}`)
         }
       }
@@ -130,7 +130,7 @@ async function onSubmit(event: { data: Record<string, unknown> }) {
       router.push('/motor-media/files')
     } else if (errors.length < total) {
       const uploaded = total - errors.length
-      success(t('motor-media.files.create_title'), `${uploaded}/${total} files uploaded`)
+      success(t('motor-media.files.create_title'), t('motor-media.files.upload_partial_success', { uploaded, total }))
       notifyError(t('motor-media.files.create_title'), errors.join('\n'))
       router.push('/motor-media/files')
     } else {
