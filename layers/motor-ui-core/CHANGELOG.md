@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 4.7.0
+
+### Minor Changes
+
+- - feat(core): canonical LINK_TARGET enum for navigation/link UI
+
 ## 4.6.0
 
 ### Minor Changes
