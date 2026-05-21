@@ -45,5 +45,8 @@
   "upload": "Hochladen",
   "remove": "Entfernen",
   "avatar_alt": "Profilbild",
-  "usage_title": "Datei-Verwendung"
+  "usage_title": "Datei-Verwendung",
+  "help": {
+    "is_global": "Wenn aktiv, ist die Datei für alle Mandanten verfügbar. Sonst nur für den oben ausgewählten Mandanten."
+  }
 }

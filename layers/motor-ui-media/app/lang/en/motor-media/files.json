@@ -45,5 +45,8 @@
   "upload": "Upload",
   "remove": "Remove",
   "avatar_alt": "Profile avatar",
-  "usage_title": "File Usage"
+  "usage_title": "File Usage",
+  "help": {
+    "is_global": "When enabled, the file is available to all clients. Otherwise only to the selected client above."
+  }
 }
