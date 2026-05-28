@@ -60,7 +60,7 @@ columns.push({
   renderer: 'boolean'
 })
 
-columns.push(createdAtColumn(t, { key: 'file.created_at', sortKey: 'created_at' }))
+columns.push(createdAtColumn(t, { key: 'created_at', sortKey: 'created_at' }))
 
 const rowActions: RowActionDef<File>[] = [
   {
