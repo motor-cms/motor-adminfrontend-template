@@ -172,6 +172,25 @@ async function fetchCategoryTreeOptions(scope: string): Promise<FilterOption[]> 
   })
 }
 
+export function useMimeTypeFilter(overrides?: Partial<FilterDef>): FilterDef {
+  const { t } = useI18n()
+
+  return {
+    key: 'mime_type',
+    label: t('motor-core.grid.filter_mime_type'),
+    type: 'select',
+    placeholder: t('motor-core.grid.filter_all_mime_types'),
+    options: [
+      { label: t('motor-core.grid.filter_mime_type_image'), value: 'image' },
+      { label: t('motor-core.grid.filter_mime_type_video'), value: 'video' },
+      { label: t('motor-core.grid.filter_mime_type_audio'), value: 'audio' },
+      { label: t('motor-core.grid.filter_mime_type_document'), value: 'document' },
+      { label: t('motor-core.grid.filter_mime_type_pdf'), value: 'application/pdf' }
+    ],
+    ...overrides
+  }
+}
+
 export function useHttpStatusCodeFilter(overrides?: Partial<FilterDef>): FilterDef {
   const { t } = useI18n()
 
