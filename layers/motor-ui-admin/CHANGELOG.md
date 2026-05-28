@@ -1,5 +1,12 @@
 # @motor-cms/ui-admin
 
+## 4.9.0
+
+### Minor Changes
+
+- - feat(files): drag-and-drop file replacement with preview
+  - fix(files): use File catalogue date for "Erstellt" column
+
 ## 4.8.0
 
 ### Minor Changes
