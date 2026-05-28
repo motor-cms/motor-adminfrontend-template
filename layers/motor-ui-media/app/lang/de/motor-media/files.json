@@ -29,6 +29,7 @@
   "no_files_selected": "Keine Dateien ausgewählt",
   "current_file": "Aktuelle Datei",
   "replace_file": "Datei ersetzen",
+  "replace_file_description": "Datei hierher ziehen oder klicken, um eine Datei auszuwählen",
   "url_copied": "URL in die Zwischenablage kopiert",
   "copy_url": "URL kopieren",
   "preview": "Vorschau",

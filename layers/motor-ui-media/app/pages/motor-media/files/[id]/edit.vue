@@ -48,13 +48,6 @@ watch(fileRecord, (res) => {
   }
 }, { immediate: true })
 
-function onFileChange(event: Event) {
-  const input = event.target as HTMLInputElement
-  if (input.files?.[0]) {
-    replacementFile.value = input.files[0]
-  }
-}
-
 async function submitFile(eventData: Record<string, unknown>): Promise<void> {
   const body: Record<string, unknown> = { ...eventData, categories: selectedCategories.value }
   if (replacementFile.value) {
@@ -203,25 +196,15 @@ async function onSaveAndContinue(event: { data: Record<string, unknown> }) {
                 />
               </div>
 
-              <!-- Replacement file input -->
-              <div class="space-y-2">
-                <UFormField
-                  name="replacement_file"
+              <!-- Replacement file input (drag-and-drop with preview) -->
+              <UFormField name="replacement_file">
+                <UFileUpload
+                  v-model="replacementFile"
                   :label="t('motor-media.files.replace_file')"
-                >
-                  <UInput
-                    type="file"
-                    class="w-full"
-                    @change="onFileChange"
-                  />
-                </UFormField>
-                <p
-                  v-if="replacementFile"
-                  class="text-sm text-muted"
-                >
-                  {{ replacementFile.name }} ({{ (replacementFile.size / 1024).toFixed(1) }} KB)
-                </p>
-              </div>
+                  :description="t('motor-media.files.replace_file_description')"
+                  icon="i-lucide-upload"
+                />
+              </UFormField>
             </div>
           </UPageCard>
         </template>
