@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 4.10.0
+
+### Minor Changes
+
+- - feat(media): add MIME-type filter to media library
+
 ## 4.9.0
 
 ### Minor Changes
