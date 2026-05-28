@@ -74,7 +74,7 @@ const rowActions: RowActionDef<File>[] = [
   }
 ]
 
-const filters = [useClientFilter(), useCategoryFilter('media')]
+const filters = [useClientFilter(), useMimeTypeFilter(), useCategoryFilter('media')]
 
 const bulkActions: BulkActionDef[] = [
   {
