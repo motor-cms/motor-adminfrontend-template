@@ -29,6 +29,7 @@
   "no_files_selected": "No files selected",
   "current_file": "Current file",
   "replace_file": "Replace file",
+  "replace_file_description": "Drag a file here or click to browse",
   "url_copied": "URL copied to clipboard",
   "copy_url": "Copy URL",
   "preview": "Preview",
