@@ -24,8 +24,6 @@ const emit = defineEmits<{
 const { t } = useI18n()
 
 const pendingFiles = ref<PendingFile[]>([])
-const isDragging = ref(false)
-const fileInputRef = ref<HTMLInputElement | null>(null)
 
 // Dirty tracking: keyed by index-stable ID per entry
 let nextId = 0
@@ -40,12 +38,6 @@ const previews = computed(() =>
     sizeHuman: formatFileSize(entry.file.size)
   }))
 )
-
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-}
 
 function addFiles(newFiles: FileList | File[]) {
   const fileArray = Array.from(newFiles)
@@ -112,34 +104,6 @@ watch(
   }
 )
 
-function onDrop(event: DragEvent) {
-  isDragging.value = false
-  if (event.dataTransfer?.files) {
-    addFiles(event.dataTransfer.files)
-  }
-}
-
-function onDragOver(event: DragEvent) {
-  event.preventDefault()
-  isDragging.value = true
-}
-
-function onDragLeave() {
-  isDragging.value = false
-}
-
-function openFilePicker() {
-  fileInputRef.value?.click()
-}
-
-function onFileInputChange(event: Event) {
-  const input = event.target as HTMLInputElement
-  if (input.files) {
-    addFiles(input.files)
-    input.value = ''
-  }
-}
-
 onBeforeUnmount(() => {
   previews.value.forEach(p => URL.revokeObjectURL(p.url))
 })
@@ -148,38 +112,11 @@ onBeforeUnmount(() => {
 <template>
   <div class="space-y-4">
     <!-- Drop zone -->
-    <div
-      class="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-8 transition-colors cursor-pointer"
-      :class="isDragging ? 'border-primary bg-primary/5' : 'border-muted hover:border-primary/50'"
-      @drop.prevent="onDrop"
-      @dragover="onDragOver"
-      @dragleave="onDragLeave"
-      @click="openFilePicker"
-    >
-      <UIcon
-        name="i-lucide-upload-cloud"
-        class="size-10 text-muted"
-      />
-      <p class="text-sm text-muted">
-        {{ t('motor-media.files.drop_files') }}
-      </p>
-      <UButton
-        variant="outline"
-        size="sm"
-        icon="i-lucide-folder-open"
-        @click.stop="openFilePicker"
-      >
-        {{ t('motor-media.files.browse') }}
-      </UButton>
-      <input
-        ref="fileInputRef"
-        type="file"
-        :accept="accept"
-        multiple
-        class="hidden"
-        @change="onFileInputChange"
-      >
-    </div>
+    <FormInputsFileDropzone
+      multiple
+      :accept="accept"
+      @files="addFiles"
+    />
 
     <!-- Pending files list -->
     <div

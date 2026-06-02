@@ -13,6 +13,13 @@ export function fileToBase64(file: File): Promise<string> {
   })
 }
 
+/** Human-readable byte size, e.g. 763.3 KB. */
+export function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
 export function fileToDataUrl(file: File): Promise<{ dataUrl: string, name: string }> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
