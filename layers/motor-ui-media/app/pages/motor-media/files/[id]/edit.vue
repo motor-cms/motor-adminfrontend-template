@@ -23,6 +23,28 @@ const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, 
 
 const fileId = route.params.id as string
 const replacementFile = ref<File | null>(null)
+const replacementPreviewUrl = ref<string | null>(null)
+const replacementSizeHuman = computed(() =>
+  replacementFile.value ? formatFileSize(replacementFile.value.size) : ''
+)
+
+function onReplacementSelected(files: File[]) {
+  const file = files[0]
+  if (!file) return
+  if (replacementPreviewUrl.value) URL.revokeObjectURL(replacementPreviewUrl.value)
+  replacementFile.value = file
+  replacementPreviewUrl.value = URL.createObjectURL(file)
+}
+
+function clearReplacement() {
+  if (replacementPreviewUrl.value) URL.revokeObjectURL(replacementPreviewUrl.value)
+  replacementPreviewUrl.value = null
+  replacementFile.value = null
+}
+
+onBeforeUnmount(() => {
+  if (replacementPreviewUrl.value) URL.revokeObjectURL(replacementPreviewUrl.value)
+})
 
 const usageModalOpen = ref(false)
 const usageEndpoint = computed(() => `/api/v2/files/${fileId}/usage`)
@@ -196,14 +218,49 @@ async function onSaveAndContinue(event: { data: Record<string, unknown> }) {
                 />
               </div>
 
-              <!-- Replacement file input (drag-and-drop with preview) -->
-              <UFormField name="replacement_file">
-                <UFileUpload
-                  v-model="replacementFile"
-                  :label="t('motor-media.files.replace_file')"
-                  :description="t('motor-media.files.replace_file_description')"
-                  icon="i-lucide-upload"
+              <!-- Replacement file input (drag-and-drop with preview before upload) -->
+              <UFormField
+                name="replacement_file"
+                :label="t('motor-media.files.replace_file')"
+              >
+                <FormInputsFileDropzone
+                  v-if="!replacementFile"
+                  :label="t('motor-media.files.replace_file_description')"
+                  @files="onReplacementSelected"
                 />
+                <!-- Preview of the selected replacement before it is uploaded -->
+                <div
+                  v-else
+                  class="flex items-center gap-3 rounded-lg border p-3"
+                >
+                  <img
+                    v-if="replacementPreviewUrl && replacementFile.type.startsWith('image/')"
+                    :src="replacementPreviewUrl"
+                    :alt="replacementFile.name"
+                    class="size-16 rounded object-cover shrink-0"
+                  >
+                  <UIcon
+                    v-else
+                    name="i-lucide-file"
+                    class="size-12 text-muted shrink-0"
+                  />
+                  <div class="min-w-0 flex-1">
+                    <p class="truncate text-sm font-medium">
+                      {{ replacementFile.name }}
+                    </p>
+                    <p class="text-xs text-muted">
+                      {{ replacementFile.type || t('motor-core.global.unknown') }} &middot; {{ replacementSizeHuman }}
+                    </p>
+                  </div>
+                  <UButton
+                    icon="i-lucide-x"
+                    variant="ghost"
+                    size="xs"
+                    color="error"
+                    :aria-label="t('motor-media.files.remove')"
+                    @click="clearReplacement"
+                  />
+                </div>
               </UFormField>
             </div>
           </UPageCard>
