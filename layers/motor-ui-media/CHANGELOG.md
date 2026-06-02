@@ -1,5 +1,11 @@
 # @motor-cms/ui-media
 
+## 4.10.1
+
+### Patch Changes
+
+- - fix(media): gallery card uses stable created_at and the shared date format
+
 ## 4.10.0
 
 ### Minor Changes
