@@ -1,5 +1,11 @@
 # @motor-cms/ui-media
 
+## 4.11.0
+
+### Minor Changes
+
+- - feat(media): rich drag-and-drop replace control with preview before upload
+
 ## 4.10.1
 
 ### Patch Changes
