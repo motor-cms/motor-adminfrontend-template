@@ -1,5 +1,11 @@
 # @motor-cms/ui-media
 
+## 4.12.0
+
+### Minor Changes
+
+- - feat(tree-picker): flat tree with horizontal-level drag-and-drop and drop placeholder (ZRMDEV-216)
+
 ## 4.11.0
 
 ### Minor Changes
