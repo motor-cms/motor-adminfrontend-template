@@ -10,6 +10,10 @@ interface CategoryItem {
 }
 
 const TEMP_NEW_ID = -1
+// Horizontal pixels per nesting level. Dragging the item this far to the
+// right/left while moving changes the target depth by one — this is what makes
+// the nesting level directly visible and controllable.
+const INDENT = 24
 
 const props = defineProps<{
   treeId: string
@@ -38,7 +42,6 @@ const activeItemId = computed(() => props.currentId ?? (isCreateMode.value ? TEM
 
 // The parent_id of root-level categories (their parent is outside the returned list)
 const rootParentId = ref<number | null>(null)
-const isDragging = ref(false)
 const expandedIds = ref(new Set<number>())
 
 // IDs that can't be a drop/select target (current item + its descendants)
@@ -84,7 +87,6 @@ function buildTree(cats: CategoryItem[]): TreeNode[] {
       map.get(cat.parent_id)!.children.push(node)
     } else {
       roots.push(node)
-      // Capture the parent_id of root-level categories
       if (rootParentId.value === null && cat.parent_id !== null) {
         rootParentId.value = cat.parent_id
       }
@@ -93,7 +95,6 @@ function buildTree(cats: CategoryItem[]): TreeNode[] {
   return roots
 }
 
-// Find ancestor IDs from root to target (not including target)
 function findPathTo(nodes: TreeNode[], targetId: number): number[] | null {
   for (const node of nodes) {
     if (node.id === targetId) return []
@@ -108,15 +109,12 @@ function findPathTo(nodes: TreeNode[], targetId: number): number[] | null {
 watch(categories, (cats) => {
   tree.value = buildTree(cats)
 
-  // Empty tree: default rootParentId to the tree's own ID (root node)
   if (rootParentId.value === null) {
     rootParentId.value = Number(props.treeId)
   }
 
-  // Create mode: insert virtual "new" node at the start of the root list
   if (isCreateMode.value) {
     tree.value.unshift({ id: TEMP_NEW_ID, name: props.newItemName || '', children: [] })
-    // Emit initial position (first child at root level)
     emitPosition()
   }
 
@@ -129,7 +127,6 @@ watch(categories, (cats) => {
   }
 }, { immediate: true })
 
-// Keep the active node's name in sync with the prop
 watch(() => props.newItemName, (name) => {
   const id = activeItemId.value
   if (id === undefined) return
@@ -139,16 +136,13 @@ watch(() => props.newItemName, (name) => {
 
 function toggleNode(id: number) {
   const next = new Set(expandedIds.value)
-  if (next.has(id)) {
-    next.delete(id)
-  } else {
-    next.add(id)
-  }
+  if (next.has(id)) next.delete(id)
+  else next.add(id)
   expandedIds.value = next
 }
 
 // =============================================
-// Tree mutation (edit mode drag & drop)
+// Tree data helpers (move + emit position)
 // =============================================
 
 function findAndRemove(nodes: TreeNode[], id: number): TreeNode | null {
@@ -207,7 +201,6 @@ function moveItem(itemId: number, newParentId: number | null, newIndex: number) 
 
   targetList.splice(newIndex, 0, item)
 
-  // Auto-expand the target parent so the user sees the result
   if (newParentId !== null && !expandedIds.value.has(newParentId)) {
     const next = new Set(expandedIds.value)
     next.add(newParentId)
@@ -218,114 +211,164 @@ function moveItem(itemId: number, newParentId: number | null, newIndex: number) 
 }
 
 // =============================================
-// Auto-expand collapsed parents on drag hover
+// Flatten the visible tree into a single list with depth
 // =============================================
 
-const autoExpandedIds = new Set<number>()
-let hoverTimer: ReturnType<typeof setTimeout> | null = null
-let hoverTargetId: number | null = null
-
-function isDescendantOf(nodeId: number, ancestorId: number): boolean {
-  const catMap = new Map(categories.value.map(c => [c.id, c]))
-  let current = catMap.get(nodeId)
-  while (current) {
-    if (current.parent_id === ancestorId) return true
-    if (current.parent_id === null) return false
-    current = current.parent_id !== null ? catMap.get(current.parent_id) : undefined
-  }
-  return false
+interface FlatItem {
+  id: number
+  name: string
+  depth: number
+  parentId: number | null
+  hasChildren: boolean
 }
 
-function collapseStaleAutoExpanded(currentItemId: number) {
-  if (autoExpandedIds.size === 0) return
-  const toRemove: number[] = []
-  for (const id of autoExpandedIds) {
-    if (id === currentItemId || isDescendantOf(currentItemId, id)) continue
-    toRemove.push(id)
+const flattened = computed<FlatItem[]>(() => {
+  const out: FlatItem[] = []
+  function walk(nodes: TreeNode[], depth: number, parentId: number | null) {
+    for (const n of nodes) {
+      out.push({ id: n.id, name: n.name, depth, parentId, hasChildren: n.children.length > 0 })
+      if (n.children.length && expandedIds.value.has(n.id)) walk(n.children, depth + 1, n.id)
+    }
   }
-  if (toRemove.length === 0) return
-  const next = new Set(expandedIds.value)
-  for (const id of toRemove) {
-    next.delete(id)
-    autoExpandedIds.delete(id)
-  }
-  expandedIds.value = next
+  walk(tree.value, 0, rootParentId.value)
+  return out
+})
+
+function isExpanded(id: number): boolean {
+  return expandedIds.value.has(id)
 }
 
-function cancelHoverExpand() {
-  if (hoverTimer) {
-    clearTimeout(hoverTimer)
-    hoverTimer = null
-    hoverTargetId = null
+// =============================================
+// Pointer-based drag with horizontal level control
+// =============================================
+
+const containerRef = ref<HTMLElement | null>(null)
+const dragActive = ref(false)
+const isDragging = computed(() => dragActive.value)
+const pointer = ref({ x: 0, y: 0 })
+let startX = 0
+let activeDepth = 0
+
+// Item above the insertion point (null = insert at very top)
+const overItemId = ref<number | null>(null)
+const offsetLeft = ref(0)
+
+// Descendants of the active item — excluded from the list while dragging
+const activeDescendantIds = computed<Set<number>>(() => {
+  const ids = new Set<number>()
+  if (activeItemId.value === undefined) return ids
+  const node = findNode(tree.value, activeItemId.value)
+  if (node) {
+    (function collect(n: TreeNode) {
+      for (const c of n.children) { ids.add(c.id); collect(c) }
+    })(node)
   }
+  return ids
+})
+
+// What we render: during drag the active item + its subtree lift out
+const displayItems = computed<FlatItem[]>(() => {
+  if (!dragActive.value) return flattened.value
+  return flattened.value.filter(i => i.id !== activeItemId.value && !activeDescendantIds.value.has(i.id))
+})
+
+const activeItem = computed(() => flattened.value.find(i => i.id === activeItemId.value) ?? null)
+
+const projected = computed(() => {
+  if (!dragActive.value) return null
+  const items = displayItems.value
+  const overIndex = overItemId.value === null ? -1 : items.findIndex(i => i.id === overItemId.value)
+  const prevItem = overIndex >= 0 ? items[overIndex] : null
+  const nextItem = items[overIndex + 1] ?? null
+
+  const dragDepth = Math.round(offsetLeft.value / INDENT)
+  const projectedDepth = activeDepth + dragDepth
+  const maxDepth = prevItem ? prevItem.depth + 1 : 0
+  const minDepth = nextItem ? nextItem.depth : 0
+  const depth = Math.max(minDepth, Math.min(projectedDepth, maxDepth))
+
+  let parentId: number | null
+  if (depth === 0 || !prevItem) {
+    parentId = rootParentId.value
+  } else if (depth === prevItem.depth) {
+    parentId = prevItem.parentId
+  } else if (depth > prevItem.depth) {
+    parentId = prevItem.id
+  } else {
+    const ancestor = items.slice(0, overIndex + 1).reverse().find(i => i.depth === depth)
+    parentId = ancestor?.parentId ?? rootParentId.value
+  }
+
+  return { depth, parentId, overIndex, overItemId: overItemId.value }
+})
+
+const projectedParentName = computed(() => {
+  const p = projected.value
+  if (!p) return null
+  if (p.parentId === null || p.parentId === rootParentId.value) return null
+  return findNode(tree.value, p.parentId)?.name ?? null
+})
+
+function rowsInDom(): HTMLElement[] {
+  return [...(containerRef.value?.querySelectorAll<HTMLElement>('[data-flat-id]') ?? [])]
 }
 
-function startHoverExpand(id: number) {
-  if (id === hoverTargetId) return
-  cancelHoverExpand()
-  hoverTargetId = id
-  hoverTimer = setTimeout(() => {
-    const next = new Set(expandedIds.value)
-    next.add(id)
-    expandedIds.value = next
-    autoExpandedIds.add(id)
-    hoverTargetId = null
-    hoverTimer = null
-  }, 500)
+function updateOver(clientY: number) {
+  let over: number | null = null
+  for (const row of rowsInDom()) {
+    const r = row.getBoundingClientRect()
+    if (clientY >= r.top + r.height / 2) over = Number(row.dataset.flatId)
+    else break
+  }
+  overItemId.value = over
 }
 
-/** Called from @dragover on each tree item during drag */
-function handleDragOver(itemId: number) {
-  collapseStaleAutoExpanded(itemId)
-
-  if (itemId === activeItemId.value) {
-    cancelHoverExpand()
-    return
-  }
-  if (nonSelectableIds.value.has(itemId)) {
-    cancelHoverExpand()
-    return
-  }
-  if (expandedIds.value.has(itemId)) {
-    cancelHoverExpand()
-    return
-  }
-
-  const node = findNode(tree.value, itemId)
-  if (!node || node.children.length === 0) {
-    cancelHoverExpand()
-    return
-  }
-
-  startHoverExpand(itemId)
+function onHandlePointerDown(e: PointerEvent) {
+  if (activeItemId.value === undefined) return
+  e.preventDefault()
+  e.stopPropagation()
+  dragActive.value = true
+  startX = e.clientX
+  offsetLeft.value = 0
+  activeDepth = activeItem.value?.depth ?? 0
+  pointer.value = { x: e.clientX, y: e.clientY }
+  nextTick(() => updateOver(e.clientY))
+  window.addEventListener('pointermove', onPointerMove)
+  window.addEventListener('pointerup', onPointerUp)
 }
 
-/** Called after drop — keeps drop target expanded, collapses the rest */
-function cleanupAutoExpand(dropParentId: number | null) {
-  cancelHoverExpand()
-  if (dropParentId !== null) {
-    autoExpandedIds.delete(dropParentId)
-  }
-  if (autoExpandedIds.size === 0) return
-  const next = new Set(expandedIds.value)
-  for (const id of autoExpandedIds) {
-    next.delete(id)
-  }
-  expandedIds.value = next
-  autoExpandedIds.clear()
+function onPointerMove(e: PointerEvent) {
+  if (!dragActive.value) return
+  pointer.value = { x: e.clientX, y: e.clientY }
+  offsetLeft.value = e.clientX - startX
+  updateOver(e.clientY)
 }
 
-// Provide shared state for the recursive NestedDraggable components
-provide('categoryTree', {
-  currentId: computed(() => activeItemId.value),
-  nonSelectableIds,
-  moveItem,
-  isEditMode,
-  isDragging,
-  expandedIds: computed(() => expandedIds.value),
-  toggleNode,
-  handleDragOver,
-  cleanupAutoExpand
+function onPointerUp() {
+  window.removeEventListener('pointermove', onPointerMove)
+  window.removeEventListener('pointerup', onPointerUp)
+  const p = projected.value
+  const id = activeItemId.value
+  dragActive.value = false
+  if (!p || id === undefined) return
+
+  // Index among the target parent's children
+  const items = displayItems.value
+  const upto = items.slice(0, p.overIndex + 1)
+  const prevSibling = [...upto].reverse().find(i => i.parentId === p.parentId && i.depth === p.depth)
+  const targetChildren = (p.parentId === null || p.parentId === rootParentId.value)
+    ? tree.value
+    : (findNode(tree.value, p.parentId)?.children ?? [])
+  const newIndex = prevSibling
+    ? targetChildren.findIndex(c => c.id === prevSibling.id) + 1
+    : 0
+
+  moveItem(id, p.parentId, newIndex)
+}
+
+onBeforeUnmount(() => {
+  window.removeEventListener('pointermove', onPointerMove)
+  window.removeEventListener('pointerup', onPointerUp)
 })
 </script>
 
@@ -343,13 +386,126 @@ provide('categoryTree', {
     </div>
     <div
       v-else
-      class="text-sm"
+      ref="containerRef"
+      class="relative text-sm select-none"
+      :class="dragActive ? 'cursor-grabbing' : ''"
     >
-      <FormInputsNestedDraggable
-        :items="tree"
-        :parent-id="rootParentId"
-        :depth="0"
-      />
+      <!-- Insertion line at the very top -->
+      <div
+        v-if="dragActive && projected && projected.overItemId === null"
+        class="pointer-events-none py-0.5"
+        :style="{ paddingLeft: (projected.depth * INDENT + 8) + 'px' }"
+      >
+        <span class="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 border-2 border-dashed border-[var(--ui-primary)] bg-[var(--ui-primary)]/5 text-[var(--ui-primary)]/70 text-sm">
+          <UIcon
+            name="i-lucide-grip-vertical"
+            class="size-4 opacity-40"
+          />
+          {{ activeItem?.name || '…' }}
+        </span>
+      </div>
+
+      <template
+        v-for="item in displayItems"
+        :key="item.id"
+      >
+        <!-- Active (current) item rendered in place as a grabbable pill -->
+        <div
+          v-if="item.id === activeItemId"
+          :data-flat-id="item.id"
+          class="flex items-center gap-1 px-2 py-1.5 my-0.5"
+          :style="{ paddingLeft: (item.depth * INDENT + 8) + 'px' }"
+        >
+          <span class="shrink-0 size-5 sm:size-4" />
+          <span
+            class="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 -my-0.5 ring-2 ring-[var(--ui-primary)] bg-[var(--ui-primary)]/10 font-semibold text-[var(--ui-primary)] cursor-grab active:cursor-grabbing touch-none"
+            @pointerdown="onHandlePointerDown"
+          >
+            <UIcon
+              name="i-lucide-grip-vertical"
+              class="shrink-0 size-4 opacity-60"
+            />
+            {{ item.name || '…' }}
+          </span>
+        </div>
+        <div
+          v-else
+          :data-flat-id="item.id"
+          class="flex items-center gap-1 px-2 py-1.5 my-0.5 rounded-md transition-colors"
+          :class="[
+            nonSelectableIds.has(item.id) ? 'opacity-40' : '',
+            dragActive && projected && projected.parentId === item.id ? 'ring-2 ring-[var(--ui-primary)] bg-[var(--ui-primary)]/10' : ''
+          ]"
+          :style="{ paddingLeft: (item.depth * INDENT + 8) + 'px' }"
+        >
+          <button
+            v-if="item.hasChildren"
+            class="shrink-0 size-5 sm:size-4 flex items-center justify-center rounded hover:bg-[var(--ui-bg-elevated)] transition-colors cursor-pointer"
+            type="button"
+            @click.stop="toggleNode(item.id)"
+          >
+            <UIcon
+              name="i-lucide-chevron-right"
+              class="size-3.5 transition-transform duration-200"
+              :class="{ 'rotate-90': isExpanded(item.id) }"
+            />
+          </button>
+          <span
+            v-else
+            class="shrink-0 size-5 sm:size-4"
+          />
+          <UIcon
+            :name="item.hasChildren
+              ? ((isExpanded(item.id) || (dragActive && projected && projected.parentId === item.id)) ? 'i-lucide-folder-open' : 'i-lucide-folder')
+              : 'i-lucide-file'"
+            class="shrink-0 size-4"
+            :class="dragActive && projected && projected.parentId === item.id ? 'text-[var(--ui-primary)]' : 'opacity-60'"
+          />
+          <span class="truncate">{{ item.name }}</span>
+        </div>
+
+        <!-- Insertion line after this row -->
+        <div
+          v-if="dragActive && projected && projected.overItemId === item.id"
+          class="pointer-events-none py-0.5"
+          :style="{ paddingLeft: (projected.depth * INDENT + 8) + 'px' }"
+        >
+          <span class="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 border-2 border-dashed border-[var(--ui-primary)] bg-[var(--ui-primary)]/5 text-[var(--ui-primary)]/70 text-sm">
+            <UIcon
+              name="i-lucide-grip-vertical"
+              class="size-4 opacity-40"
+            />
+            {{ activeItem?.name || '…' }}
+          </span>
+        </div>
+      </template>
+
+      <!-- Floating chip + level hint following the cursor while dragging -->
+      <Teleport to="body">
+        <div
+          v-if="dragActive && activeItem"
+          class="fixed z-50 pointer-events-none -translate-y-1/2"
+          :style="{ left: pointer.x + 14 + 'px', top: pointer.y + 'px' }"
+        >
+          <span class="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 ring-2 ring-[var(--ui-primary)] bg-[var(--ui-bg-default,#fff)] shadow-lg font-semibold text-[var(--ui-primary)] text-sm">
+            <UIcon
+              name="i-lucide-grip-vertical"
+              class="shrink-0 size-4 opacity-60"
+            />
+            {{ activeItem.name || '…' }}
+          </span>
+          <span
+            v-if="projected"
+            class="mt-1 flex items-center gap-1 w-fit rounded px-1.5 py-0.5 bg-[var(--ui-primary)] text-white text-[11px] shadow"
+          >
+            <UIcon
+              name="i-lucide-corner-down-right"
+              class="size-3"
+            />
+            {{ projectedParentName || '—' }}
+          </span>
+        </div>
+      </Teleport>
     </div>
   </ClientOnly>
 </template>
