@@ -44,6 +44,9 @@ importers:
 
   layers/motor-ui-admin:
     dependencies:
+      '@motor-cms/ui-core':
+        specifier: workspace:^
+        version: link:../motor-ui-core
       '@tiptap/extension-link':
         specifier: ^3.0.0
         version: 3.20.4(@tiptap/core@3.20.4(@tiptap/pm@3.20.4))(@tiptap/pm@3.20.4)
@@ -74,10 +77,6 @@ importers:
       zod:
         specifier: ^4.0.0
         version: 4.3.6
-    devDependencies:
-      '@motor-cms/ui-core':
-        specifier: workspace:*
-        version: link:../motor-ui-core
 
   layers/motor-ui-core:
     dependencies:
@@ -120,6 +119,9 @@ importers:
 
   layers/motor-ui-media:
     dependencies:
+      '@motor-cms/ui-core':
+        specifier: workspace:^
+        version: link:../motor-ui-core
       '@vueuse/core':
         specifier: ^14.0.0
         version: 14.2.1(vue@3.5.30(typescript@5.9.3))
@@ -129,10 +131,6 @@ importers:
       vue:
         specifier: ^3.5.0
         version: 3.5.30(typescript@5.9.3)
-    devDependencies:
-      '@motor-cms/ui-core':
-        specifier: workspace:*
-        version: link:../motor-ui-core
 
 packages:
 

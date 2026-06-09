@@ -43,3 +43,4 @@ packages/
 
 # motor-dev state (local linking)
 .motor-dev.state.json
+.tmp/
