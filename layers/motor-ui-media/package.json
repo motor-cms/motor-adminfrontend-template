@@ -12,6 +12,9 @@
   "dependencies": {
     "@vueuse/core": "^14.0.0"
   },
+  "devDependencies": {
+    "@motor-cms/ui-core": "workspace:*"
+  },
   "peerDependencies": {
     "@motor-cms/ui-core": ">=4.0.0",
     "nuxt": "^4.0.0",
