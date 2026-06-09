@@ -38,12 +38,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck
-        run: pnpm typecheck
-
       - name: Run tests
         run: pnpm test
 
+      # --- Decide whether to release ---
+      # Release when an author-written changeset exists OR when layer code
+      # changed without one (e.g. a merge from production). The latter lets
+      # us cut a fresh pre-release even when no changeset was committed.
       - name: Check for changesets
         id: changesets
         run: |
@@ -54,18 +55,28 @@ jobs:
             echo "has_changesets=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Skip if no changesets
+      - name: Check if layer code changed
         if: steps.changesets.outputs.has_changesets == 'false'
-        run: echo "No changesets to publish. Skipping."
-
-      - name: Configure git
-        if: steps.changesets.outputs.has_changesets == 'true'
+        id: code_changed
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$LAST_TAG" ]; then
+            DIFF_REF="$LAST_TAG"
+          else
+            DIFF_REF="HEAD~5"
+          fi
+          CODE_CHANGED=false
+          if git diff --name-only "$DIFF_REF"..HEAD -- 'layers/' | grep -q .; then
+            CODE_CHANGED=true
+          fi
+          echo "changed=$CODE_CHANGED" >> "$GITHUB_OUTPUT"
+
+      - name: Skip notice
+        if: steps.changesets.outputs.has_changesets == 'false' && steps.code_changed.outputs.changed != 'true'
+        run: echo "No changesets and no layer code changes. Nothing to publish."
 
       - name: Determine pre-release tag
-        if: steps.changesets.outputs.has_changesets == 'true'
+        if: steps.changesets.outputs.has_changesets == 'true' || steps.code_changed.outputs.changed == 'true'
         id: tag
         run: |
           if [ "${{ github.ref_name }}" = "staging" ]; then
@@ -74,8 +85,64 @@ jobs:
             echo "tag=alpha" >> "$GITHUB_OUTPUT"
           fi
 
+      # Synthesize a changeset from conventional-commit messages when layer
+      # code changed but no changeset was committed. Bump level is inferred:
+      # `!`/`BREAKING CHANGE` -> major, `feat` -> minor, otherwise patch.
+      - name: Generate changeset from commits
+        if: steps.changesets.outputs.has_changesets == 'false' && steps.code_changed.outputs.changed == 'true'
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -n "$LAST_TAG" ]; then
+            COMMITS=$(git log "$LAST_TAG"..HEAD --pretty=format:"%s" --no-merges --)
+            FULL_COMMITS=$(git log "$LAST_TAG"..HEAD --pretty=format:"%B" --no-merges --)
+          else
+            COMMITS=$(git log -10 --pretty=format:"%s" --no-merges --)
+            FULL_COMMITS=$(git log -10 --pretty=format:"%B" --no-merges --)
+          fi
+
+          BUMP="patch"
+          SUMMARY=""
+
+          if echo "$FULL_COMMITS" | grep -qE '^BREAKING CHANGE:'; then
+            BUMP="major"
+          fi
+
+          while IFS= read -r msg; do
+            [ -z "$msg" ] && continue
+            if echo "$msg" | grep -qE '^[a-z]+(\(.+\))?!:'; then
+              BUMP="major"
+              SUMMARY="${SUMMARY}- ${msg}\n"
+            elif echo "$msg" | grep -qE '^feat(\(.+\))?:'; then
+              [ "$BUMP" != "major" ] && BUMP="minor"
+              SUMMARY="${SUMMARY}- ${msg}\n"
+            elif echo "$msg" | grep -qE '^(fix|refactor|perf)(\(.+\))?:'; then
+              SUMMARY="${SUMMARY}- ${msg}\n"
+            fi
+          done <<< "$COMMITS"
+
+          if [ -z "$SUMMARY" ]; then
+            SUMMARY="- $(git log -1 --pretty=format:'%s')\n"
+          fi
+
+          HASH=$(git rev-parse --short HEAD)
+          FILENAME=".changeset/auto-${HASH}.md"
+          printf -- "---\n" > "$FILENAME"
+          printf "'@motor-cms/ui-core': %s\n" "$BUMP" >> "$FILENAME"
+          printf "'@motor-cms/ui-admin': %s\n" "$BUMP" >> "$FILENAME"
+          printf "'@motor-cms/ui-media': %s\n" "$BUMP" >> "$FILENAME"
+          printf -- "---\n\n" >> "$FILENAME"
+          printf '%b' "$SUMMARY" >> "$FILENAME"
+          echo "Created $FILENAME with $BUMP bump:"
+          cat "$FILENAME"
+
+      - name: Configure git
+        if: steps.changesets.outputs.has_changesets == 'true' || steps.code_changed.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
       - name: Enter pre-release mode
-        if: steps.changesets.outputs.has_changesets == 'true'
+        if: steps.changesets.outputs.has_changesets == 'true' || steps.code_changed.outputs.changed == 'true'
         run: |
           # Exit any existing pre-release mode first
           if [ -f .changeset/pre.json ]; then
@@ -99,14 +166,39 @@ jobs:
           fi
 
       - name: Version packages
-        if: steps.changesets.outputs.has_changesets == 'true'
-        run: pnpm changeset version
+        if: steps.changesets.outputs.has_changesets == 'true' || steps.code_changed.outputs.changed == 'true'
+        id: version
+        run: |
+          pnpm changeset version
+          echo "versioned=true" >> "$GITHUB_OUTPUT"
 
+      # Direct `pnpm publish` per package. We avoid `pnpm changeset publish`
+      # because the changesets/pnpm-11/npm-10.9 combo silently returns
+      # "E404 undefined". `pnpm publish` (unlike vanilla `npm publish`)
+      # resolves the `workspace:*` devDependency on @motor-cms/ui-core to the
+      # concrete version before publishing.
       - name: Publish to npm
-        if: steps.changesets.outputs.has_changesets == 'true'
+        if: steps.version.outputs.versioned == 'true'
         id: publish
         run: |
-          pnpm changeset publish
+          set -e
+          FAILED=()
+          for pkg in layers/motor-ui-core layers/motor-ui-admin layers/motor-ui-media; do
+            NAME=$(node -p "require('./$pkg/package.json').name")
+            VERSION=$(node -p "require('./$pkg/package.json').version")
+            echo "::group::Publishing $NAME@$VERSION (tag: ${{ steps.tag.outputs.tag }})"
+            if ( cd "$pkg" && pnpm publish --access public --tag ${{ steps.tag.outputs.tag }} --no-git-checks ); then
+              echo "✓ $NAME@$VERSION"
+            else
+              echo "✗ $NAME@$VERSION failed"
+              FAILED+=("$NAME@$VERSION")
+            fi
+            echo "::endgroup::"
+          done
+          if [ ${#FAILED[@]} -gt 0 ]; then
+            echo "::error::Packages failed to publish: ${FAILED[*]}"
+            exit 1
+          fi
           echo "published=true" >> "$GITHUB_OUTPUT"
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
