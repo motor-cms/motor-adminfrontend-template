@@ -9,7 +9,7 @@
   "view_title": "Kategoriebaum ansehen",
   "created_success": "Kategoriebaum wurde erfolgreich erstellt",
   "updated_success": "Kategoriebaum wurde erfolgreich aktualisiert",
-  "children": "Kinder",
+  "children": "Kategorien",
   "children_title": "Kategorien in \"{name}\"",
   "children_subtitle": "Kategorien in diesem Baum verwalten"
 }

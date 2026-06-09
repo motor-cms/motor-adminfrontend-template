@@ -21,18 +21,19 @@ function handleCardClick(e: MouseEvent) {
   }
 }
 
+const toast = useToast()
+const { t, locale } = useI18n()
+
+// Read the File record's own created_at (stable across file replacements), not
+// the Spatie media-row date which bumps on every replacement (ZRMDEV-220).
+// Format via the shared locale-aware formatter so it matches the list view's
+// DateRenderer (e.g. "29.05.2026 13:55") instead of an ad-hoc locale format.
 const createdAt = computed(() => {
-  const raw = props.item.file?.created_at
+  const raw = props.item.created_at
   if (!raw) return ''
-  return new Date(raw).toLocaleDateString(undefined, {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  })
+  return formatDate(parseDate(raw), toIntlLocale(locale.value), true)
 })
 
-const toast = useToast()
-const { t } = useI18n()
 const lightboxOpen = ref(false)
 
 const media = computed(() => props.item.file)

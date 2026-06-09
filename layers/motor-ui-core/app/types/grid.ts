@@ -44,6 +44,17 @@ export interface ListRendererProps {
   max?: number
 }
 
+/**
+ * Renders an enum/select value by looking up its i18n label.
+ * The looked-up key is `${translationPrefix}${value}` — include trailing separators
+ * (e.g. `motor-builder.seo_redirects.type_`) so `value = 'redirect'` resolves to
+ * `motor-builder.seo_redirects.type_redirect`. Falls back to the raw value if no
+ * translation is found.
+ */
+export interface EnumRendererProps {
+  translationPrefix: string
+}
+
 // Renderers with no configurable props
 export type TextRendererProps = Record<string, never>
 export type IndentedTextRendererProps = Record<string, never>
@@ -64,6 +75,7 @@ export interface RendererPropsMap {
   'text': TextRendererProps
   'indented-text': IndentedTextRendererProps
   'tags': TagsRendererProps
+  'enum': EnumRendererProps
 }
 
 export type RendererName = keyof RendererPropsMap

@@ -9,7 +9,7 @@ const props = defineProps<{
   subtitleKey: string
 }>()
 
-const { t, te } = useI18n()
+const { t, te } = useI18n({ useScope: 'global' })
 const { navigation, status } = useAdminNavigation()
 
 const { breadcrumbs } = useBreadcrumbs()

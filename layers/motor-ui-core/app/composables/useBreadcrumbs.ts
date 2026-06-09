@@ -26,7 +26,7 @@ const segmentTranslationMap: Record<string, string> = {
  * - ID segments are skipped
  */
 export function useBreadcrumbs(explicitBreadcrumbs?: Ref<BreadcrumbItem[] | undefined> | BreadcrumbItem[]) {
-  const { t, te } = useI18n()
+  const { t, te } = useI18n({ useScope: 'global' })
   const route = useRoute()
 
   const breadcrumbs = computed<BreadcrumbItem[]>(() => {
