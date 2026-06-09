@@ -20,16 +20,16 @@ jobs:
       !startsWith(github.event.head_commit.message, 'Merge remote-tracking branch')
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           version: latest
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: pnpm
@@ -175,8 +175,8 @@ jobs:
       # Direct `pnpm publish` per package. We avoid `pnpm changeset publish`
       # because the changesets/pnpm-11/npm-10.9 combo silently returns
       # "E404 undefined". `pnpm publish` (unlike vanilla `npm publish`)
-      # resolves the `workspace:*` devDependency on @motor-cms/ui-core to the
-      # concrete version before publishing.
+      # resolves the `workspace:^` peer dependency on @motor-cms/ui-core to a
+      # concrete caret range before publishing.
       - name: Publish to npm
         if: steps.version.outputs.versioned == 'true'
         id: publish
