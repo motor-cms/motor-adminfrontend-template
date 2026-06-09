@@ -11,6 +11,9 @@ export interface FileResource {
   id: number
   description: string
   file: MediaFile | null
+  /** File-record creation date (stable across file replacements). Prefer this over file.created_at. */
+  created_at?: string
+  updated_at?: string
   categories?: { id: number, name: string }[] | null
   [key: string]: unknown
 }

@@ -29,10 +29,14 @@
   "no_files_selected": "No files selected",
   "current_file": "Current file",
   "replace_file": "Replace file",
+  "replace_file_description": "Drag a file here or click to browse",
   "url_copied": "URL copied to clipboard",
   "copy_url": "Copy URL",
   "preview": "Preview",
   "upload_progress": "Uploading file {current} of {total}...",
+  "upload_failed": "Failed to upload {name}",
+  "upload_partial_success": "{uploaded} of {total} files uploaded",
+  "update_failed": "Failed to update file",
   "categories_required": "Please select at least one category",
   "files_required": "Please select at least one file",
   "view_gallery": "Gallery view",
@@ -42,5 +46,8 @@
   "upload": "Upload",
   "remove": "Remove",
   "avatar_alt": "Profile avatar",
-  "usage_title": "File Usage"
+  "usage_title": "File Usage",
+  "help": {
+    "is_global": "When enabled, the file is available to all clients. Otherwise only to the selected client above."
+  }
 }

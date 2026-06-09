@@ -5,6 +5,7 @@ import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Underline from '@tiptap/extension-underline'
+import { LINK_TARGET } from '../../../types/link-target'
 
 const props = defineProps<{
   modelValue: string
@@ -25,7 +26,7 @@ const linkEditorProps = ref<{
 }>({
   linkType: 'url',
   url: '',
-  target: '_self',
+  target: LINK_TARGET.Self,
   anchor: '',
   navigation: null,
   nofollow: false
@@ -75,7 +76,7 @@ function toggleLink() {
   if (!ed) return
   const attrs = ed.getAttributes('link')
   const href = attrs.href ?? ''
-  const target = attrs.target ?? '_self'
+  const target = attrs.target ?? LINK_TARGET.Self
   const rel = attrs.rel ?? ''
 
   if (href) {
@@ -84,7 +85,7 @@ function toggleLink() {
     linkEditorProps.value = {
       linkType: 'url',
       url: '',
-      target: '_self',
+      target: LINK_TARGET.Self,
       anchor: '',
       navigation: null,
       nofollow: false

@@ -32,10 +32,21 @@ columns.unshift({
   width: 'w-36'
 })
 
+// Constrain description + filename so they wrap rather than forcing the
+// table to horizontal-scroll on long unbroken filenames (ZRMDEV-221 follow-up).
+const wrappingTextCell = {
+  width: 'max-w-xs',
+  class: 'whitespace-normal break-words'
+}
+
 const descIdx = columns.findIndex(c => c.key === 'description')
+if (descIdx >= 0) {
+  columns[descIdx] = { ...columns[descIdx], ...wrappingTextCell }
+}
 columns.splice(descIdx + 1, 0, {
   key: 'file.file_name',
-  label: t('motor-media.files.file_name')
+  label: t('motor-media.files.file_name'),
+  ...wrappingTextCell
 })
 
 columns.push({
@@ -43,7 +54,13 @@ columns.push({
   label: t('motor-media.files.mime_type')
 })
 
-columns.push(createdAtColumn(t, { key: 'file.created_at', sortKey: 'created_at' }))
+columns.push({
+  key: 'is_excluded_from_search_index',
+  label: t('motor-media.files.is_excluded_from_search_index'),
+  renderer: 'boolean'
+})
+
+columns.push(createdAtColumn(t, { key: 'created_at', sortKey: 'created_at' }))
 
 const rowActions: RowActionDef<File>[] = [
   {
@@ -57,7 +74,7 @@ const rowActions: RowActionDef<File>[] = [
   }
 ]
 
-const filters = [useClientFilter(), useCategoryFilter('media')]
+const filters = [useClientFilter(), useMimeTypeFilter(), useCategoryFilter('media')]
 
 const bulkActions: BulkActionDef[] = [
   {

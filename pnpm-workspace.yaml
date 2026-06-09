@@ -2,11 +2,12 @@ packages:
   - 'layers/*'
   - 'playground'
 
-# pnpm 10+ in workspace mode reads `onlyBuiltDependencies` from here, not from
-# package.json. Without this, CI's `pnpm install --frozen-lockfile` exits 1
-# with ERR_PNPM_IGNORED_BUILDS for any package with a build script.
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - esbuild
-  - unrs-resolver
-  - vue-demi
+# pnpm 11+ reads the build-script allowlist from `allowBuilds` (map form) in
+# pnpm-workspace.yaml. The older `onlyBuiltDependencies` (list form) in
+# package.json is silently ignored in workspace mode, causing CI's
+# `pnpm install --frozen-lockfile` to fail with ERR_PNPM_IGNORED_BUILDS.
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  unrs-resolver: true
+  vue-demi: true

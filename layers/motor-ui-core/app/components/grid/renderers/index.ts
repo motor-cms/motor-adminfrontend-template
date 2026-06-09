@@ -9,6 +9,7 @@ import BadgeRenderer from './BadgeRenderer.vue'
 import AvatarRenderer from './AvatarRenderer.vue'
 import IndentedTextRenderer from './IndentedTextRenderer.vue'
 import TagsRenderer from './TagsRenderer.vue'
+import EnumRenderer from './EnumRenderer.vue'
 
 export const coreRenderers: Record<string, Component> = {
   'text': TextRenderer,
@@ -21,6 +22,7 @@ export const coreRenderers: Record<string, Component> = {
   'avatar': AvatarRenderer,
   'indented-text': IndentedTextRenderer,
   'tags': TagsRenderer,
+  'enum': EnumRenderer,
 }
 
 export {
@@ -34,4 +36,5 @@ export {
   AvatarRenderer,
   IndentedTextRenderer,
   TagsRenderer,
+  EnumRenderer,
 }
