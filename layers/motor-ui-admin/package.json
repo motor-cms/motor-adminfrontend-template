@@ -20,6 +20,9 @@
     "v-onboarding": "^2.12.2",
     "zod": "^4.0.0"
   },
+  "devDependencies": {
+    "@motor-cms/ui-core": "workspace:*"
+  },
   "peerDependencies": {
     "nuxt": "^4.0.0",
     "vue": "^3.5.0"
