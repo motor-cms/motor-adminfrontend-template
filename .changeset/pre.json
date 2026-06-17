@@ -2,9 +2,9 @@
   "mode": "pre",
   "tag": "rc",
   "initialVersions": {
-    "@motor-cms/ui-admin": "4.12.1-rc.2",
-    "@motor-cms/ui-core": "4.12.1-rc.2",
-    "@motor-cms/ui-media": "4.12.1-rc.2"
+    "@motor-cms/ui-admin": "4.12.1-rc.3",
+    "@motor-cms/ui-core": "4.12.1-rc.3",
+    "@motor-cms/ui-media": "4.12.1-rc.3"
   },
   "changesets": [
     "auto-1586df3"
