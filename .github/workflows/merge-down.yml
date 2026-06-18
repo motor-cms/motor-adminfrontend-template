@@ -12,6 +12,10 @@ concurrency:
   group: merge-down
   cancel-in-progress: false
 
+permissions:
+  contents: read
+  id-token: write   # OIDC -> Infisical for the motor-cms-ci-bot App key (no stored PAT_TOKEN)
+
 jobs:
   merge-down:
     name: Cascade merge
@@ -27,10 +31,31 @@ jobs:
       )
 
     steps:
+      # Keyless cross-branch auth: OIDC -> Infisical for the motor-cms-ci-bot App
+      # key, then a 1h installation token (Contents+PRs write). An App token (unlike
+      # GITHUB_TOKEN) still triggers the downstream release.yml on the merged-down
+      # branches — preserving the old PAT_TOKEN behaviour. Replaces revoked PAT_TOKEN.
+      - name: Fetch GitHub App creds from Infisical (OIDC, no stored token)
+        uses: Infisical/secrets-action@v1.0.7
+        with:
+          method: oidc
+          domain: https://secrets.tastatur-und-maus.net
+          identity-id: ${{ secrets.INFISICAL_IDENTITY_ID }}
+          project-slug: ${{ secrets.INFISICAL_PROJECT_SLUG }}
+          env-slug: prod
+          secret-path: /
+      - name: Mint short-lived motor-cms-ci-bot App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ env.GH_APP_ID }}
+          private-key: ${{ env.GH_APP_PRIVATE_KEY }}
+          owner: motor-cms
+          repositories: motor-adminfrontend-template
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - uses: pnpm/action-setup@v6
         with:
@@ -114,7 +139,7 @@ jobs:
               --body "Automatic merge-down could not fast-forward. Version conflicts were auto-resolved but code conflicts remain. Please resolve and merge manually."
           fi
         env:
-          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Merge staging → develop
         id: to-develop
@@ -175,4 +200,4 @@ jobs:
               --body "Automatic merge-down could not fast-forward. Version conflicts were auto-resolved but code conflicts remain. Please resolve and merge manually."
           fi
         env:
-          GH_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
