@@ -9,6 +9,10 @@ concurrency:
   group: release-prerelease-${{ github.ref_name }}
   cancel-in-progress: false
 
+permissions:
+  contents: write   # git push version bump / tags (GITHUB_TOKEN)
+  id-token: write   # OIDC -> Infisical for the npm publish token (no stored NPM_TOKEN)
+
 jobs:
   prerelease:
     name: Publish Pre-release
@@ -102,6 +106,16 @@ jobs:
         if: steps.changesets.outputs.has_changesets == 'true'
         run: pnpm changeset version
 
+      - name: Fetch npm token from Infisical (OIDC, no stored token)
+        uses: Infisical/secrets-action@v1.0.7
+        with:
+          method: oidc
+          domain: https://secrets.tastatur-und-maus.net
+          identity-id: ${{ secrets.INFISICAL_IDENTITY_ID }}
+          project-slug: ${{ secrets.INFISICAL_PROJECT_SLUG }}
+          env-slug: prod
+          secret-path: /
+        # exports NPM_TOKEN to the job env for the publish step
       - name: Publish to npm
         if: steps.changesets.outputs.has_changesets == 'true'
         id: publish
@@ -109,8 +123,8 @@ jobs:
           pnpm changeset publish
           echo "published=true" >> "$GITHUB_OUTPUT"
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ env.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ env.NPM_TOKEN }}
 
       - name: Commit version updates
         if: steps.publish.outputs.published == 'true'
