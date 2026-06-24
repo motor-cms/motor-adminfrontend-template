@@ -2,6 +2,7 @@
 import type { NuxtError } from '#app'
 
 const { t } = useI18n()
+const { logout } = useSanctumAuth()
 
 const props = defineProps<{
   error: NuxtError
@@ -11,6 +12,13 @@ const is404 = computed(() => props.error.statusCode === 404)
 
 function handleError() {
   clearError({ redirect: '/' })
+}
+
+// The error page renders without the app layout, so the sidebar's logout is not
+// available. Offer an explicit logout so a user can always escape a faulty
+// error state instead of being stuck (ZRMDEV-236).
+async function handleLogout() {
+  await logout()
 }
 </script>
 
@@ -26,12 +34,21 @@ function handleError() {
       <p class="text-sm text-[var(--ui-text-muted)] max-w-md">
         {{ is404 ? t('motor-core.errors.page_not_found_description') : error.message }}
       </p>
-      <UButton
-        :label="t('motor-core.errors.back_to_dashboard')"
-        icon="i-lucide-home"
-        color="primary"
-        @click="handleError"
-      />
+      <div class="flex items-center justify-center gap-2">
+        <UButton
+          :label="t('motor-core.errors.back_to_dashboard')"
+          icon="i-lucide-home"
+          color="primary"
+          @click="handleError"
+        />
+        <UButton
+          :label="t('motor-core.global.log_out')"
+          icon="i-lucide-log-out"
+          color="neutral"
+          variant="outline"
+          @click="handleLogout"
+        />
+      </div>
     </div>
   </div>
 </template>
