@@ -5,6 +5,7 @@
   "back_to_dashboard": "Zurück zum Dashboard",
   "access_denied": "Zugriff verweigert",
   "no_permission": "Sie haben keine Berechtigung, diese Aktion auszuführen.",
+  "no_access_description": "Sie haben keine Berechtigung für diese Seite. Bitte wählen Sie in der Seitenleiste einen Bereich, auf den Sie Zugriff haben.",
   "create_failed": "Erstellen fehlgeschlagen",
   "update_failed": "Aktualisieren fehlgeschlagen",
   "delete_failed": "Löschen fehlgeschlagen"

@@ -6,11 +6,18 @@ export default defineNuxtRouteMiddleware((to) => {
 
   const { user } = useSanctumAuth<User>()
 
-  // Skip check if user is not yet loaded (auth middleware handles redirect)
+  // Unauthenticated access is handled by sanctum's global auth middleware
+  // (redirects to /login); nothing to check here without an identity.
   if (!user.value) return
 
   const { can } = usePermissions()
   if (!can(permission)) {
-    throw createError({ statusCode: 404, statusMessage: 'Not Found' })
+    // Don't throw: a thrown error renders the layout-less error page (no sidebar,
+    // no logout), leaving the user stuck. Send them to an in-layout no-access
+    // page where the permission-filtered sidebar and the user menu (logout)
+    // stay available so they can reach a page they DO have access to, or log out
+    // (ZRMDEV-236). Guard against a redirect loop on /no-access itself.
+    if (to.path === '/no-access') return
+    return navigateTo('/no-access')
   }
 })

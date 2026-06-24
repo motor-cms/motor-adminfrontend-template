@@ -5,6 +5,7 @@
   "back_to_dashboard": "Back to Dashboard",
   "access_denied": "Access denied",
   "no_permission": "You do not have permission to perform this action.",
+  "no_access_description": "You don't have permission to view this page. Please pick an area you have access to from the sidebar.",
   "create_failed": "Failed to create resource",
   "update_failed": "Failed to update resource",
   "delete_failed": "Failed to delete resource"
