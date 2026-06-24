@@ -89,6 +89,24 @@ function getOptions(filter: FilterDef): FilterOption[] {
   return filter.options ?? []
 }
 
+// A single-select filter with ≤1 selectable option is pointless (e.g. a user
+// assigned to a single Mandant shouldn't get a client filter — nor see who else
+// uses the system). Hide it once its options are known; the whole filter button
+// hides too if nothing useful remains (ZRMDEV-165). Async options stay visible
+// while still loading so the control doesn't flicker away and back.
+function isFilterUseful(filter: FilterDef): boolean {
+  if (filter.type === 'select' && !filter.multiple) {
+    if (typeof filter.options === 'function'
+      && (loadingOptions.value[filter.key] || !(filter.key in loadedOptions.value))) {
+      return true
+    }
+    return getOptions(filter).length > 1
+  }
+  return true
+}
+
+const visibleFilters = computed(() => (props.filters ?? []).filter(isFilterUseful))
+
 // Sentinel value for the "All" option (empty string is reserved by Radix Vue)
 const ALL_VALUE = '__all__'
 
@@ -197,7 +215,7 @@ onMounted(() => {
       </UInput>
 
       <!-- Filter Popover -->
-      <UPopover v-if="filters?.length">
+      <UPopover v-if="visibleFilters.length">
         <UButton
           icon="i-lucide-filter"
           variant="outline"
@@ -220,7 +238,7 @@ onMounted(() => {
         <template #content>
           <div class="p-4 min-w-72 flex flex-col gap-4">
             <div
-              v-for="filter in filters"
+              v-for="filter in visibleFilters"
               :key="filter.key"
               class="flex flex-col gap-1.5"
             >
@@ -294,7 +312,7 @@ onMounted(() => {
 
       <!-- Active Filter Chips -->
       <template
-        v-for="filter in filters"
+        v-for="filter in visibleFilters"
         :key="`chip-${filter.key}`"
       >
         <span
