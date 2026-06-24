@@ -1,5 +1,17 @@
 # @motor-cms/ui-media
 
+## 4.12.1
+
+### Patch Changes
+
+- da200e2: - fix: link @motor-cms/ui-core locally and refresh stale lockfile
+  - fix: make tsconfig self-contained and remove postinstall
+  - fix: tsconfig extends path for CI test resolution
+- Updated dependencies [da200e2]
+- Updated dependencies [58286e4]
+- Updated dependencies [06eb5fd]
+  - @motor-cms/ui-core@4.12.1
+
 ## 4.12.1-rc.5
 
 ### Patch Changes

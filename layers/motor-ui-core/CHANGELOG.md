@@ -1,5 +1,19 @@
 # @motor-cms/ui-core
 
+## 4.12.1
+
+### Patch Changes
+
+- da200e2: - fix: link @motor-cms/ui-core locally and refresh stale lockfile
+  - fix: make tsconfig self-contained and remove postinstall
+  - fix: tsconfig extends path for CI test resolution
+- 58286e4: fix(grid): hide single-select filters that resolve to ≤1 option, and hide the filter button entirely when none remain. A tenant assigned to a single Mandant no longer sees a (useless, all-clients-revealing) client filter. (ZRMDEV-165)
+- 06eb5fd: fix(auth): close three admin security/UX gaps
+
+  - Clear the local notification history + unread-count cookie when the session ends or switches users, so the next user on a shared browser never sees the previous user's notifications (ZRMDEV-235).
+  - Permission-denied routes now redirect to an in-layout `/no-access` page (sidebar + logout stay available) instead of throwing a layout-less 404 that left users stuck; the error page also gets a logout escape (ZRMDEV-236).
+  - Permission middleware redirects rather than throws, so a non-permitted user is gracefully blocked (frontend half of ZRMDEV-237; the privilege-escalation fix itself is backend).
+
 ## 4.12.1-rc.5
 
 ### Patch Changes
