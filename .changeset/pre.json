@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "rc",
+  "initialVersions": {
+    "@motor-cms/ui-admin": "4.12.1",
+    "@motor-cms/ui-core": "4.12.1",
+    "@motor-cms/ui-media": "4.12.1"
+  },
+  "changesets": [
+    "auto-9ff0f9c"
+  ]
+}
