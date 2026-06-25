@@ -21,6 +21,8 @@ const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, 
   selectOptionConfigs: fileSelectOptionConfigs
 })
 
+const upload = useCancellableUpload()
+
 const fileId = route.params.id as string
 const replacementFile = ref<File | null>(null)
 const replacementPreviewUrl = ref<string | null>(null)
@@ -70,12 +72,13 @@ watch(fileRecord, (res) => {
   }
 }, { immediate: true })
 
-async function submitFile(eventData: Record<string, unknown>): Promise<void> {
+async function submitFile(eventData: Record<string, unknown>, signal: AbortSignal): Promise<void> {
   const body: Record<string, unknown> = { ...eventData, categories: selectedCategories.value }
   if (replacementFile.value) {
     body.file = await fileToDataUrl(replacementFile.value)
   }
-  await client(`/api/v2/files/${fileId}`, { method: 'PATCH', body })
+  await client(`/api/v2/files/${fileId}`, { method: 'PATCH', body, signal })
+  upload.done()
   success(t('motor-media.files.edit_title'), t('motor-media.files.updated_success'))
 }
 
@@ -107,10 +110,12 @@ function handleSubmitError(err: unknown) {
 
 async function onSubmit(event: { data: Record<string, unknown> }) {
   loading.value = true
+  const signal = upload.start()
   try {
-    await submitFile(event.data)
+    await submitFile(event.data, signal)
     router.push('/motor-media/files')
   } catch (err: unknown) {
+    if (isAbortError(err)) return
     handleSubmitError(err)
   } finally {
     loading.value = false
@@ -119,10 +124,12 @@ async function onSubmit(event: { data: Record<string, unknown> }) {
 
 async function onSaveAndNew(event: { data: Record<string, unknown> }) {
   loading.value = true
+  const signal = upload.start()
   try {
-    await submitFile(event.data)
+    await submitFile(event.data, signal)
     router.push('/motor-media/files/create')
   } catch (err: unknown) {
+    if (isAbortError(err)) return
     handleSubmitError(err)
   } finally {
     loading.value = false
@@ -131,10 +138,12 @@ async function onSaveAndNew(event: { data: Record<string, unknown> }) {
 
 async function onSaveAndContinue(event: { data: Record<string, unknown> }) {
   loading.value = true
+  const signal = upload.start()
   try {
-    await submitFile(event.data)
+    await submitFile(event.data, signal)
     nextTick(() => formRef.value?.captureSnapshot())
   } catch (err: unknown) {
+    if (isAbortError(err)) return
     handleSubmitError(err)
   } finally {
     loading.value = false

@@ -27,6 +27,7 @@ const selectedCategories = ref<number[]>([])
 const pendingFiles = ref<PendingFile[]>([])
 const uploading = ref(false)
 const uploadProgress = ref('')
+const upload = useCancellableUpload()
 
 const defaults = computed(() => ({
   description: (state.description as string) || '',
@@ -95,8 +96,10 @@ async function onSubmit(event: { data: Record<string, unknown> }) {
   }
 
   uploading.value = true
+  const signal = upload.start()
   const total = pendingFiles.value.length
   const errors: string[] = []
+  let aborted = false
 
   try {
     for (let i = 0; i < total; i++) {
@@ -115,15 +118,26 @@ async function onSubmit(event: { data: Record<string, unknown> }) {
       try {
         await client('/api/v2/files', {
           method: 'POST',
-          body
+          body,
+          signal
         })
       } catch (err: unknown) {
+        if (isAbortError(err)) {
+          aborted = true
+          break
+        }
         if (!handleServerError(err)) {
           const message = err instanceof Error ? err.message : t('motor-media.files.upload_failed', { name: pending.file.name })
           errors.push(`${pending.file.name}: ${message}`)
         }
       }
     }
+
+    // User cancelled / navigated away: the navigation already happened, so don't
+    // show notifications and don't force a redirect to the overview.
+    if (aborted) return
+
+    upload.done()
 
     if (errors.length === 0) {
       success(t('motor-media.files.create_title'), t('motor-media.files.created_success'))
