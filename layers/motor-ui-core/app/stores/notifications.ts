@@ -22,13 +22,49 @@ export interface Notification {
 
 const MAX_NOTIFICATIONS = 20
 
+// Bucket used when no user is authenticated (login screen, SSR, tests). A user's
+// notifications are never stored here, so the anonymous view is always empty on a
+// shared browser after logout.
+const ANONYMOUS_BUCKET = '__anonymous__'
+
+function bucketKey(userId: string | null) {
+  return userId ?? ANONYMOUS_BUCKET
+}
+
 export const useNotificationsStore = defineStore('notifications', () => {
-  const notifications = ref<Notification[]>([])
+  // Notifications are a local-only toast history persisted to localStorage. To
+  // avoid leaking one user's notifications to the next on a shared browser they
+  // are kept in per-user buckets keyed by user id, and only the current user's
+  // bucket is ever exposed. Because the buckets persist, logging back in as the
+  // same user restores their notifications (ZRMDEV-235).
+  const notificationsByUser = ref<Record<string, Notification[]>>({})
+  // Which user's bucket is currently visible. Not persisted — the auth plugin
+  // sets it on login / logout / user switch. null → anonymous (empty) view.
+  const currentUserId = ref<string | null>(null)
   const isSlideoverOpen = ref(false)
+
+  const notifications = computed(() =>
+    notificationsByUser.value[bucketKey(currentUserId.value)] ?? []
+  )
 
   const unreadCount = computed(() =>
     notifications.value.filter(n => !n.read).length
   )
+
+  // Returns the current user's bucket, creating it on first write.
+  function currentBucket() {
+    const key = bucketKey(currentUserId.value)
+    if (!notificationsByUser.value[key]) {
+      notificationsByUser.value[key] = []
+    }
+    return notificationsByUser.value[key]
+  }
+
+  // Point the store at a user's bucket. Accepts number | string | null so it can
+  // be fed the sanctum user id directly.
+  function setUser(userId: string | number | null | undefined) {
+    currentUserId.value = userId === null || userId === undefined ? null : String(userId)
+  }
 
   function add(notification: Omit<Notification, 'id' | 'timestamp' | 'read'>) {
     const newNotification: Notification = {
@@ -38,37 +74,42 @@ export const useNotificationsStore = defineStore('notifications', () => {
       read: false
     }
 
+    const key = bucketKey(currentUserId.value)
+    const bucket = currentBucket()
+
     // Add to beginning of array
-    notifications.value.unshift(newNotification)
+    bucket.unshift(newNotification)
 
     // Keep only last MAX_NOTIFICATIONS
-    if (notifications.value.length > MAX_NOTIFICATIONS) {
-      notifications.value = notifications.value.slice(0, MAX_NOTIFICATIONS)
+    if (bucket.length > MAX_NOTIFICATIONS) {
+      notificationsByUser.value[key] = bucket.slice(0, MAX_NOTIFICATIONS)
     }
 
     return newNotification
   }
 
   function markAsRead(id: string) {
-    const notification = notifications.value.find(n => n.id === id)
+    const notification = currentBucket().find(n => n.id === id)
     if (notification) {
       notification.read = true
     }
   }
 
   function markAllAsRead() {
-    notifications.value.forEach(n => n.read = true)
+    currentBucket().forEach(n => n.read = true)
   }
 
   function remove(id: string) {
-    const index = notifications.value.findIndex(n => n.id === id)
+    const bucket = currentBucket()
+    const index = bucket.findIndex(n => n.id === id)
     if (index !== -1) {
-      notifications.value.splice(index, 1)
+      bucket.splice(index, 1)
     }
   }
 
+  // Clears only the current user's notifications (slideover "clear" button).
   function clear() {
-    notifications.value = []
+    notificationsByUser.value[bucketKey(currentUserId.value)] = []
   }
 
   function openSlideover() {
@@ -82,7 +123,9 @@ export const useNotificationsStore = defineStore('notifications', () => {
   return {
     notifications,
     isSlideoverOpen,
+    currentUserId,
     unreadCount,
+    setUser,
     add,
     markAsRead,
     markAllAsRead,
@@ -94,7 +137,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
 }, {
   persist: {
     storage: piniaPluginPersistedstate.localStorage(),
-    pick: ['notifications'],
+    pick: ['notificationsByUser'],
     serializer: {
       serialize: JSON.stringify,
       deserialize: deserializeNotifications
@@ -104,11 +147,16 @@ export const useNotificationsStore = defineStore('notifications', () => {
 
 export function deserializeNotifications(value: string) {
   const data = JSON.parse(value)
-  if (data?.notifications) {
-    data.notifications = data.notifications.map((n: Notification & { timestamp: string }) => ({
-      ...n,
-      timestamp: new Date(n.timestamp)
-    }))
+  if (data?.notificationsByUser && typeof data.notificationsByUser === 'object') {
+    for (const key of Object.keys(data.notificationsByUser)) {
+      const bucket = data.notificationsByUser[key]
+      if (Array.isArray(bucket)) {
+        data.notificationsByUser[key] = bucket.map((n: Notification & { timestamp: string }) => ({
+          ...n,
+          timestamp: new Date(n.timestamp)
+        }))
+      }
+    }
   }
   return data
 }
