@@ -1,5 +1,15 @@
 # @motor-cms/ui-media
 
+## 4.12.2-rc.4
+
+### Patch Changes
+
+- 4051e18: - fix(media): make file upload cancellable on create and edit pages (ZRMDEV-239)
+- Updated dependencies [4051e18]
+- Updated dependencies [a6f8482]
+- Updated dependencies [a973694]
+  - @motor-cms/ui-core@4.12.2-rc.4
+
 ## 4.12.2-rc.3
 
 ### Patch Changes

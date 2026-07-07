@@ -1,5 +1,13 @@
 # @motor-cms/ui-core
 
+## 4.12.2-rc.4
+
+### Patch Changes
+
+- 4051e18: - fix(media): make file upload cancellable on create and edit pages (ZRMDEV-239)
+- a6f8482: - fix(builder): add `stripLinkPrefix` helper so tel:/mailto: link values are normalised to the bare number/address (collapsing legacy `tel:tel:` and `tel.:` data) and expose it via the package exports map
+- a973694: - fix(notifications): scope the notification history per user so it no longer leaks across users on a shared browser, while restoring a user's own notifications when they log back in (ZRMDEV-235)
+
 ## 4.12.2-rc.3
 
 ### Patch Changes
