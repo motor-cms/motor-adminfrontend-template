@@ -2,12 +2,13 @@
   "mode": "pre",
   "tag": "rc",
   "initialVersions": {
-    "@motor-cms/ui-admin": "4.12.2-rc.1",
-    "@motor-cms/ui-core": "4.12.2-rc.1",
-    "@motor-cms/ui-media": "4.12.2-rc.1"
+    "@motor-cms/ui-admin": "4.12.2-rc.2",
+    "@motor-cms/ui-core": "4.12.2-rc.2",
+    "@motor-cms/ui-media": "4.12.2-rc.2"
   },
   "changesets": [
     "auto-9ff0f9c",
+    "fix-tel-link-prefix",
     "zrmdev-235-per-user-notifications"
   ]
 }
