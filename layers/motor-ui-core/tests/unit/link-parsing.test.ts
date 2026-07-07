@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { parseLinkProps } from '../../app/composables/useLinkParsing'
+import { parseLinkProps, stripLinkPrefix } from '../../app/composables/useLinkParsing'
 
 describe('parseLinkProps', () => {
   it('linkParsing-mailto', () => {
@@ -39,5 +39,43 @@ describe('parseLinkProps', () => {
     expect(result.target).toBe('_blank')
     expect(result.linkType).toBe('url')
     expect(result.url).toBe('https://example.com')
+  })
+})
+
+describe('stripLinkPrefix', () => {
+  it('strips a leading tel: prefix', () => {
+    expect(stripLinkPrefix('tel:068190698995')).toBe('068190698995')
+  })
+
+  it('strips a leading mailto: prefix', () => {
+    expect(stripLinkPrefix('mailto:user@example.com')).toBe('user@example.com')
+  })
+
+  it('collapses a doubled tel: prefix from already-corrupted data', () => {
+    expect(stripLinkPrefix('tel:tel:068190698995')).toBe('068190698995')
+  })
+
+  it('collapses a doubled mailto: prefix', () => {
+    expect(stripLinkPrefix('mailto:mailto:user@example.com')).toBe('user@example.com')
+  })
+
+  it('collapses the corrupted "tel.:" prefix variant from legacy data', () => {
+    expect(stripLinkPrefix('tel.:068190698990')).toBe('068190698990')
+  })
+
+  it('collapses a mixed tel:tel.: legacy value', () => {
+    expect(stripLinkPrefix('tel:tel.:068190698990')).toBe('068190698990')
+  })
+
+  it('leaves a bare phone number untouched', () => {
+    expect(stripLinkPrefix('068190698995')).toBe('068190698995')
+  })
+
+  it('leaves a url untouched', () => {
+    expect(stripLinkPrefix('https://example.com')).toBe('https://example.com')
+  })
+
+  it('handles an empty value', () => {
+    expect(stripLinkPrefix('')).toBe('')
   })
 })

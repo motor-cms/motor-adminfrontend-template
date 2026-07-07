@@ -39,7 +39,8 @@
     "./app/types/config/seo-redirect": "./app/types/config/seo-redirect.ts",
     "./app/types/config/topic": "./app/types/config/topic.ts",
     "./app/types/config/user": "./app/types/config/user.ts",
-    "./app/utils/uuid": "./app/utils/uuid.ts"
+    "./app/utils/uuid": "./app/utils/uuid.ts",
+    "./app/composables/useLinkParsing": "./app/composables/useLinkParsing.ts"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.0",
