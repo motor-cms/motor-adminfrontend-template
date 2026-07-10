@@ -52,7 +52,7 @@ const _useShortcutRegistry = () => {
 
   if (import.meta.client) {
     const isOverlayModifier = (e: KeyboardEvent) =>
-      e.key === 'Meta' || e.key === 'Control' || e.key === 'Alt'
+      e.key === 'Alt'
 
     useEventListener('keydown', (e: KeyboardEvent) => {
       if (isOverlayModifier(e)) {

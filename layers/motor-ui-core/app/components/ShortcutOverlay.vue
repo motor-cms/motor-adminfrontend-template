@@ -34,7 +34,7 @@ const { t } = useI18n()
             <span class="ml-auto inline-flex items-center gap-1 text-xs text-[var(--ui-text-dimmed)]">
               {{ t('motor-core.shortcuts.hold_hint') }}
               <UKbd
-                value="meta"
+                value="alt"
                 size="sm"
               />
             </span>
