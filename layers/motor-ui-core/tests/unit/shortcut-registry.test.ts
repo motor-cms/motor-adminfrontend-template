@@ -133,11 +133,11 @@ describe('useShortcutRegistry', () => {
     const keydown = shortcutEventHandlers['keydown']
     const keyup = shortcutEventHandlers['keyup']
 
-    keydown?.({ key: 'Meta' })
+    keydown?.({ key: 'Alt' })
     vi.advanceTimersByTime(400)
     expect(isOverlayVisible.value).toBe(true)
 
-    keyup?.({ key: 'Meta' })
+    keyup?.({ key: 'Alt' })
     vi.useRealTimers()
   })
 
@@ -149,19 +149,19 @@ describe('useShortcutRegistry', () => {
     const blur = shortcutEventHandlers['blur']
     const mousedown = shortcutEventHandlers['mousedown']
 
-    keydown?.({ key: 'Meta' })
+    keydown?.({ key: 'Alt' })
     vi.advanceTimersByTime(400)
     expect(isOverlayVisible.value).toBe(true)
-    keyup?.({ key: 'Meta' })
+    keyup?.({ key: 'Alt' })
     expect(isOverlayVisible.value).toBe(false)
 
-    keydown?.({ key: 'Meta' })
+    keydown?.({ key: 'Alt' })
     vi.advanceTimersByTime(400)
     expect(isOverlayVisible.value).toBe(true)
     blur?.()
     expect(isOverlayVisible.value).toBe(false)
 
-    keydown?.({ key: 'Meta' })
+    keydown?.({ key: 'Alt' })
     vi.advanceTimersByTime(400)
     expect(isOverlayVisible.value).toBe(true)
     mousedown?.()
@@ -195,7 +195,7 @@ describe('useShortcutRegistry', () => {
     const { isOverlayVisible } = useShortcutRegistry()
     const keydown = shortcutEventHandlers['keydown']
 
-    keydown?.({ key: 'Meta' })
+    keydown?.({ key: 'Alt' })
     keydown?.({ key: 's' })
     vi.advanceTimersByTime(400)
 
@@ -203,34 +203,34 @@ describe('useShortcutRegistry', () => {
     vi.useRealTimers()
   })
 
-  it('Control key also triggers overlay hold', () => {
+  it('Meta and Control no longer trigger overlay hold (EN-2204)', () => {
     vi.useFakeTimers()
     const { isOverlayVisible } = useShortcutRegistry()
     const keydown = shortcutEventHandlers['keydown']
-    const keyup = shortcutEventHandlers['keyup']
+
+    keydown?.({ key: 'Meta' })
+    vi.advanceTimersByTime(400)
+    expect(isOverlayVisible.value).toBe(false)
 
     keydown?.({ key: 'Control' })
     vi.advanceTimersByTime(400)
-    expect(isOverlayVisible.value).toBe(true)
-
-    keyup?.({ key: 'Control' })
     expect(isOverlayVisible.value).toBe(false)
     vi.useRealTimers()
   })
 
-  it('double Meta keydown does not create multiple timers', () => {
+  it('double Alt keydown does not create multiple timers', () => {
     vi.useFakeTimers()
     const { isOverlayVisible } = useShortcutRegistry()
     const keydown = shortcutEventHandlers['keydown']
     const keyup = shortcutEventHandlers['keyup']
 
-    keydown?.({ key: 'Meta' })
-    keydown?.({ key: 'Meta' })
+    keydown?.({ key: 'Alt' })
+    keydown?.({ key: 'Alt' })
     vi.advanceTimersByTime(400)
 
     expect(isOverlayVisible.value).toBe(true)
 
-    keyup?.({ key: 'Meta' })
+    keyup?.({ key: 'Alt' })
     vi.useRealTimers()
   })
 })
