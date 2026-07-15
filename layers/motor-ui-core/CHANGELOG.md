@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 4.12.3-rc.2
+
+### Patch Changes
+
+- b59b41b: - fix(shortcuts): open overlay only with Option key to avoid macOS screenshot conflict (EN-2204)
+
 ## 4.12.3-rc.1
 
 ### Patch Changes
