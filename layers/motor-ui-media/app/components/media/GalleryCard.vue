@@ -260,13 +260,14 @@ function onCheckboxChange(checked: boolean | 'indeterminate') {
       </div>
     </div>
 
+    <!-- Prefer the public storage/CDN URL — the lightbox copy button shares it -->
     <MediaLightbox
       v-if="isImage"
       v-model:open="lightboxOpen"
-      :src="downloadUrl ?? ''"
+      :src="media?.url ?? downloadUrl ?? ''"
       :alt="item.description || media?.file_name"
       :file-name="media?.file_name"
-      :download-url="downloadUrl"
+      :download-url="media?.url ?? downloadUrl"
     />
   </div>
 </template>
