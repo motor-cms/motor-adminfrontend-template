@@ -6,7 +6,8 @@ test.describe('Media Files', () => {
 
     expect(page.url()).toContain('/motor-media/files')
 
-    const galleryGrid = page.locator('.columns-2')
+    // Masonry grid once thumbnails are measured, `.columns-2` while the skeleton shows
+    const galleryGrid = page.locator('[data-testid="media-gallery-masonry"], .columns-2')
     const emptyState = page.locator('text=/no records|keine/i')
 
     const hasGallery = await galleryGrid.first().isVisible().catch(() => false)

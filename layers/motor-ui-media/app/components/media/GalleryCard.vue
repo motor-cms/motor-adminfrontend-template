@@ -5,6 +5,8 @@ const props = defineProps<{
   item: FileResource
   selected?: boolean
   selectable?: boolean
+  /** Pre-measured thumbnail aspect ratio (width/height) — reserves the tile's final size before the image paints */
+  ratio?: number
 }>()
 
 const emit = defineEmits<{
@@ -38,14 +40,18 @@ const lightboxOpen = ref(false)
 
 const media = computed(() => props.item.file)
 
-const thumbnailUrl = computed(() => {
-  // Prefer API url (actual storage/CDN URL) when available
-  if (media.value?.url) return media.value.url
-  if (!props.item.id) return undefined
-  return `${backendBaseUrl}/download/${props.item.id}`
-})
+const runtimeConfig = useRuntimeConfig()
+const backendBaseUrl = runtimeConfig.public.backendBaseUrl as string
+
+// Same URL the gallery preloads for measuring — must match for a cache hit
+const thumbnailUrl = computed(() => mediaThumbnailUrl(props.item, backendBaseUrl))
 
 const isImage = computed(() => media.value?.mime_type?.startsWith('image/'))
+
+const imageLoaded = ref(false)
+const imageStyle = computed(() =>
+  props.ratio ? { aspectRatio: String(props.ratio) } : undefined
+)
 
 const fileExtension = computed(() => {
   if (!media.value?.file_name) return ''
@@ -62,9 +68,6 @@ const mimeIcon = computed(() => {
   if (mime.includes('document') || mime.includes('word') || mime.includes('text')) return 'i-lucide-file-text'
   return 'i-lucide-file'
 })
-
-const runtimeConfig = useRuntimeConfig()
-const backendBaseUrl = runtimeConfig.public.backendBaseUrl as string
 
 const downloadUrl = computed(() => {
   if (!props.item.id) return undefined
@@ -126,7 +129,7 @@ function onCheckboxChange(checked: boolean | 'indeterminate') {
 </script>
 
 <template>
-  <div class="group break-inside-avoid mb-4">
+  <div class="group">
     <div
       class="relative rounded-xl overflow-hidden ring-1 ring-[var(--ui-border)] bg-[var(--ui-bg-elevated)] shadow-sm hover:shadow-xl hover:ring-[var(--ui-border-accented)] transition-all duration-300"
       :class="{ 'ring-2 ring-[var(--ui-primary)]': selected }"
@@ -153,18 +156,26 @@ function onCheckboxChange(checked: boolean | 'indeterminate') {
         {{ fileExtension }}
       </div>
 
-      <!-- Image thumbnail -->
+      <!-- Image thumbnail — the wrapper reserves the final tile size via
+           aspect-ratio so the masonry never reflows when the image paints -->
       <NuxtLink
         v-if="isImage && thumbnailUrl"
         :to="`/motor-media/files/${item.id}/edit`"
-        class="block"
+        class="relative block overflow-hidden"
+        :style="imageStyle"
       >
         <img
           :src="thumbnailUrl"
           :alt="item.description || media?.file_name || ''"
           class="w-full block transition-transform duration-300 group-hover:scale-105"
+          :class="ratio ? 'absolute inset-0 h-full object-cover' : ''"
           loading="lazy"
+          @load="imageLoaded = true"
         >
+        <USkeleton
+          v-if="ratio && !imageLoaded"
+          class="absolute inset-0 rounded-none"
+        />
       </NuxtLink>
 
       <!-- Non-image placeholder -->

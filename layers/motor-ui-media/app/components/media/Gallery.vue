@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useIntersectionObserver } from '@vueuse/core'
+import { useIntersectionObserver, useBreakpoints, breakpointsTailwind } from '@vueuse/core'
 import type {
   FilterDef,
   BulkActionDef,
@@ -99,6 +99,84 @@ const hasActiveFilters = computed(() => {
 
 const hasMore = computed(() => currentPage.value < lastPage.value)
 
+// --- Masonry layout with pre-measured aspect ratios -----------------------
+// Images are preloaded before their cards enter the grid so every tile is
+// rendered at its final size (no reflow when the image finishes loading).
+// Items are distributed into flex columns via a deterministic shortest-column
+// algorithm: appending a page never moves already-placed tiles, unlike CSS
+// `columns-*` which rebalances the whole grid on every append.
+
+const runtimeConfig = useRuntimeConfig()
+const backendBaseUrl = runtimeConfig.public.backendBaseUrl as string
+
+const FALLBACK_RATIO = 4 / 3
+const ratios = ref<Record<number, number>>({})
+// SSR renders the skeleton; the real grid appears once page-1 thumbnails are measured
+const clientReady = ref(false)
+
+function preloadRatio(src: string, timeoutMs = 7000): Promise<number | null> {
+  return new Promise((resolve) => {
+    const img = new Image()
+    const timer = window.setTimeout(() => resolve(null), timeoutMs)
+    img.onload = () => {
+      window.clearTimeout(timer)
+      resolve(img.naturalHeight > 0 ? img.naturalWidth / img.naturalHeight : null)
+    }
+    img.onerror = () => {
+      window.clearTimeout(timer)
+      resolve(null)
+    }
+    img.src = src
+  })
+}
+
+async function measureItems(list: FileResource[]): Promise<void> {
+  if (import.meta.server) return
+  const pending = list.filter(item => ratios.value[item.id] === undefined)
+  await Promise.all(pending.map(async (item) => {
+    let ratio: number | null = null
+    if (mediaIsImage(item)) {
+      const src = mediaThumbnailUrl(item, backendBaseUrl)
+      if (src) ratio = await preloadRatio(src)
+    }
+    // Non-images use the card's fixed 4/3 placeholder; failed preloads fall
+    // back to 4/3 too (the card crops via object-cover to keep the grid stable)
+    ratios.value[item.id] = ratio ?? FALLBACK_RATIO
+  }))
+}
+
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const isMd = breakpoints.greaterOrEqual('md')
+const isLg = breakpoints.greaterOrEqual('lg')
+const isXl = breakpoints.greaterOrEqual('xl')
+const columnCount = computed(() => {
+  if (isXl.value) return 5
+  if (isLg.value) return 4
+  if (isMd.value) return 3
+  return 2
+})
+
+// Nominal values for height estimation — only relative balance matters
+const NOMINAL_COLUMN_WIDTH = 280
+const CARD_INFO_HEIGHT = 62
+const CARD_GAP = 16
+
+const columns = computed<FileResource[][]>(() => {
+  const count = columnCount.value
+  const cols: FileResource[][] = Array.from({ length: count }, () => [])
+  const heights = new Array<number>(count).fill(0)
+  for (const item of items.value) {
+    const ratio = ratios.value[item.id] ?? FALLBACK_RATIO
+    let target = 0
+    for (let i = 1; i < count; i++) {
+      if (heights[i]! < heights[target]!) target = i
+    }
+    cols[target]!.push(item)
+    heights[target]! += NOMINAL_COLUMN_WIDTH / ratio + CARD_INFO_HEIGHT + CARD_GAP
+  }
+  return cols
+})
+
 // Build fetch params combining filters with internal page
 function buildParams(page: number): GridParams {
   const sortField = gridState.state.sort ?? 'created_at'
@@ -120,6 +198,8 @@ function buildParams(page: number): GridParams {
 async function loadPage(page: number, append: boolean): Promise<void> {
   try {
     const response = await props.fetch(buildParams(page))
+    // Measure thumbnails BEFORE inserting so tiles render at final size
+    await measureItems(response.data)
     if (append) {
       items.value = [...items.value, ...response.data]
     } else {
@@ -176,6 +256,13 @@ const { error: ssrError } = await useAsyncData(
 )
 if (ssrError.value) fetchError.value = ssrError.value
 initialLoading.value = false
+
+// When page 1 came from SSR its thumbnails were never measured on the
+// client — measure them now, then swap the skeleton for the real grid.
+onMounted(async () => {
+  await measureItems(items.value)
+  clientReady.value = true
+})
 
 // Watch filter/search/sort changes — reset accumulated data
 const filterKey = computed(() => JSON.stringify({
@@ -269,9 +356,9 @@ useIntersectionObserver(
         />
       </div>
 
-      <!-- Initial loading skeleton -->
+      <!-- Initial loading skeleton (also shown until page-1 thumbnails are measured) -->
       <div
-        v-else-if="initialLoading"
+        v-else-if="initialLoading || (!clientReady && items.length > 0)"
         class="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4"
       >
         <div
@@ -288,16 +375,31 @@ useIntersectionObserver(
 
       <!-- Gallery masonry grid -->
       <template v-else-if="items.length > 0">
-        <div class="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4">
-          <MediaGalleryCard
-            v-for="item in items"
-            :key="item.id"
-            :item="item"
-            :selectable="hasBulkActions"
-            :selected="selectedIds.has(item.id)"
-            @select="toggleSelection"
-            @show-usage="emit('show-usage', $event)"
-          />
+        <div
+          data-testid="media-gallery-masonry"
+          class="flex items-start gap-4"
+        >
+          <div
+            v-for="(column, colIndex) in columns"
+            :key="colIndex"
+            class="flex-1 min-w-0 flex flex-col gap-4"
+          >
+            <MediaGalleryCard
+              v-for="item in column"
+              :key="item.id"
+              :item="item"
+              :ratio="ratios[item.id]"
+              :selectable="hasBulkActions"
+              :selected="selectedIds.has(item.id)"
+              @select="toggleSelection"
+              @show-usage="emit('show-usage', $event)"
+            />
+            <USkeleton
+              v-if="loadingMore && hasMore"
+              class="w-full rounded-xl shrink-0"
+              :style="{ height: `${150 + ((colIndex * 53) % 4) * 35}px` }"
+            />
+          </div>
         </div>
 
         <!-- Infinite scroll sentinel -->
