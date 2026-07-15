@@ -161,13 +161,14 @@ async function forceDownload() {
       </div>
     </div>
 
+    <!-- Prefer the public storage/CDN URL — the lightbox copy button shares it -->
     <MediaLightbox
       v-if="isImage"
       v-model:open="lightboxOpen"
-      :src="downloadUrl ?? ''"
+      :src="value.url ?? downloadUrl ?? ''"
       :alt="value.file_name"
       :file-name="value.file_name"
-      :download-url="downloadUrl"
+      :download-url="value.url ?? downloadUrl"
     />
   </div>
   <span
