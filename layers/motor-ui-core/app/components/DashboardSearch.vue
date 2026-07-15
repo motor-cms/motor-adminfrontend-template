@@ -73,7 +73,8 @@ watchDebounced(
       paletteItemsById.value = itemMap
       totalResults.value = result.total
       moduleFacets.value = result.moduleFacets
-    } catch {
+    } catch (e) {
+      console.error('[DashboardSearch]', e)
       groups.value = []
       totalResults.value = 0
       moduleFacets.value = {}

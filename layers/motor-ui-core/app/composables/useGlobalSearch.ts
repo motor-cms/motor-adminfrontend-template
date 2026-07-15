@@ -106,7 +106,7 @@ function routeKey(module: string, index: string): string {
  * The backend may return URLs with http://localhost which don't resolve
  * in the browser. Replace the origin with the configured backendBaseUrl.
  */
-function resolveThumbnailUrl(url: string | undefined): string | undefined {
+export function resolveBackendUrl(url: string | undefined): string | undefined {
   if (!url) return undefined
   try {
     const parsed = new URL(url)
@@ -212,7 +212,7 @@ export async function searchPalette(query: string, t: TFunc, limit = 10): Promis
     if (!groupMap.has(groupId)) {
       groupMap.set(groupId, { module: result.module, items: [] })
     }
-    const thumbnailUrl = resolveThumbnailUrl(result.meta?.thumbnail_url as string | undefined)
+    const thumbnailUrl = resolveBackendUrl(result.meta?.thumbnail_url as string | undefined)
     const item: PaletteItem = {
       id: `${result.module}-${result.index}-${result.id}`,
       label: result.title ?? '(Untitled)',
@@ -309,7 +309,7 @@ export function fetchSearchGrid(
       excerpt: result.excerpt,
       to: resolveRoute(result),
       icon: resolveIcon(result.module, result.index, result.meta),
-      thumbnail_url: resolveThumbnailUrl(result.meta?.thumbnail_url as string | undefined),
+      thumbnail_url: resolveBackendUrl(result.meta?.thumbnail_url as string | undefined),
       score: result.score,
       actions: resolveActions(result, t),
       entity_meta: result.meta
