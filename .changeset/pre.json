@@ -2,13 +2,14 @@
   "mode": "pre",
   "tag": "rc",
   "initialVersions": {
-    "@motor-cms/ui-admin": "4.12.3-rc.1",
-    "@motor-cms/ui-core": "4.12.3-rc.1",
-    "@motor-cms/ui-media": "4.12.3-rc.1"
+    "@motor-cms/ui-admin": "4.12.3-rc.2",
+    "@motor-cms/ui-core": "4.12.3-rc.2",
+    "@motor-cms/ui-media": "4.12.3-rc.2"
   },
   "changesets": [
     "auto-2ba8f52",
     "media-copy-public-url",
-    "media-gallery-masonry-stability"
+    "media-gallery-masonry-stability",
+    "media-lightbox-public-url"
   ]
 }
