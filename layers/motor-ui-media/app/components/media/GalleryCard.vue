@@ -75,7 +75,9 @@ const downloadUrl = computed(() => {
 })
 
 async function copyUrl() {
-  const url = downloadUrl.value
+  // Copy the storage/CDN URL from the API (public S3/CloudFront on prod) —
+  // the backend /download route is VPN-only and useless as a shared link
+  const url = media.value?.url ?? downloadUrl.value
   if (!url) return
   try {
     await navigator.clipboard.writeText(url)
