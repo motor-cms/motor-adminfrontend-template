@@ -1,5 +1,12 @@
 # @motor-cms/ui-core
 
+## 4.12.3-rc.4
+
+### Patch Changes
+
+- b59b41b: - fix(shortcuts): open overlay only with Option key to avoid macOS screenshot conflict (EN-2204)
+- 36cb07b: fix(search): global-search result cards copy the file's public storage/CDN URL (new `url` meta field from the search index) instead of the VPN-only backend /download route; the search lightbox uses it too. Errors during palette search are now logged instead of silently swallowed.
+
 ## 4.12.3-rc.3
 
 ### Patch Changes
