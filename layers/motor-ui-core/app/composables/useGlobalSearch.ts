@@ -185,6 +185,8 @@ export interface PaletteItem {
   module: string
   index: string
   actions: SearchAction[]
+  /** Public storage/CDN URL of a file result — preferred over the VPN-only /download route */
+  url?: string
 }
 
 export interface PaletteGroup {
@@ -222,7 +224,8 @@ export async function searchPalette(query: string, t: TFunc, limit = 10): Promis
       to: resolveRoute(result),
       module: result.module,
       index: result.index,
-      actions: resolveActions(result, t)
+      actions: resolveActions(result, t),
+      url: resolveBackendUrl(result.meta?.url as string | undefined)
     }
     const mimeType = (result.meta?.mime_type as string) ?? ''
     if (thumbnailUrl && mimeType.startsWith('image/')) {
