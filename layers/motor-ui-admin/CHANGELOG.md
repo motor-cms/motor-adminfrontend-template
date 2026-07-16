@@ -1,5 +1,15 @@
 # @motor-cms/ui-admin
 
+## 4.12.3-rc.5
+
+### Patch Changes
+
+- b59b41b: - fix(shortcuts): open overlay only with Option key to avoid macOS screenshot conflict (EN-2204)
+- Updated dependencies [b59b41b]
+- Updated dependencies [9d7edf4]
+- Updated dependencies [36cb07b]
+  - @motor-cms/ui-core@4.12.3-rc.5
+
 ## 4.12.3-rc.4
 
 ### Patch Changes
