@@ -275,9 +275,15 @@ const appSettings = useAppSettingsStore()
 const isCompact = computed(() => appSettings.formLayout === 'compact')
 
 // UFormField ui override
+// Horizontal: die Label-Spalte braucht eine feste Breite. Nuxt UIs
+// Horizontal-Variante setzt nur `root: "flex justify-between …"`, also richten
+// sich `wrapper` (Label + Beschreibung) und `container` nach ihrem Inhalt — ein
+// laengerer Beschreibungstext verbreitert die Label-Spalte und schiebt das
+// Eingabefeld dieser einen Zeile nach rechts, waehrend alle anderen Zeilen
+// stehen bleiben. Mit fester Breite fluchten alle Felder eines Formulars.
 const formFieldUi = computed(() => isCompact.value
   ? { container: 'w-full' }
-  : { container: 'w-full max-w-2xl' }
+  : { wrapper: 'w-1/3 shrink-0', container: 'w-full max-w-2xl' }
 )
 
 const spanClass: Record<number, string> = {
