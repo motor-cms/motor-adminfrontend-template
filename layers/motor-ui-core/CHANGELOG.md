@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 4.12.5-rc.0
+
+### Patch Changes
+
+- - fix(form): Label-Spalte horizontaler Formularfelder auf feste Breite
+
 ## 4.12.4
 
 ### Patch Changes
