@@ -9,10 +9,10 @@ export const aISystemPromptMeta = {
     id: { type: 'integer', renderer: 'number', hideable: false },
     name: { type: 'string', sortable: true, hideable: false },
     prompt: { type: 'string' },
-    client: { type: 'ref', renderer: 'text', ref: 'ClientResource', labelKey: 'name' },
+    client: { type: 'unknown' },
     client_id: { type: 'integer', renderer: 'number' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -33,8 +33,8 @@ export const clientMeta = {
     contact_phone: { type: 'string' },
     contact_email: { type: 'string', renderer: 'link' },
     frontend_config: { type: 'unknown' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -47,8 +47,8 @@ export const configVariableMeta = {
     name: { type: 'string', sortable: true, hideable: false },
     value: { type: 'string' },
     is_invisible: { type: 'boolean', renderer: 'boolean' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -57,16 +57,18 @@ export const domainMeta = {
   fields: {
     id: { type: 'integer', renderer: 'number', hideable: false },
     name: { type: 'string', sortable: true, hideable: false },
-    client: { type: 'ref', renderer: 'text', ref: 'ClientResource', labelKey: 'name' },
+    client: { type: 'unknown' },
     client_id: { type: 'integer', renderer: 'number' },
     is_active: { type: 'boolean', renderer: 'boolean' },
     is_preview_domain: { type: 'boolean', renderer: 'boolean' },
+    is_canonical: { type: 'boolean', renderer: 'boolean' },
     protocol: { type: 'string' },
     host: { type: 'string' },
     port: { type: 'integer', renderer: 'number' },
     path: { type: 'string' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    entity_configurations: { type: 'array' },
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -76,9 +78,9 @@ export const emailTemplateMeta = {
     id: { type: 'integer', renderer: 'number', hideable: false },
     name: { type: 'string', sortable: true, hideable: false },
     slug: { type: 'string' },
-    client: { type: 'ref', renderer: 'text', ref: 'ClientResource', labelKey: 'name' },
+    client: { type: 'unknown' },
     client_id: { type: 'integer', renderer: 'number' },
-    language: { type: 'ref', renderer: 'text', ref: 'LanguageResource', labelKey: 'name' },
+    language: { type: 'unknown' },
     language_id: { type: 'integer', renderer: 'number' },
     subject: { type: 'string' },
     body_text: { type: 'string' },
@@ -92,8 +94,8 @@ export const emailTemplateMeta = {
     default_bcc_email: { type: 'string', renderer: 'link' },
     default_replyto_email: { type: 'string', renderer: 'link' },
     default_replyto_name: { type: 'string' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -116,8 +118,8 @@ export const languageMeta = {
     iso_639_1: { type: 'string' },
     english_name: { type: 'string' },
     native_name: { type: 'string' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -129,8 +131,8 @@ export const permissionGroupMeta = {
     sort_position: { type: 'integer', renderer: 'number' },
     permission_names: { type: 'array' },
     permissions: { type: 'ref[]', renderer: 'list', ref: 'PermissionResource', labelKey: 'name' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -141,8 +143,8 @@ export const permissionMeta = {
     name: { type: 'string', sortable: true, hideable: false },
     guard_name: { type: 'string' },
     permission_group: { type: 'ref', renderer: 'text', ref: 'PermissionGroupResource', labelKey: 'name' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -153,8 +155,8 @@ export const roleMeta = {
     name: { type: 'string', sortable: true, hideable: false },
     guard_name: { type: 'string' },
     permissions: { type: 'ref[]', renderer: 'list', ref: 'PermissionResource', labelKey: 'name' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -164,11 +166,11 @@ export const userMeta = {
     id: { type: 'integer', renderer: 'number', hideable: false },
     name: { type: 'string', sortable: true, hideable: false },
     email: { type: 'string', renderer: 'link' },
-    avatar: { type: 'ref', renderer: 'avatar', ref: 'MediaResource' },
+    avatar: { type: 'unknown' },
     clients: { type: 'ref[]', renderer: 'list', ref: 'ClientResource', labelKey: 'name' },
     roles: { type: 'ref[]', renderer: 'list', ref: 'RoleResource', labelKey: 'name' },
     permissions: { type: 'ref[]', renderer: 'list', ref: 'PermissionResource', labelKey: 'name' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const

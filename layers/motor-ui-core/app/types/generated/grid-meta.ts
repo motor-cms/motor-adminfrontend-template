@@ -9,11 +9,11 @@ export const approvalMeta = {
     id: { type: 'integer', renderer: 'number', hideable: false },
     is_approved: { type: 'boolean', renderer: 'boolean' },
     is_rejected: { type: 'boolean', renderer: 'boolean' },
-    to_be_published_at: { type: 'string' },
+    to_be_published_at: { type: 'datetime', renderer: 'date', sortable: true },
     comment: { type: 'string' },
     approved_by_client_id: { type: 'integer', renderer: 'number' },
-    client: { type: 'ref', renderer: 'text', ref: 'ClientResource', labelKey: 'name' },
-    approved_at: { type: 'string' }
+    client: { type: 'unknown' },
+    approved_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -28,8 +28,8 @@ export const categoryMeta = {
     _rgt: { type: 'integer', renderer: 'number' },
     level: { type: 'integer', renderer: 'number' },
     children: { type: 'ref[]', renderer: 'list', ref: 'CategoryResource', labelKey: 'name' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -49,8 +49,8 @@ export const categoryTreeMeta = {
     name: { type: 'string', sortable: true, hideable: false },
     scope: { type: 'string' },
     children: { type: 'ref[]', renderer: 'list', ref: 'CategoryResource', labelKey: 'name' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -68,12 +68,26 @@ export const dashboardAnnouncementMeta = {
     linkable_name: { type: 'unknown' },
     linkable_url: { type: 'string', renderer: 'link' },
     is_active: { type: 'boolean', renderer: 'boolean' },
-    starts_at: { type: 'string' },
-    expires_at: { type: 'string' },
+    starts_at: { type: 'datetime', renderer: 'date', sortable: true },
+    expires_at: { type: 'datetime', renderer: 'date', sortable: true },
     created_by: { type: 'integer', renderer: 'number' },
     created_by_name: { type: 'unknown' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
+  }
+} as const
+
+export const entityConfigurationMeta = {
+  schemaName: 'EntityConfigurationResource',
+  fields: {
+    id: { type: 'integer', renderer: 'number', hideable: false },
+    configurable_type: { type: 'string' },
+    configurable_id: { type: 'integer', renderer: 'number' },
+    config_variable_id: { type: 'integer', renderer: 'number' },
+    config_variable: { type: 'ref', renderer: 'text', ref: 'ConfigVariableResource', labelKey: 'name' },
+    value: { type: 'string' },
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -85,6 +99,13 @@ export const fileUsageMeta = {
     name: { type: 'string', sortable: true, hideable: false },
     is_published: { type: 'boolean', renderer: 'boolean' },
     block_types: { type: 'string' }
+  }
+} as const
+
+export const formSubmissionMeta = {
+  schemaName: 'FormSubmissionResource',
+  fields: {
+    data: { type: 'object' }
   }
 } as const
 

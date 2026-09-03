@@ -8,17 +8,19 @@ export const fileMeta = {
   fields: {
     id: { type: 'integer', renderer: 'number', hideable: false },
     client_id: { type: 'integer', renderer: 'number' },
-    client: { type: 'ref', renderer: 'text', ref: 'ClientResource', labelKey: 'name' },
+    client: { type: 'unknown' },
     description: { type: 'string' },
     author: { type: 'string' },
     source: { type: 'string' },
     is_global: { type: 'boolean', renderer: 'boolean' },
     alt_text: { type: 'string' },
-    file: { type: 'unknown' },
+    file: { type: 'ref', renderer: 'avatar', ref: 'MediaResource' },
     categories: { type: 'ref[]', renderer: 'list', ref: 'CategoryResource', labelKey: 'name' },
     exists: { type: 'unknown' },
     is_excluded_from_search_index: { type: 'boolean', renderer: 'boolean' },
-    tags: { type: 'string' }
+    tags: { type: 'string' },
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -35,7 +37,7 @@ export const mediaMeta = {
     local_url: { type: 'string', renderer: 'link' },
     path: { type: 'string' },
     uuid: { type: 'string' },
-    created_at: { type: 'string' },
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
     conversions: { type: 'string' }
   }
 } as const

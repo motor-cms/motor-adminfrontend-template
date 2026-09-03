@@ -14,10 +14,10 @@ export const fileFormMeta = {
       alt_text: { input: 'text', required: true },
       is_global: { input: 'toggle' },
       is_excluded_from_search_index: { input: 'toggle' },
-      file: { input: 'text' },
       tags: { input: 'text' },
       categories: { input: 'multi-select', required: true },
-      files: { input: 'text', required: true }
+      files: { input: 'text', required: true },
+      file: { input: 'text' }
     }
   },
   patch: {
