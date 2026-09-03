@@ -238,10 +238,10 @@ export const userFormMeta = {
   post: {
     schemaName: 'UserPostRequest',
     fields: {
+      clients: { input: 'multi-select' },
       name: { input: 'text', required: true },
       email: { input: 'email', required: true },
       password: { input: 'password', required: true },
-      clients: { input: 'multi-select' },
       roles: { input: 'multi-select' },
       permissions: { input: 'multi-select' },
       avatar: { input: 'text' }
@@ -250,10 +250,10 @@ export const userFormMeta = {
   patch: {
     schemaName: 'UserPatchRequest',
     fields: {
+      clients: { input: 'multi-select' },
       name: { input: 'text', required: true },
       email: { input: 'email', required: true },
       password: { input: 'password' },
-      clients: { input: 'multi-select' },
       roles: { input: 'multi-select' },
       permissions: { input: 'multi-select' },
       avatar: { input: 'text' }

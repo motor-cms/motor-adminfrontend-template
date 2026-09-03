@@ -12,7 +12,7 @@ export const approvalMeta = {
     to_be_published_at: { type: 'string' },
     comment: { type: 'string' },
     approved_by_client_id: { type: 'integer', renderer: 'number' },
-    client: { type: 'ref', renderer: 'text', ref: 'ClientResource', labelKey: 'name' },
+    client: { type: 'unknown' },
     approved_at: { type: 'string' }
   }
 } as const
@@ -77,6 +77,20 @@ export const dashboardAnnouncementMeta = {
   }
 } as const
 
+export const entityConfigurationMeta = {
+  schemaName: 'EntityConfigurationResource',
+  fields: {
+    id: { type: 'integer', renderer: 'number', hideable: false },
+    configurable_type: { type: 'string' },
+    configurable_id: { type: 'integer', renderer: 'number' },
+    config_variable_id: { type: 'integer', renderer: 'number' },
+    config_variable: { type: 'ref', renderer: 'text', ref: 'ConfigVariableResource', labelKey: 'name' },
+    value: { type: 'string' },
+    created_at: { type: 'string' },
+    updated_at: { type: 'string' }
+  }
+} as const
+
 export const fileUsageMeta = {
   schemaName: 'FileUsageResource',
   fields: {
@@ -85,6 +99,13 @@ export const fileUsageMeta = {
     name: { type: 'string', sortable: true, hideable: false },
     is_published: { type: 'boolean', renderer: 'boolean' },
     block_types: { type: 'string' }
+  }
+} as const
+
+export const formSubmissionMeta = {
+  schemaName: 'FormSubmissionResource',
+  fields: {
+    data: { type: 'object' }
   }
 } as const
 

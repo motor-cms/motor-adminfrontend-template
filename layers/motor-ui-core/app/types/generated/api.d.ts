@@ -203,6 +203,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/builder-pages/{builderPage}/draft-from-published": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a draft from the published revision
+         * @description Clones the live revision into a new draft revision (is_current=true,
+         *     is_published=false) without taking the published revision offline.
+         */
+        post: operations["builderPageDraftFromPublished.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/builder-pages/{builderPage}/duplicate": {
         parameters: {
             query?: never;
@@ -1262,6 +1283,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/entity-configurations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["v2.entity-configurations.index"];
+        put?: never;
+        post: operations["v2.entity-configurations.store"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/entity-configurations/{entityConfiguration}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["v2.entity-configurations.show"];
+        put: operations["v2.entity-configurations.update"];
+        post?: never;
+        delete: operations["v2.entity-configurations.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/files": {
         parameters: {
             query?: never;
@@ -1315,6 +1368,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/form-submissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["v2.form-submissions.index"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/form-submissions/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["v2.form-submissions.export"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/form-submissions/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["v2.form-submissions.bulk-destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["v2.form-submissions.bulk-update"];
+        trace?: never;
+    };
+    "/form-submissions/{formSubmission}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["v2.form-submissions.show"];
+        put?: never;
+        post?: never;
+        delete: operations["v2.form-submissions.destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["v2.form-submissions.update"];
+        trace?: never;
+    };
     "/global-search": {
         parameters: {
             query?: never;
@@ -1364,6 +1481,33 @@ export interface paths {
         put: operations["v2.languages.update"];
         post?: never;
         delete: operations["v2.languages.destroy"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/navigations/seo-redirect-audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Audit redirect navigations against the actual SEO redirects of a domain
+         * @description EN-2268: a navigation of link_type "redirect" only decides where the
+         *     *menu link* points. The server-side 301 that fires on a direct request
+         *     to the old URL is a separate SeoRedirect row and is not created along
+         *     with it, so entries silently end up without one — their slug then
+         *     serves an empty page to bookmarks, shared links and search engines.
+         *
+         *     Redirects are stored per domain, so the caller must say which domain to
+         *     audit against.
+         */
+        get: operations["navigationItems.seoRedirectAudit"];
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1863,10 +2007,10 @@ export interface components {
             id: number;
             name: string;
             prompt: string;
-            client?: components["schemas"]["ClientResource"];
+            client?: components["schemas"]["ClientResource"] | null;
             client_id: number;
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** ApprovalCollection */
         ApprovalCollection: components["schemas"]["ApprovalResource"][];
@@ -1881,16 +2025,17 @@ export interface components {
             id: number;
             is_approved: boolean;
             is_rejected: boolean;
-            to_be_published_at: string;
+            to_be_published_at: string | null;
             comment: string | null;
-            approved_by_client_id: number;
-            client: components["schemas"]["ClientResource"];
-            approved_at: string;
+            approved_by_client_id: number | null;
+            client: components["schemas"]["ClientResource"] | null;
+            approved_at: string | null;
         };
         /** BuilderCustomComponentPatchRequest */
         BuilderCustomComponentPatchRequest: {
             name: string;
-            client_id: number;
+            /** @enum {integer} */
+            client_id: "";
             language_id: number;
             tags?: string[] | null;
             categories?: number[] | null;
@@ -1898,7 +2043,8 @@ export interface components {
         /** BuilderCustomComponentPostRequest */
         BuilderCustomComponentPostRequest: {
             name: string;
-            client_id: number;
+            /** @enum {integer} */
+            client_id: "";
             language_id: number;
             tags?: string[] | null;
             categories?: number[] | null;
@@ -1924,7 +2070,8 @@ export interface components {
             is_excluded_from_search_index?: boolean;
             /** @description Page metadata — optional, update only when present */
             name?: string;
-            client_id?: number;
+            /** @enum {integer} */
+            client_id?: "";
             language_id?: number;
             cache_type?: string;
             ttl?: number;
@@ -1945,7 +2092,8 @@ export interface components {
         BuilderPagePatchRequest: {
             name: string;
             ttl: number;
-            client_id: number;
+            /** @enum {integer} */
+            client_id: "";
             language_id: number;
             /** @enum {string} */
             cache_type: "always" | "never";
@@ -1965,7 +2113,8 @@ export interface components {
         BuilderPagePostRequest: {
             name: string;
             ttl: number;
-            client_id: number;
+            /** @enum {integer} */
+            client_id: "";
             language_id: number;
             /** @enum {string} */
             cache_type: "always" | "never";
@@ -1986,8 +2135,8 @@ export interface components {
             id: number;
             name: string;
             type: string;
-            ttl: number;
-            cache_type: string;
+            ttl: number | null;
+            cache_type: string | null;
             page_definition?: Record<string, never> | null;
             uuid: string;
             is_current: boolean;
@@ -1995,14 +2144,15 @@ export interface components {
             /** Format: date-time */
             published_at: string | null;
             has_published_revision: string;
+            published_revision_id: number | null;
             is_excluded_from_cookie_banner: boolean;
             is_excluded_from_search_index: boolean;
             is_excluded_from_search: boolean;
             admin_scss: string;
-            client: components["schemas"]["ClientResource"];
+            client: components["schemas"]["ClientResource"] | null;
             client_id: number;
-            language: components["schemas"]["LanguageResource"];
-            language_id: number | null;
+            language: components["schemas"]["LanguageResource"] | null;
+            language_id: number;
             tags: string;
             created_at: string;
             updated_at: string;
@@ -2012,6 +2162,8 @@ export interface components {
             global_scss: string;
             navigations?: components["schemas"]["NavigationSummaryResource"][];
             has_active_navigation: boolean;
+            navigation_count: number;
+            is_linked: boolean;
             categories: components["schemas"]["CategorySummaryResource"][];
         };
         /** BuilderPageRevisionCollection */
@@ -2023,9 +2175,9 @@ export interface components {
             name: string;
             is_current: boolean;
             is_published: boolean;
-            published_at: string;
-            created_at: string;
-            updated_at: string;
+            published_at: string | null;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** BuilderPageSetPublishedStatusRequest */
         BuilderPageSetPublishedStatusRequest: {
@@ -2071,8 +2223,8 @@ export interface components {
             level: number;
             /** @description Only include children when explicitly loaded - breaks Scramble recursion */
             children?: components["schemas"]["CategoryResource"][];
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** CategorySummaryResource */
         CategorySummaryResource: {
@@ -2097,19 +2249,21 @@ export interface components {
             scope: string;
             /** @description Only include children when explicitly loaded */
             children?: components["schemas"]["CategoryResource"][];
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** ClickpathPatchRequest */
         ClickpathPatchRequest: {
             name: string;
-            client_id: number;
+            /** @enum {integer} */
+            client_id: "";
             duration: number;
         };
         /** ClickpathPostRequest */
         ClickpathPostRequest: {
             name: string;
-            client_id: number;
+            /** @enum {integer} */
+            client_id: "";
             duration: number;
         };
         /** ClickpathResource */
@@ -2132,7 +2286,7 @@ export interface components {
             layer_order_index: string;
             main_content: string;
             client_id: string;
-            parent_id: string;
+            parent_id: string | null;
             parent_step_id: string;
         };
         /** ClientPatchRequest */
@@ -2179,14 +2333,14 @@ export interface components {
             city: string;
             country_iso_3166_1: string;
             website: string;
-            description: string | null;
+            description: string;
             is_active: boolean;
             contact_name: string;
             contact_phone: string;
             contact_email: string;
-            frontend_config: string | null;
-            created_at: string;
-            updated_at: string;
+            frontend_config: unknown[] | string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** ConfigVariablePatchRequest */
         ConfigVariablePatchRequest: {
@@ -2212,8 +2366,8 @@ export interface components {
             name: string;
             value: string;
             is_invisible: boolean;
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** CustomComponentResource */
         CustomComponentResource: {
@@ -2231,10 +2385,10 @@ export interface components {
              */
             has_published_revision: string;
             admin_scss: string | null;
-            client: components["schemas"]["ClientResource"];
+            client: components["schemas"]["ClientResource"] | null;
             client_id: number;
-            language: components["schemas"]["LanguageResource"];
-            language_id: number | null;
+            language: components["schemas"]["LanguageResource"] | null;
+            language_id: number;
             tags: string;
             created_at: string;
             updated_at: string;
@@ -2286,11 +2440,11 @@ export interface components {
         CustomContentFieldResource: {
             id: number;
             name: string;
-            label: string | null;
-            default_value: boolean | string | null;
+            label: string;
+            default_value: boolean | string;
             type: string;
-            custom_content_type_id: number | null;
-            field_data: string | null;
+            custom_content_type_id: number;
+            field_data: string;
             sort_position: number;
             is_repeatable: boolean;
             is_required: boolean;
@@ -2298,13 +2452,14 @@ export interface components {
             options: string;
             ui_options: string;
             show_in_grid: boolean;
-            legal_text: string | null;
-            placeholder: string | null;
+            legal_text: string;
+            placeholder: string;
         };
         /** CustomContentTypePatchRequest */
         CustomContentTypePatchRequest: {
             name: string;
-            client_id: number;
+            /** @enum {integer} */
+            client_id: "";
             type: string;
             is_searchable?: boolean | null;
             is_sortable?: boolean | null;
@@ -2314,7 +2469,8 @@ export interface components {
         /** CustomContentTypePostRequest */
         CustomContentTypePostRequest: {
             name: string;
-            client_id: number;
+            /** @enum {integer} */
+            client_id: "";
             type: string;
             is_searchable?: boolean | null;
             is_sortable?: boolean | null;
@@ -2325,14 +2481,18 @@ export interface components {
         CustomContentTypeResource: {
             id: number;
             name: string;
-            slug: string | null;
+            slug: string;
             client_id: number;
             client: components["schemas"]["ClientResource"];
             type: string;
             is_searchable: boolean;
             is_sortable: boolean;
-            integrations: Record<string, never> | unknown[];
+            integrations: Record<string, never> | unknown[] | null;
             fields?: components["schemas"]["CustomContentFieldResource"][];
+            /** Format: date-time */
+            created_at: string | null;
+            /** Format: date-time */
+            updated_at: string | null;
         };
         /** DashboardAnnouncementPostRequest */
         DashboardAnnouncementPostRequest: {
@@ -2342,7 +2502,16 @@ export interface components {
             type: "info" | "warning" | "error";
             /** @enum {string} */
             audience: "self" | "users" | "client";
-            client_id?: number | null;
+            target_user_ids?: number[] | null;
+            /**
+             * @description Phase 8 follow-up to ZRMDEV-165: SuperAdmin can target any
+             *     seeded client; everyone else is restricted to their pivot.
+             *     The controller still falls back to $user->clients->first()?->id
+             *     when client_id is omitted, but a non-admin caller can no longer
+             *     poison rows by submitting a foreign client_id explicitly.
+             * @enum {integer|null}
+             */
+            client_id?: "" | null;
             linkable_type?: string | null;
             linkable_id?: number | null;
             /** Format: date-time */
@@ -2350,7 +2519,6 @@ export interface components {
             /** Format: date-time */
             expires_at?: string | null;
             is_active?: boolean;
-            target_user_ids?: number[] | null;
         };
         /** DashboardAnnouncementPutRequest */
         DashboardAnnouncementPutRequest: {
@@ -2360,7 +2528,14 @@ export interface components {
             type: "info" | "warning" | "error";
             /** @enum {string} */
             audience: "self" | "users" | "client";
-            client_id?: number | null;
+            target_user_ids?: number[] | null;
+            /**
+             * @description Phase 8 follow-up to ZRMDEV-165: stops a multi-client editor
+             *     from re-tagging an existing announcement into a foreign tenant
+             *     by PUT'ing the foreign client_id.
+             * @enum {integer|null}
+             */
+            client_id?: "" | null;
             linkable_type?: string | null;
             linkable_id?: number | null;
             /** Format: date-time */
@@ -2368,27 +2543,26 @@ export interface components {
             /** Format: date-time */
             expires_at?: string | null;
             is_active?: boolean;
-            target_user_ids?: number[] | null;
         };
         /** DashboardAnnouncementResource */
         DashboardAnnouncementResource: {
             id: number;
             title: string;
-            body: string | null;
+            body: string;
             type: string;
             audience: string;
             target_user_ids: unknown[] | null;
             linkable_type: string | null;
             linkable_id: number | null;
             linkable_name: unknown;
-            linkable_url: string;
+            linkable_url: string | null;
             is_active: boolean;
-            starts_at: string;
-            expires_at: string;
+            starts_at: string | null;
+            expires_at: string | null;
             created_by: number | null;
             created_by_name: unknown;
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** DomainPatchRequest */
         DomainPatchRequest: {
@@ -2400,6 +2574,7 @@ export interface components {
             port: number;
             path: string;
             is_preview_domain?: boolean;
+            is_canonical?: boolean;
         };
         /** DomainPostRequest */
         DomainPostRequest: {
@@ -2411,21 +2586,24 @@ export interface components {
             port: number;
             path: string;
             is_preview_domain?: boolean;
+            is_canonical?: boolean;
         };
         /** DomainResource */
         DomainResource: {
             id: number;
             name: string;
-            client?: components["schemas"]["ClientResource"];
+            client?: components["schemas"]["ClientResource"] | null;
             client_id: number;
             is_active: boolean;
             is_preview_domain: boolean;
+            is_canonical: boolean;
             protocol: string;
             host: string;
             port: number;
             path: string;
-            created_at: string;
-            updated_at: string;
+            entity_configurations?: (components["schemas"]["EntityConfigurationResource"] & Record<string, never>)[];
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** EmailTemplatePatchRequest */
         EmailTemplatePatchRequest: {
@@ -2473,25 +2651,25 @@ export interface components {
         EmailTemplateResource: {
             id: number;
             name: string;
-            slug: string | null;
-            client?: components["schemas"]["ClientResource"];
+            slug: string;
+            client?: components["schemas"]["ClientResource"] | null;
             client_id: number;
-            language?: components["schemas"]["LanguageResource"];
+            language?: components["schemas"]["LanguageResource"] | null;
             language_id: number;
             subject: string;
-            body_text: string | null;
-            body_html: string | null;
+            body_text: string;
+            body_html: string;
             has_body_html: boolean;
-            default_sender_name: string | null;
-            default_sender_email: string | null;
-            default_recipient_name: string | null;
-            default_recipient_email: string | null;
-            default_cc_email: string | null;
-            default_bcc_email: string | null;
-            default_replyto_email: string | null;
-            default_replyto_name: string | null;
-            created_at: string;
-            updated_at: string;
+            default_sender_name: string;
+            default_sender_email: string;
+            default_recipient_name: string;
+            default_recipient_email: string;
+            default_cc_email: string;
+            default_bcc_email: string;
+            default_replyto_email: string;
+            default_replyto_name: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** EmailTemplateUsageResource */
         EmailTemplateUsageResource: {
@@ -2502,11 +2680,37 @@ export interface components {
             usage_type: string;
             builder_page: string;
         };
+        /** EntityConfigurationPatchRequest */
+        EntityConfigurationPatchRequest: {
+            configurable_type?: string;
+            configurable_id?: number;
+            config_variable_id?: number;
+            value?: string | null;
+        };
+        /** EntityConfigurationPostRequest */
+        EntityConfigurationPostRequest: {
+            configurable_type: string;
+            configurable_id: number;
+            config_variable_id: number;
+            value?: string | null;
+        };
+        /** EntityConfigurationResource */
+        EntityConfigurationResource: {
+            id: number;
+            configurable_type: string;
+            configurable_id: number;
+            config_variable_id: number;
+            config_variable?: components["schemas"]["ConfigVariableResource"];
+            value: string | null;
+            created_at: string | null;
+            updated_at: string | null;
+        };
         /** FileCollection */
         FileCollection: components["schemas"]["FileResource"][];
         /** FilePatchRequest */
         FilePatchRequest: {
-            client_id?: number | null;
+            /** @enum {integer|null} */
+            client_id?: "" | null;
             description: string;
             author: string;
             source: string;
@@ -2522,36 +2726,39 @@ export interface components {
         };
         /** FilePostRequest */
         FilePostRequest: {
-            client_id?: number | null;
+            /** @enum {integer|null} */
+            client_id?: "" | null;
             description: string;
             author: string;
             source: string;
             alt_text: string;
             is_global?: string | null;
             is_excluded_from_search_index?: boolean | null;
-            file?: string | null;
             tags?: string[] | null;
             categories: number[];
             files: {
                 dataUrl: string;
                 name?: string | null;
             }[];
+            file?: string | null;
         };
         /** FileResource */
         FileResource: {
             id: number;
             client_id: number | null;
-            client?: components["schemas"]["ClientResource"];
+            client?: components["schemas"]["ClientResource"] | null;
             description: string;
             author: string;
             source: string;
             is_global: boolean;
             alt_text: string;
-            file: components["schemas"]["MediaResource"] | null;
-            categories: components["schemas"]["CategoryResource"][] | null;
+            file: components["schemas"]["MediaResource"];
+            categories: components["schemas"]["CategoryResource"][];
             exists: string | boolean;
             is_excluded_from_search_index: boolean;
             tags: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** FileUsageCollection */
         FileUsageCollection: components["schemas"]["FileUsageResource"][];
@@ -2562,6 +2769,40 @@ export interface components {
             name: string;
             is_published: boolean;
             block_types: string;
+        };
+        /** FormSubmissionBulkRequest */
+        FormSubmissionBulkRequest: {
+            ids: number[];
+            /** @enum {string} */
+            status: "new" | "read";
+        };
+        /** FormSubmissionPatchRequest */
+        FormSubmissionPatchRequest: {
+            /** @enum {string} */
+            status: "new" | "read";
+        };
+        /** FormSubmissionResource */
+        FormSubmissionResource: {
+            data: {
+                id: number;
+                uuid: string;
+                client_id: number | null;
+                custom_content_type_id: number | null;
+                builder_page_id: number | null;
+                form_component_uuid: string | null;
+                form_name: string;
+                user_email: string | null;
+                data: unknown[];
+                status: string;
+                /** Format: date-time */
+                read_at: string | null;
+                read_by: number | null;
+                ip: string | null;
+                /** Format: date-time */
+                created_at: string | null;
+                /** Format: date-time */
+                updated_at: string | null;
+            };
         };
         /** GridActionRequest */
         GridActionRequest: {
@@ -2587,8 +2828,8 @@ export interface components {
             iso_639_1: string;
             english_name: string;
             native_name: string;
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** MediaResource */
         MediaResource: {
@@ -2602,35 +2843,38 @@ export interface components {
             local_url: string;
             path: string;
             uuid: string | null;
-            created_at: string;
+            created_at: string | null;
             conversions: string;
         };
         /** NavigationItemResource */
         NavigationItemResource: {
             id: number;
             name: string;
-            scope: string;
-            slug: string;
-            notification: components["schemas"]["NotificationResource"];
-            full_slug: string;
+            scope: string | null;
+            slug: string | null;
+            notification: components["schemas"]["NotificationResource"] | null;
+            full_slug: string | null;
             is_visible: boolean;
             is_active: boolean;
+            is_canonical: boolean;
             hide_slug_from_url: boolean;
-            link_type: string;
-            link_target: string;
+            link_type: string | null;
+            link_target: string | null;
             link_url: string | null;
             click_event: string | null;
             builder_page?: components["schemas"]["BuilderPageResource"];
-            builder_page_uuid: string | null;
+            builder_page_uuid: string;
             builder_page_name: string | null;
             navigation_item_id: number | null;
             has_builder_page: boolean;
             has_redirection: boolean;
+            /** @enum {string|null} */
+            seo_redirect_status: "ok" | "missing" | null;
             has_external_url: boolean;
             assistant_clickpath_id: number | null;
             clickpath: components["schemas"]["ClickpathResource"] | null;
-            client: components["schemas"]["ClientResource"];
-            language: components["schemas"]["LanguageResource"];
+            client: components["schemas"]["ClientResource"] | null;
+            language: components["schemas"]["LanguageResource"] | null;
             parent_id: number;
             _lft: number;
             _rgt: number;
@@ -2641,8 +2885,10 @@ export interface components {
             css_classes: unknown[] | null;
             root_node: string;
             root_node_name: string;
+            created_at: string | null;
+            updated_at: string | null;
             computed_link: string;
-            main_navigation_item: components["schemas"]["NavigationItemResource"];
+            main_navigation_item: components["schemas"]["NavigationItemResource"] | null;
         };
         /** NavigationPatchRequest */
         NavigationPatchRequest: {
@@ -2666,6 +2912,9 @@ export interface components {
                 score?: number | null;
                 topic_id?: number | null;
             }[] | null;
+            /** @enum {integer|null} */
+            client_id?: "" | null;
+            is_canonical?: boolean;
         };
         /** NavigationPostRequest */
         NavigationPostRequest: {
@@ -2689,13 +2938,16 @@ export interface components {
                 score?: number | null;
                 topic_id?: number | null;
             }[] | null;
+            /** @enum {integer|null} */
+            client_id?: "" | null;
+            is_canonical?: boolean;
         };
         /** NavigationReducedResource */
         NavigationReducedResource: {
             id: number;
             name: string;
-            slug: string;
-            full_slug: string;
+            slug: string | null;
+            full_slug: string | null;
             is_active: boolean;
             root_node: string;
             _lft: number;
@@ -2707,9 +2959,9 @@ export interface components {
         NavigationSummaryResource: {
             id: number;
             name: string;
-            full_slug: string;
+            full_slug: string | null;
             is_active: boolean;
-            scope: string;
+            scope: string | null;
             root_node: string;
             root_node_name: string;
         };
@@ -2731,22 +2983,24 @@ export interface components {
         NavigationTreeResource: {
             id: number;
             name: string;
-            scope: string;
-            client: components["schemas"]["ClientResource"];
+            scope: string | null;
+            client: components["schemas"]["ClientResource"] | null;
             client_id: number;
-            language: components["schemas"]["LanguageResource"];
-            language_id: number | null;
-            children?: components["schemas"]["NavigationReducedResource"][] | components["schemas"]["NavigationItemResource"][] | null;
+            language: components["schemas"]["LanguageResource"] | null;
+            language_id: number;
+            children: components["schemas"]["NavigationReducedResource"][] | components["schemas"]["NavigationItemResource"][] | null;
             parent: number | null;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** NotificationResource */
         NotificationResource: {
             id: number;
-            headline: string;
-            text: string;
-            variante: string;
-            link: string;
-            button_text: string;
+            headline: string | null;
+            text: string | null;
+            variante: string | null;
+            link: string | null;
+            button_text: string | null;
             can_be_hidden: boolean;
             is_active: boolean;
             navigation_id: number | null;
@@ -2774,8 +3028,8 @@ export interface components {
             sort_position: number | null;
             permission_names?: unknown[];
             permissions?: components["schemas"]["PermissionResource"][];
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** PermissionPatchRequest */
         PermissionPatchRequest: {
@@ -2795,8 +3049,8 @@ export interface components {
             name: string;
             guard_name: string;
             permission_group?: components["schemas"]["PermissionGroupResource"];
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** PublishingTimeCollection */
         PublishingTimeCollection: components["schemas"]["PublishingTimeResource"][];
@@ -2804,14 +3058,14 @@ export interface components {
         PublishingTimeResource: {
             id: number;
             publishable_id: number;
-            to_be_published_at: string;
-            name: string;
-            client_id: number;
-            language_id: number;
+            to_be_published_at: string | null;
+            name: string | null;
+            client_id: number | null;
+            language_id: number | null;
             client_name: string;
             language_native_name: string;
             is_published: boolean;
-            uuid: string;
+            uuid: string | null;
             /** Format: date-time */
             created_at: string | null;
             navigations: components["schemas"]["NavigationItemResource"][] | string[];
@@ -2820,13 +3074,13 @@ export interface components {
         PublishingTimeSummaryResource: {
             id: number;
             publishable_id: number;
-            to_be_published_at: string;
-            name: string;
-            client_id: number;
-            language_id: number;
+            to_be_published_at: string | null;
+            name: string | null;
+            client_id: number | null;
+            language_id: number | null;
             is_published: boolean;
-            uuid: string;
-            created_at: string;
+            uuid: string | null;
+            created_at: string | null;
         };
         /** RolePatchRequest */
         RolePatchRequest: {
@@ -2846,8 +3100,8 @@ export interface components {
             name: string;
             guard_name: string;
             permissions?: components["schemas"]["PermissionResource"][];
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** ScorePatchRequest */
         ScorePatchRequest: {
@@ -2872,8 +3126,8 @@ export interface components {
             scorable_id: number;
             scorable_type: string;
             score: number;
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** SearchConfigPatchRequest */
         SearchConfigPatchRequest: {
@@ -2893,6 +3147,8 @@ export interface components {
                 url: string;
                 url_label: string;
             }[];
+            /** @enum {integer|null} */
+            client_id?: "" | null;
         };
         /** SearchConfigPostRequest */
         SearchConfigPostRequest: {
@@ -2912,54 +3168,56 @@ export interface components {
                 url: string;
                 url_label: string;
             }[];
+            /** @enum {integer|null} */
+            client_id?: "" | null;
         };
         /** SearchConfigResource */
         SearchConfigResource: {
             id: number;
-            domain_id: number | null;
-            domain: components["schemas"]["DomainResource"];
+            domain_id: number;
+            domain: components["schemas"]["DomainResource"] | null;
             is_active: boolean;
-            url: string;
-            url_label: string;
-            links: unknown[];
+            url: string | null;
+            url_label: string | null;
+            links: unknown[] | null;
             overline: string | null;
-            headline: string;
-            teaser: string;
+            headline: string | null;
+            teaser: string | null;
             image_crop: unknown[] | null;
             file_id: number | null;
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** SeoRedirectPatchRequest */
         SeoRedirectPatchRequest: {
+            categories?: number[];
             request_url: string;
-            target_url: string;
+            target_url?: string | null;
             http_status_code?: number | null;
             type?: string | null;
             domain_id: number;
-            categories?: number[];
         };
         /** SeoRedirectPostRequest */
         SeoRedirectPostRequest: {
+            categories?: number[];
             request_url: string;
-            target_url: string;
+            target_url?: string | null;
             http_status_code?: number | null;
             type?: string | null;
             domain_id: number;
-            categories?: number[];
         };
         /** SeoRedirectResource */
         SeoRedirectResource: {
             id: number;
             request_url: string;
-            target_url: string;
-            http_status_code: number | null;
+            target_url: string | null;
+            http_status_code: number;
             type: string;
             client_id: string;
-            domain_id: number | null;
+            domain_id: number;
             categories: components["schemas"]["CategorySummaryResource"][];
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** SeoValuePatchRequest */
         SeoValuePatchRequest: {
@@ -2981,15 +3239,16 @@ export interface components {
         };
         /** SeoValueResource */
         SeoValueResource: {
-            id: number;
+            id: number | null;
             attribute_type: string | null;
-            key: string;
-            value: string;
+            key: string | null;
+            value: string | null;
             content: string | null;
             seoable_id: string;
             seoable_type: string;
-            created_at: string;
-            updated_at: string;
+            is_auto: boolean;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** StepPatchRequest */
         StepPatchRequest: {
@@ -2997,7 +3256,8 @@ export interface components {
             type: string;
             trigger_content: string;
             main_content: string;
-            client_id: number;
+            /** @enum {integer} */
+            client_id: "";
             trigger_content_headline?: string | null;
             layer_order_index?: number | null;
             clickpath_id?: number | null;
@@ -3010,7 +3270,8 @@ export interface components {
             type: string;
             trigger_content: string;
             main_content: string;
-            client_id: number;
+            /** @enum {integer} */
+            client_id: "";
             trigger_content_headline?: string | null;
             layer_order_index?: number | null;
             clickpath_id: number;
@@ -3023,20 +3284,22 @@ export interface components {
             name: string;
             type: string;
             trigger_content: string;
-            trigger_content_headline: string | null;
-            layer_order_index: number | null;
+            trigger_content_headline: string;
+            layer_order_index: number;
             main_content: string;
             client_id: number;
         };
         /** TopicPatchRequest */
         TopicPatchRequest: {
-            client_id: number;
+            /** @enum {integer} */
+            client_id: "";
             name: string;
             categories: string[];
         };
         /** TopicPostRequest */
         TopicPostRequest: {
-            client_id: number;
+            /** @enum {integer} */
+            client_id: "";
             name: string;
             categories: string[];
         };
@@ -3046,12 +3309,12 @@ export interface components {
             client_id: number;
             client?: components["schemas"]["ClientResource"] | null;
             name: string;
-            categories?: components["schemas"]["CategoryResource"][] | null;
-            created_at: string;
-            updated_at: string;
+            categories: components["schemas"]["CategoryResource"][] | null;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** TriggeredScoreCollection */
-        TriggeredScoreCollection: components["schemas"]["TriggeredScoreResource"][];
+        TriggeredScoreCollection: (components["schemas"]["TriggeredScoreResource"] & Record<string, never>)[];
         /** TriggeredScoreResource */
         TriggeredScoreResource: {
             id: number;
@@ -3060,8 +3323,8 @@ export interface components {
             topic?: components["schemas"]["TopicResource"];
             scorable_type: string;
             score: number;
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
         /** TriggeredScoreSearchRequest */
         TriggeredScoreSearchRequest: {
@@ -3075,11 +3338,11 @@ export interface components {
         };
         /** UserPatchRequest */
         UserPatchRequest: {
+            clients?: number[] | null;
             name: string;
             /** Format: email */
             email: string;
             password?: string | null;
-            clients?: number[] | null;
             roles?: number[] | null;
             permissions?: number[] | null;
             avatar?: {
@@ -3089,11 +3352,11 @@ export interface components {
         };
         /** UserPostRequest */
         UserPostRequest: {
+            clients?: number[] | null;
             name: string;
             /** Format: email */
             email: string;
             password: string;
-            clients?: number[] | null;
             roles?: number[] | null;
             permissions?: number[] | null;
             avatar?: {
@@ -3106,12 +3369,12 @@ export interface components {
             id: number;
             name: string;
             email: string;
-            avatar: components["schemas"]["MediaResource"];
+            avatar: components["schemas"]["MediaResource"] | null;
             clients?: components["schemas"]["ClientResource"][];
             roles?: components["schemas"]["RoleResource"][];
             permissions?: components["schemas"]["PermissionResource"][];
-            created_at: string;
-            updated_at: string;
+            created_at: string | null;
+            updated_at: string | null;
         };
     };
     responses: {
@@ -3736,6 +3999,30 @@ export interface operations {
             404: components["responses"]["ModelNotFoundException"];
         };
     };
+    "builderPageDraftFromPublished.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The builder page ID */
+                builderPage: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": 201;
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
     "builderPageDuplicate.store": {
         parameters: {
             query?: never;
@@ -3797,13 +4084,9 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: {
+        requestBody: {
             content: {
-                "application/json": components["schemas"]["BuilderTemporaryPagePostRequest"] & {
-                    page_id?: string;
-                    client_id?: string;
-                    language_id?: string;
-                };
+                "application/json": components["schemas"]["BuilderTemporaryPagePostRequest"];
             };
         };
         responses: {
@@ -4356,7 +4639,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["CategoryResource"];
+                        data: components["schemas"]["CategoryResource"] & Record<string, never>;
                         meta: {
                             /** @constant */
                             api_version: "v2";
@@ -4545,7 +4828,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["CategoryTreeResource"];
+                        data: components["schemas"]["CategoryTreeResource"] & Record<string, never>;
                         meta: {
                             /** @constant */
                             api_version: "v2";
@@ -6247,7 +6530,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["CustomContentTypeResource"];
+                        data: components["schemas"]["CustomContentTypeResource"] & Record<string, never>;
                         meta: {
                             /** @constant */
                             api_version: "v2";
@@ -6382,7 +6665,7 @@ export interface operations {
                                 subject_name: unknown;
                                 subject_exists: boolean;
                                 causer_name: unknown;
-                                created_at: string;
+                                created_at: string | null;
                             }[];
                             activity_meta: {
                                 current_page: number;
@@ -6392,8 +6675,8 @@ export interface operations {
                             };
                             publishing_queue: {
                                 id: number;
-                                name: unknown | "Unknown";
-                                to_be_published_at: string | null;
+                                name: unknown;
+                                to_be_published_at: null | string;
                                 publishable_type: string;
                                 publishable_id: number;
                             }[];
@@ -7143,6 +7426,195 @@ export interface operations {
             401: components["responses"]["AuthenticationException"];
         };
     };
+    "v2.entity-configurations.index": {
+        parameters: {
+            query?: {
+                search?: string | null;
+                page?: number | null;
+                per_page?: number | null;
+                configurable_type?: string;
+                configurable_id?: number;
+                config_variable_id?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Paginated set of `EntityConfigurationResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["EntityConfigurationResource"][];
+                        links: {
+                            first: string | null;
+                            last: string | null;
+                            prev: string | null;
+                            next: string | null;
+                        };
+                        meta: {
+                            current_page: number;
+                            from: number | null;
+                            last_page: number;
+                            /** @description Generated paginator links. */
+                            links: {
+                                url: string | null;
+                                label: string;
+                                active: boolean;
+                            }[];
+                            /** @description Base path for paginator generated URLs. */
+                            path: string | null;
+                            /** @description Number of items shown per page. */
+                            per_page: number;
+                            /** @description Number of the last item in the slice. */
+                            to: number | null;
+                            /** @description Total number of items being paginated. */
+                            total: number;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v2.entity-configurations.store": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EntityConfigurationPostRequest"];
+            };
+        };
+        responses: {
+            /** @description `EntityConfigurationResource` */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["EntityConfigurationResource"];
+                        meta: {
+                            /** @constant */
+                            api_version: "v2";
+                            /** @constant */
+                            message: "Entity configuration created";
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v2.entity-configurations.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The entity configuration ID */
+                entityConfiguration: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `EntityConfigurationResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["EntityConfigurationResource"] & Record<string, never>;
+                        meta: {
+                            /** @constant */
+                            api_version: "v2";
+                            /** @constant */
+                            message: "Entity configuration retrieved";
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "v2.entity-configurations.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The entity configuration ID */
+                entityConfiguration: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["EntityConfigurationPatchRequest"];
+            };
+        };
+        responses: {
+            /** @description `EntityConfigurationResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: components["schemas"]["EntityConfigurationResource"];
+                        meta: {
+                            /** @constant */
+                            api_version: "v2";
+                            /** @constant */
+                            message: "Entity configuration updated";
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v2.entity-configurations.destroy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The entity configuration ID */
+                entityConfiguration: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
     "v2.files.index": {
         parameters: {
             query?: {
@@ -7361,6 +7833,234 @@ export interface operations {
             };
             401: components["responses"]["AuthenticationException"];
             404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "v2.form-submissions.index": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Paginated set */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data: string[];
+                        links: {
+                            first: string | null;
+                            last: string | null;
+                            prev: string | null;
+                            next: string | null;
+                        };
+                        meta: {
+                            current_page: number;
+                            from: number | null;
+                            last_page: number;
+                            /** @description Generated paginator links. */
+                            links: {
+                                url: string | null;
+                                label: string;
+                                active: boolean;
+                            }[];
+                            /** @description Base path for paginator generated URLs. */
+                            path: string | null;
+                            /** @description Number of items shown per page. */
+                            per_page: number;
+                            /** @description Number of the last item in the slice. */
+                            to: number | null;
+                            /** @description Total number of items being paginated. */
+                            total: number;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "v2.form-submissions.export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    "Transfer-Encoding": "chunked";
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv; charset=UTF-8": string;
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+        };
+    };
+    "v2.form-submissions.bulk-destroy": {
+        parameters: {
+            query?: {
+                "ids[]"?: number[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        meta: {
+                            deleted: number;
+                            /** @constant */
+                            api_version: "v2";
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v2.form-submissions.bulk-update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FormSubmissionBulkRequest"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        meta: {
+                            updated: number;
+                            /** @constant */
+                            api_version: "v2";
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
+    "v2.form-submissions.show": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The form submission ID */
+                formSubmission: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description `FormSubmissionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FormSubmissionResource"] & {
+                        meta: {
+                            /** @constant */
+                            api_version: "v2";
+                            /** @constant */
+                            message: "Form submission retrieved";
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "v2.form-submissions.destroy": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The form submission ID */
+                formSubmission: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "v2.form-submissions.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The form submission ID */
+                formSubmission: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FormSubmissionPatchRequest"];
+            };
+        };
+        responses: {
+            /** @description `FormSubmissionResource` */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FormSubmissionResource"] & {
+                        meta: {
+                            /** @constant */
+                            api_version: "v2";
+                            /** @constant */
+                            message: "Form submission updated";
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            403: components["responses"]["AuthorizationException"];
+            404: components["responses"]["ModelNotFoundException"];
+            422: components["responses"]["ValidationException"];
         };
     };
     "v2.global-search": {
@@ -7613,6 +8313,67 @@ export interface operations {
             401: components["responses"]["AuthenticationException"];
             403: components["responses"]["AuthorizationException"];
             404: components["responses"]["ModelNotFoundException"];
+        };
+    };
+    "navigationItems.seoRedirectAudit": {
+        parameters: {
+            query?: {
+                domain_id?: string;
+                status?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        message: "Redirect audit read";
+                        data: string[];
+                        meta: {
+                            current_page: Record<string, never> | null;
+                            last_page: Record<string, never> | null;
+                            per_page: Record<string, never> | null;
+                            total: number;
+                            from: string | null;
+                            to: string | null;
+                            domain_id: number;
+                            domain: string;
+                            audit_total: number;
+                            audit_missing: number;
+                        };
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        message: "Domain not found";
+                    };
+                };
+            };
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @constant */
+                        message: "domain_id is required";
+                    };
+                };
+            };
         };
     };
     "v2.navigation-items-flat.index": {
@@ -8090,7 +8851,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["PermissionGroupResource"];
+                        data: components["schemas"]["PermissionGroupResource"] & Record<string, never>;
                         meta: {
                             /** @constant */
                             api_version: "v2";
@@ -8124,7 +8885,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["PermissionGroupResource"];
+                        data: components["schemas"]["PermissionGroupResource"] & Record<string, never>;
                         meta: {
                             /** @constant */
                             api_version: "v2";
@@ -8162,7 +8923,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["PermissionGroupResource"];
+                        data: components["schemas"]["PermissionGroupResource"] & Record<string, never>;
                         meta: {
                             /** @constant */
                             api_version: "v2";
@@ -9728,7 +10489,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data: components["schemas"]["UserResource"];
+                        data: components["schemas"]["UserResource"] & Record<string, never>;
                         meta: {
                             /** @constant */
                             api_version: "v2";

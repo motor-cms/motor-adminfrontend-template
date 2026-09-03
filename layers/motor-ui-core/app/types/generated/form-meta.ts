@@ -60,13 +60,13 @@ export const dashboardAnnouncementFormMeta = {
       body: { input: 'textarea' },
       type: { input: 'text', required: true },
       audience: { input: 'text', required: true },
+      target_user_ids: { input: 'multi-select' },
       client_id: { input: 'select' },
       linkable_type: { input: 'text' },
       linkable_id: { input: 'select' },
       starts_at: { input: 'text' },
       expires_at: { input: 'text' },
-      is_active: { input: 'toggle' },
-      target_user_ids: { input: 'multi-select' }
+      is_active: { input: 'toggle' }
     }
   }
 } as const
@@ -79,13 +79,13 @@ export const dashboardAnnouncementPutFormMeta = {
       body: { input: 'textarea' },
       type: { input: 'text', required: true },
       audience: { input: 'text', required: true },
+      target_user_ids: { input: 'multi-select' },
       client_id: { input: 'select' },
       linkable_type: { input: 'text' },
       linkable_id: { input: 'select' },
       starts_at: { input: 'text' },
       expires_at: { input: 'text' },
-      is_active: { input: 'toggle' },
-      target_user_ids: { input: 'multi-select' }
+      is_active: { input: 'toggle' }
     }
   },
   patch: {
@@ -95,13 +95,60 @@ export const dashboardAnnouncementPutFormMeta = {
       body: { input: 'textarea' },
       type: { input: 'text', required: true },
       audience: { input: 'text', required: true },
+      target_user_ids: { input: 'multi-select' },
       client_id: { input: 'select' },
       linkable_type: { input: 'text' },
       linkable_id: { input: 'select' },
       starts_at: { input: 'text' },
       expires_at: { input: 'text' },
-      is_active: { input: 'toggle' },
-      target_user_ids: { input: 'multi-select' }
+      is_active: { input: 'toggle' }
+    }
+  }
+} as const
+
+export const entityConfigurationFormMeta = {
+  post: {
+    schemaName: 'EntityConfigurationPostRequest',
+    fields: {
+      configurable_type: { input: 'text', required: true },
+      configurable_id: { input: 'select', required: true },
+      config_variable_id: { input: 'select', required: true },
+      value: { input: 'text' }
+    }
+  },
+  patch: {
+    schemaName: 'EntityConfigurationPatchRequest',
+    fields: {
+      configurable_type: { input: 'text' },
+      configurable_id: { input: 'select' },
+      config_variable_id: { input: 'select' },
+      value: { input: 'text' }
+    }
+  }
+} as const
+
+export const formSubmissionFormMeta = {
+  patch: {
+    schemaName: 'FormSubmissionPatchRequest',
+    fields: {
+      status: { input: 'text', required: true }
+    }
+  }
+} as const
+
+export const formSubmissionBulkFormMeta = {
+  post: {
+    schemaName: 'FormSubmissionBulkRequest',
+    fields: {
+      ids: { input: 'multi-select', required: true },
+      status: { input: 'text', required: true }
+    }
+  },
+  patch: {
+    schemaName: 'FormSubmissionBulkRequest',
+    fields: {
+      ids: { input: 'multi-select', required: true },
+      status: { input: 'text', required: true }
     }
   }
 } as const
