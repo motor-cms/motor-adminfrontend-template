@@ -8,7 +8,7 @@ export const fileMeta = {
   fields: {
     id: { type: 'integer', renderer: 'number', hideable: false },
     client_id: { type: 'integer', renderer: 'number' },
-    client: { type: 'unknown' },
+    client: { type: 'ref', renderer: 'text', ref: 'ClientResource', labelKey: 'name' },
     description: { type: 'string' },
     author: { type: 'string' },
     source: { type: 'string' },

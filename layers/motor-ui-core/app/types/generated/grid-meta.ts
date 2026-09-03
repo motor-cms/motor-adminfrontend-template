@@ -12,7 +12,7 @@ export const approvalMeta = {
     to_be_published_at: { type: 'datetime', renderer: 'date', sortable: true },
     comment: { type: 'string' },
     approved_by_client_id: { type: 'integer', renderer: 'number' },
-    client: { type: 'unknown' },
+    client: { type: 'ref', renderer: 'text', ref: 'ClientResource', labelKey: 'name' },
     approved_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
