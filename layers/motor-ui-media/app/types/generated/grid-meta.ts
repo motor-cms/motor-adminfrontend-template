@@ -19,8 +19,8 @@ export const fileMeta = {
     exists: { type: 'unknown' },
     is_excluded_from_search_index: { type: 'boolean', renderer: 'boolean' },
     tags: { type: 'string' },
-    created_at: { type: 'string' },
-    updated_at: { type: 'string' }
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
+    updated_at: { type: 'datetime', renderer: 'date', sortable: true }
   }
 } as const
 
@@ -37,7 +37,7 @@ export const mediaMeta = {
     local_url: { type: 'string', renderer: 'link' },
     path: { type: 'string' },
     uuid: { type: 'string' },
-    created_at: { type: 'string' },
+    created_at: { type: 'datetime', renderer: 'date', sortable: true },
     conversions: { type: 'string' }
   }
 } as const

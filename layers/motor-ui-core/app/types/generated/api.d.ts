@@ -2009,7 +2009,9 @@ export interface components {
             prompt: string;
             client?: components["schemas"]["ClientResource"] | null;
             client_id: number;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** ApprovalCollection */
@@ -2025,10 +2027,12 @@ export interface components {
             id: number;
             is_approved: boolean;
             is_rejected: boolean;
+            /** Format: date-time */
             to_be_published_at: string | null;
             comment: string | null;
             approved_by_client_id: number | null;
             client: components["schemas"]["ClientResource"] | null;
+            /** Format: date-time */
             approved_at: string | null;
         };
         /** BuilderCustomComponentPatchRequest */
@@ -2154,7 +2158,9 @@ export interface components {
             language: components["schemas"]["LanguageResource"] | null;
             language_id: number;
             tags: string;
+            /** Format: date-time */
             created_at: string;
+            /** Format: date-time */
             updated_at: string;
             publishing_time: components["schemas"]["PublishingTimeSummaryResource"][];
             seo_tags: components["schemas"]["SeoValueResource"][];
@@ -2175,8 +2181,11 @@ export interface components {
             name: string;
             is_current: boolean;
             is_published: boolean;
+            /** Format: date-time */
             published_at: string | null;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** BuilderPageSetPublishedStatusRequest */
@@ -2223,7 +2232,9 @@ export interface components {
             level: number;
             /** @description Only include children when explicitly loaded - breaks Scramble recursion */
             children?: components["schemas"]["CategoryResource"][];
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** CategorySummaryResource */
@@ -2249,7 +2260,9 @@ export interface components {
             scope: string;
             /** @description Only include children when explicitly loaded */
             children?: components["schemas"]["CategoryResource"][];
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** ClickpathPatchRequest */
@@ -2339,7 +2352,9 @@ export interface components {
             contact_phone: string;
             contact_email: string;
             frontend_config: unknown[] | string;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** ConfigVariablePatchRequest */
@@ -2366,7 +2381,9 @@ export interface components {
             name: string;
             value: string;
             is_invisible: boolean;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** CustomComponentResource */
@@ -2390,7 +2407,9 @@ export interface components {
             language: components["schemas"]["LanguageResource"] | null;
             language_id: number;
             tags: string;
+            /** Format: date-time */
             created_at: string;
+            /** Format: date-time */
             updated_at: string;
             global_css: string | null;
             global_scss: string | null;
@@ -2557,11 +2576,15 @@ export interface components {
             linkable_name: unknown;
             linkable_url: string | null;
             is_active: boolean;
+            /** Format: date-time */
             starts_at: string | null;
+            /** Format: date-time */
             expires_at: string | null;
             created_by: number | null;
             created_by_name: unknown;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** DomainPatchRequest */
@@ -2602,7 +2625,9 @@ export interface components {
             port: number;
             path: string;
             entity_configurations?: (components["schemas"]["EntityConfigurationResource"] & Record<string, never>)[];
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** EmailTemplatePatchRequest */
@@ -2668,7 +2693,9 @@ export interface components {
             default_bcc_email: string;
             default_replyto_email: string;
             default_replyto_name: string;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** EmailTemplateUsageResource */
@@ -2702,7 +2729,9 @@ export interface components {
             config_variable_id: number;
             config_variable?: components["schemas"]["ConfigVariableResource"];
             value: string | null;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** FileCollection */
@@ -2757,7 +2786,9 @@ export interface components {
             exists: string | boolean;
             is_excluded_from_search_index: boolean;
             tags: string;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** FileUsageCollection */
@@ -2828,7 +2859,9 @@ export interface components {
             iso_639_1: string;
             english_name: string;
             native_name: string;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** MediaResource */
@@ -2843,6 +2876,7 @@ export interface components {
             local_url: string;
             path: string;
             uuid: string | null;
+            /** Format: date-time */
             created_at: string | null;
             conversions: string;
         };
@@ -2885,7 +2919,9 @@ export interface components {
             css_classes: unknown[] | null;
             root_node: string;
             root_node_name: string;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
             computed_link: string;
             main_navigation_item: components["schemas"]["NavigationItemResource"] | null;
@@ -2990,7 +3026,9 @@ export interface components {
             language_id: number;
             children: components["schemas"]["NavigationReducedResource"][] | components["schemas"]["NavigationItemResource"][] | null;
             parent: number | null;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** NotificationResource */
@@ -3028,7 +3066,9 @@ export interface components {
             sort_position: number | null;
             permission_names?: unknown[];
             permissions?: components["schemas"]["PermissionResource"][];
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** PermissionPatchRequest */
@@ -3049,7 +3089,9 @@ export interface components {
             name: string;
             guard_name: string;
             permission_group?: components["schemas"]["PermissionGroupResource"];
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** PublishingTimeCollection */
@@ -3058,6 +3100,7 @@ export interface components {
         PublishingTimeResource: {
             id: number;
             publishable_id: number;
+            /** Format: date-time */
             to_be_published_at: string | null;
             name: string | null;
             client_id: number | null;
@@ -3074,12 +3117,14 @@ export interface components {
         PublishingTimeSummaryResource: {
             id: number;
             publishable_id: number;
+            /** Format: date-time */
             to_be_published_at: string | null;
             name: string | null;
             client_id: number | null;
             language_id: number | null;
             is_published: boolean;
             uuid: string | null;
+            /** Format: date-time */
             created_at: string | null;
         };
         /** RolePatchRequest */
@@ -3100,7 +3145,9 @@ export interface components {
             name: string;
             guard_name: string;
             permissions?: components["schemas"]["PermissionResource"][];
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** ScorePatchRequest */
@@ -3126,7 +3173,9 @@ export interface components {
             scorable_id: number;
             scorable_type: string;
             score: number;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** SearchConfigPatchRequest */
@@ -3185,7 +3234,9 @@ export interface components {
             teaser: string | null;
             image_crop: unknown[] | null;
             file_id: number | null;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** SeoRedirectPatchRequest */
@@ -3216,7 +3267,9 @@ export interface components {
             client_id: string;
             domain_id: number;
             categories: components["schemas"]["CategorySummaryResource"][];
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** SeoValuePatchRequest */
@@ -3247,7 +3300,9 @@ export interface components {
             seoable_id: string;
             seoable_type: string;
             is_auto: boolean;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** StepPatchRequest */
@@ -3310,7 +3365,9 @@ export interface components {
             client?: components["schemas"]["ClientResource"] | null;
             name: string;
             categories: components["schemas"]["CategoryResource"][] | null;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** TriggeredScoreCollection */
@@ -3323,7 +3380,9 @@ export interface components {
             topic?: components["schemas"]["TopicResource"];
             scorable_type: string;
             score: number;
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
         /** TriggeredScoreSearchRequest */
@@ -3373,7 +3432,9 @@ export interface components {
             clients?: components["schemas"]["ClientResource"][];
             roles?: components["schemas"]["RoleResource"][];
             permissions?: components["schemas"]["PermissionResource"][];
+            /** Format: date-time */
             created_at: string | null;
+            /** Format: date-time */
             updated_at: string | null;
         };
     };
