@@ -1,6 +1,6 @@
 {
   "name": "@motor-cms/ui-core",
-  "version": "4.12.5-rc.0",
+  "version": "4.12.5-rc.1",
   "type": "module",
   "main": "./nuxt.config.ts",
   "files": [
