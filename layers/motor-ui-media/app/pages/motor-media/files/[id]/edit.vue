@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import { fileFormMeta } from '../../../../types/generated/form-meta'
 import { fileEditFormConfig, fileSelectOptionConfigs } from '@motor-cms/ui-core/app/types/config/file'
+import {
+  AI_GENERATED_FIELD,
+  AI_MODIFIED_FIELD,
+  aiLabelingGroupsWithHint,
+  aiLabelingState,
+  applyAiLabeling,
+  applyAiLabelingExclusion,
+  withAiLabelingFields
+} from '../../../../utils/aiLabeling'
 
 definePageMeta({ layout: 'default', permission: 'files.read' })
 
@@ -15,11 +24,16 @@ const { fields, schema, groups, state, loading, fetching, fetchError, canWrite, 
   routePrefix: '/motor-media/files',
   translationPrefix: 'motor-media.files',
   formMeta: fileFormMeta,
-  formConfig: fileEditFormConfig,
+  formConfig: withAiLabelingFields(fileEditFormConfig),
   mode: 'edit',
   id: route.params.id as string,
   selectOptionConfigs: fileSelectOptionConfigs
 })
+
+const formGroups = aiLabelingGroupsWithHint(groups, t('motor-media.files.ai_labeling_hint'))
+
+watch(() => state[AI_GENERATED_FIELD], () => applyAiLabelingExclusion(state, AI_GENERATED_FIELD))
+watch(() => state[AI_MODIFIED_FIELD], () => applyAiLabelingExclusion(state, AI_MODIFIED_FIELD))
 
 const upload = useCancellableUpload()
 
@@ -69,10 +83,12 @@ watch(fileRecord, (res) => {
     if (cats) {
       selectedCategories.value = cats.map(c => c.id)
     }
+    Object.assign(state, aiLabelingState(res.data.ai_labeling))
   }
 }, { immediate: true })
 
 async function submitFile(eventData: Record<string, unknown>, signal: AbortSignal): Promise<void> {
+  applyAiLabeling(eventData)
   const body: Record<string, unknown> = { ...eventData, categories: selectedCategories.value }
   if (replacementFile.value) {
     body.file = await fileToDataUrl(replacementFile.value)
@@ -165,7 +181,7 @@ async function onSaveAndContinue(event: { data: Record<string, unknown> }) {
         v-model:state="state"
         :fields="fields"
         :schema="schema"
-        :groups="groups"
+        :groups="formGroups"
         :select-options="selectOptions"
         :select-options-loading="selectOptionsLoading"
         :loading="loading"

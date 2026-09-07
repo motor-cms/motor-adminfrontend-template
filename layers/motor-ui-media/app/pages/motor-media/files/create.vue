@@ -2,6 +2,14 @@
 import type { PendingFile } from '../../../components/form/inputs/MultiFileUpload.vue'
 import { fileFormMeta } from '../../../types/generated/form-meta'
 import { fileCreateFormConfig, fileSelectOptionConfigs } from '@motor-cms/ui-core/app/types/config/file'
+import {
+  AI_GENERATED_FIELD,
+  AI_MODIFIED_FIELD,
+  aiLabelingGroupsWithHint,
+  applyAiLabeling,
+  applyAiLabelingExclusion,
+  withAiLabelingFields
+} from '../../../utils/aiLabeling'
 
 definePageMeta({ layout: 'default', permission: 'files.write' })
 
@@ -17,10 +25,15 @@ const { fields, schema, groups, state, selectOptions, selectOptionsLoading } = a
   routePrefix: '/motor-media/files',
   translationPrefix: 'motor-media.files',
   formMeta: fileFormMeta,
-  formConfig: fileCreateFormConfig,
+  formConfig: withAiLabelingFields(fileCreateFormConfig),
   mode: 'create',
   selectOptionConfigs: fileSelectOptionConfigs
 })
+
+const formGroups = aiLabelingGroupsWithHint(groups, t('motor-media.files.ai_labeling_hint'))
+
+watch(() => state[AI_GENERATED_FIELD], () => applyAiLabelingExclusion(state, AI_GENERATED_FIELD))
+watch(() => state[AI_MODIFIED_FIELD], () => applyAiLabelingExclusion(state, AI_MODIFIED_FIELD))
 
 const selectedCategories = ref<number[]>([])
 
@@ -95,6 +108,8 @@ async function onSubmit(event: { data: Record<string, unknown> }) {
     return
   }
 
+  applyAiLabeling(event.data)
+
   uploading.value = true
   const signal = upload.start()
   const total = pendingFiles.value.length
@@ -167,7 +182,7 @@ async function onSubmit(event: { data: Record<string, unknown> }) {
       v-model:state="state"
       :fields="fields"
       :schema="schema"
-      :groups="groups"
+      :groups="formGroups"
       :select-options="selectOptions"
       :select-options-loading="selectOptionsLoading"
       :loading="uploading"
