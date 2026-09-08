@@ -8,16 +8,22 @@ export type AiLabeling = typeof AI_LABELING_GENERATED | typeof AI_LABELING_MODIF
 
 export const AI_GENERATED_FIELD = 'ai_generated'
 export const AI_MODIFIED_FIELD = 'ai_modified'
+export const AI_LABELING_FIELD = 'ai_labeling'
 export const AI_LABELING_GROUP = 'ai_labeling'
 
 /**
  * The API stores a single nullable field, the ticket asks for two toggles.
  * Adding them through `extraFields` keeps the generated form-meta untouched,
  * so a later `sync:api` cannot overwrite them.
+ *
+ * Das API-Feld selbst wird ausgeblendet: sobald `sync:api` die Regel
+ * `ai_labeling` aus dem FilePostRequest übernimmt, stünde sonst neben den
+ * beiden Toggles noch ein rohes Eingabefeld für dasselbe Feld im Formular.
  */
 export function withAiLabelingFields(config: FormFieldsFromMetaOptions): FormFieldsFromMetaOptions {
   return {
     ...config,
+    omit: [...new Set([...(config.omit ?? []), AI_LABELING_FIELD])],
     extraFields: {
       ...config.extraFields,
       [AI_GENERATED_FIELD]: { input: 'toggle' },
@@ -63,7 +69,7 @@ export function aiLabelingFromToggles(generated: unknown, modified: unknown): Ai
  * the API validates, so the helper keys have to go before the request is sent.
  */
 export function applyAiLabeling(data: Record<string, unknown>): void {
-  data.ai_labeling = aiLabelingFromToggles(data[AI_GENERATED_FIELD], data[AI_MODIFIED_FIELD])
+  data[AI_LABELING_FIELD] = aiLabelingFromToggles(data[AI_GENERATED_FIELD], data[AI_MODIFIED_FIELD])
   Reflect.deleteProperty(data, AI_GENERATED_FIELD)
   Reflect.deleteProperty(data, AI_MODIFIED_FIELD)
 }
