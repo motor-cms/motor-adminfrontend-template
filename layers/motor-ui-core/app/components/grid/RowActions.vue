@@ -63,6 +63,13 @@ function getConfirmMessage(action: RowActionDef<T>): string {
   return action.confirm ?? t('motor-core.grid.are_you_sure')
 }
 
+function getConfirmWarning(action: RowActionDef<T>): string | undefined {
+  if (typeof action.confirmWarning === 'function') {
+    return action.confirmWarning(props.row)
+  }
+  return action.confirmWarning
+}
+
 async function executeAction(action: RowActionDef<T>): Promise<void> {
   // Handle navigation
   if (action.to) {
@@ -137,6 +144,7 @@ function onCancel(): void {
     <GridConfirmActionModal
       v-model:open="confirmModal"
       :message="confirmAction ? getConfirmMessage(confirmAction) : ''"
+      :warning="confirmAction ? getConfirmWarning(confirmAction) : undefined"
       :color="confirmAction?.color"
       :loading="pendingAction !== null"
       @confirm="onConfirm"

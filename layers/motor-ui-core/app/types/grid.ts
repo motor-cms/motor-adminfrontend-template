@@ -165,6 +165,8 @@ export interface RowActionDef<T = Record<string, unknown>> {
   to?: string | ((row: T) => string)
   handler?: (row: T) => Promise<void> | void
   confirm?: string | ((row: T) => string)
+  /** Extra consequence line under the confirm message, rendered as its own bold paragraph. */
+  confirmWarning?: string | ((row: T) => string)
   visible?: (row: T) => boolean
   enabled?: boolean
   silent?: boolean
