@@ -1,5 +1,12 @@
 # @motor-cms/ui-admin
 
+## 4.12.6-rc.0
+
+### Patch Changes
+
+- 6464888: Disable the remote @nuxt/fonts providers in the ui-admin layer so admin builds no longer fetch Google fonts at build time (the theme-preview page and its docs name families that are not shipped locally; CI fetches were flaky)
+  - @motor-cms/ui-core@4.12.6-rc.0
+
 ## 4.12.5
 
 ### Patch Changes

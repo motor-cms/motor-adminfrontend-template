@@ -1,5 +1,7 @@
 # @motor-cms/ui-core
 
+## 4.12.6-rc.0
+
 ## 4.12.5
 
 ### Patch Changes
