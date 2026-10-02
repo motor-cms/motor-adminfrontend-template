@@ -1,5 +1,11 @@
 # @motor-cms/ui-media
 
+## 4.12.6-rc.1
+
+### Patch Changes
+
+- @motor-cms/ui-core@4.12.6-rc.1
+
 ## 4.12.6-rc.0
 
 ### Patch Changes
