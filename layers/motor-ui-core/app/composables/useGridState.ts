@@ -28,10 +28,17 @@ export function useGridState(options: UseGridStateOptions) {
   // Initialize state from URL > persisted > defaults
   const persistedSettings = gridSettingsStore.getSettings(gridId)
 
+  // Search lives in a session cookie (SSR-safe, ends with the browser session),
+  // so it survives leaving the list via edit/cancel/sidebar like the filters do.
+  const searchCookie = useCookie<string | null>(`grid-search-${gridId}`, {
+    default: () => null,
+    sameSite: 'lax'
+  })
+
   const state = reactive<GridState>({
     page: Number(route.query.page) || 1,
     perPage: Number(route.query.per_page) || persistedSettings?.perPage || defaultPerPage,
-    search: (route.query.search as string) || '',
+    search: (route.query.search as string) || searchCookie.value || '',
     sort: (route.query.sort as string) || persistedSettings?.sort || defaultSort || null,
     direction: (route.query.direction as 'asc' | 'desc') || persistedSettings?.direction || defaultDirection,
     filters: {}
@@ -154,6 +161,10 @@ export function useGridState(options: UseGridStateOptions) {
     syncToUrl,
     { deep: true, flush: 'post' }
   )
+
+  watch(() => state.search, (search) => {
+    searchCookie.value = search || null
+  })
 
   // Persistence — only watches settings that should survive across sessions
   // (page and search are intentionally excluded: they are transient)

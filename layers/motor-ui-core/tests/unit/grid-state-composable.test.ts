@@ -1,5 +1,6 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest'
 import { useGridState, isFilterValuePresent } from '../../app/composables/useGridState'
+import type { Ref } from 'vue'
 
 const mockReplace = vi.fn()
 const mockSaveSettings = vi.fn()
@@ -55,6 +56,37 @@ describe('useGridState', () => {
     expect(state.perPage).toBe(100)
     expect(state.sort).toBe('created_at')
     expect(state.direction).toBe('desc')
+  })
+
+  it('restores search from the session cookie when the URL has none (EN-2370)', () => {
+    vi.stubGlobal('useCookie', (name: string, opts?: { default?: () => unknown }) =>
+      ref(name === 'grid-search-test-grid' ? 'wärme' : opts?.default?.() ?? null)
+    )
+    const { state } = useGridState({ gridId: 'test-grid' })
+    expect(state.search).toBe('wärme')
+  })
+
+  it('prefers the URL search over the session cookie', () => {
+    vi.stubGlobal('useRoute', () => ({ query: { search: 'strom' } }))
+    vi.stubGlobal('useCookie', (name: string, opts?: { default?: () => unknown }) =>
+      ref(name === 'grid-search-test-grid' ? 'wärme' : opts?.default?.() ?? null)
+    )
+    const { state } = useGridState({ gridId: 'test-grid' })
+    expect(state.search).toBe('strom')
+  })
+
+  it('writes the search to the session cookie and clears it on reset', async () => {
+    const cookies: Record<string, Ref<unknown>> = {}
+    vi.stubGlobal('useCookie', (name: string, opts?: { default?: () => unknown }) =>
+      (cookies[name] = ref(opts?.default?.() ?? null))
+    )
+    const { setSearch, resetFilters } = useGridState({ gridId: 'test-grid' })
+    setSearch('wärme')
+    await nextTick()
+    expect(cookies['grid-search-test-grid']!.value).toBe('wärme')
+    resetFilters()
+    await nextTick()
+    expect(cookies['grid-search-test-grid']!.value).toBeNull()
   })
 
   it('setPage updates page', () => {
