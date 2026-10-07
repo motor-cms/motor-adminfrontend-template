@@ -1,5 +1,12 @@
 # @motor-cms/ui-media
 
+## 4.12.6-rc.3
+
+### Patch Changes
+
+- Updated dependencies [f5b738b]
+  - @motor-cms/ui-core@4.12.6-rc.3
+
 ## 4.12.6-rc.2
 
 ### Patch Changes

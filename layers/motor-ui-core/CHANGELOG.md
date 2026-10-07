@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 4.12.6-rc.3
+
+### Patch Changes
+
+- f5b738b: Remember the grid search per list in a session cookie, so it survives leaving the list (edit, cancel, sidebar) the same way the filters already do (EN-2370)
+
 ## 4.12.6-rc.2
 
 ## 4.12.6-rc.1
