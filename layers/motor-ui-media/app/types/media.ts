@@ -2,6 +2,7 @@ export interface MediaFile {
   url?: string
   file_name?: string
   mime_type?: string
+  size?: number
   size_human?: string
   created_at?: string
   conversions?: Record<string, { url: string }> | Array<{ name: string, url: string }> | string

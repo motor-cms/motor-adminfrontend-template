@@ -40,6 +40,12 @@ const lightboxOpen = ref(false)
 
 const media = computed(() => props.item.file)
 
+const sizeHuman = computed(() =>
+  typeof media.value?.size === 'number' ? formatFileSize(media.value.size) : ''
+)
+
+const metaLine = computed(() => [createdAt.value, sizeHuman.value].filter(Boolean).join(' · '))
+
 const runtimeConfig = useRuntimeConfig()
 const backendBaseUrl = runtimeConfig.public.backendBaseUrl as string
 
@@ -252,10 +258,10 @@ function onCheckboxChange(checked: boolean | 'indeterminate') {
           {{ item.description || media?.file_name || '-' }}
         </NuxtLink>
         <span
-          v-if="createdAt"
+          v-if="metaLine"
           class="text-xs text-[var(--ui-text-muted)]"
         >
-          {{ createdAt }}
+          {{ metaLine }}
         </span>
       </div>
     </div>
