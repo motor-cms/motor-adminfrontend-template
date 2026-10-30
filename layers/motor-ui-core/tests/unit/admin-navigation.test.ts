@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { ref } from 'vue'
 
 import { useAdminNavigation } from '~/composables/useAdminNavigation'
@@ -397,5 +397,59 @@ describe('useAdminNavigation', () => {
     expect(navigation.value[2].icon).toBe('i-lucide-file')
     expect(navigation.value[3].icon).toBe('i-lucide-boxes')
     expect(navigation.value[4].icon).toBe('i-lucide-hand-helping')
+  })
+})
+
+describe('useAdminNavigation: Administration group permission (ZRMDEV-237)', () => {
+  function navigationFor(permissions: string[]) {
+    vi.stubGlobal('usePermissions', () => ({ can: (p: string) => permissions.includes(p), canAny: () => true, hasRole: () => false }))
+    mockAsyncData.mockReturnValue({
+      data: ref({
+        data: {
+          700: {
+            name: 'motor-builder.global.builder',
+            slug: 'builder',
+            route: null,
+            permissions: ['builder.read'],
+            items: {
+              0: { name: 'motor-builder.pages.pages', slug: 'pages', route: 'admin.motor-builder.pages', permissions: ['builder-pages.read'] }
+            }
+          },
+          900: {
+            name: 'motor-core.global.administration',
+            slug: 'administration',
+            route: null,
+            permissions: ['administration.read'],
+            items: {
+              100: { name: 'motor-admin.users.users', slug: 'users', route: 'admin.motor-admin.users', permissions: ['users.read'] }
+            }
+          }
+        }
+      }),
+      status: ref('success'),
+      error: ref(null),
+      refresh: vi.fn()
+    })
+    return useAdminNavigation().navigation.value
+  }
+
+  afterEach(() => {
+    vi.stubGlobal('usePermissions', () => ({ can: () => true, canAny: () => true, hasRole: () => false }))
+  })
+
+  it('hides the Administration group without administration.read, even with child permissions', () => {
+    const slugs = navigationFor(['users.read', 'builder-pages.read']).map(item => item.label)
+    expect(slugs).not.toContain('Administration')
+  })
+
+  it('shows the Administration group with administration.read and a child permission', () => {
+    const nav = navigationFor(['users.read', 'administration.read'])
+    expect(nav.map(item => item.label)).toContain('Administration')
+  })
+
+  it('keeps other groups visible through their children without the group permission', () => {
+    const nav = navigationFor(['builder-pages.read'])
+    expect(nav).toHaveLength(1)
+    expect(nav[0].children).toHaveLength(1)
   })
 })

@@ -1,12 +1,13 @@
 <!-- app/pages/motor-admin/users/[id]/edit.vue -->
 <script setup lang="ts">
 import { userFormMeta } from '../../../../types/generated/form-meta'
-import { userEditFormConfig, userSelectOptionConfigs, userEditExtraFields } from '@motor-cms/ui-core/app/types/config/user'
+import { userEditFormConfig, userSelectOptionConfigs, userEditExtraFields, restrictUserAccessFields, stripUserAccessFields } from '@motor-cms/ui-core/app/types/config/user'
 
 definePageMeta({ layout: 'default', permission: 'users.read' })
 
 const route = useRoute()
 const { t } = useI18n()
+const isSuperAdmin = usePermissions().hasRole('SuperAdmin')
 
 const { fields: rawFields, schema, groups, state, loading, fetching, fetchError, canWrite, pageTitle, formRef, selectOptions, selectOptionsLoading, onSubmit, onSaveAndContinue, onSaveAndNew, deleteRecord, deleting } = await useEntityForm({
   apiEndpoint: '/api/v2/users',
@@ -28,6 +29,9 @@ const { fields: rawFields, schema, groups, state, loading, fetching, fetchError,
     if (!state.change_password || !data.password) {
       delete data.password
     }
+
+    // Roles and permissions are SuperAdmin-only (ZRMDEV-237)
+    stripUserAccessFields(data, isSuperAdmin)
   }
 })
 
@@ -44,6 +48,7 @@ const refinedSchema = schema.superRefine((data, ctx) => {
 
 // Make fields reactive for toggle visibility
 const fields = reactive(rawFields)
+restrictUserAccessFields(fields, isSuperAdmin, t('motor-admin.users.access_superadmin_only'))
 
 const passwordField = fields.find(f => f.key === 'password')
 const confirmField = fields.find(f => f.key === 'password_confirmation')

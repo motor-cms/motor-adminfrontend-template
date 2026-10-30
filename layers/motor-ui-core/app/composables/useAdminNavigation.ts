@@ -1,4 +1,5 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
+import { ADMINISTRATION_PERMISSION } from '../utils/administration-access'
 
 // Frontend-only layers can register sidebar nav items via this registry.
 // Items appear under a "Plugins" separator at the bottom of the sidebar.
@@ -103,6 +104,9 @@ export function useAdminNavigation() {
       let filteredItem = item
 
       if (filteredItem.items && Object.keys(filteredItem.items).length > 0) {
+        // The Administration group's own permission gates all of its children
+        // (ZRMDEV-237). Other groups stay visible through their children.
+        if (filteredItem.permissions?.includes(ADMINISTRATION_PERMISSION) && !can(ADMINISTRATION_PERMISSION)) continue
         const filteredChildren = filterNavItems(filteredItem.items)
         if (Object.keys(filteredChildren).length === 0) continue
         // Parent group with surviving children — always show as container

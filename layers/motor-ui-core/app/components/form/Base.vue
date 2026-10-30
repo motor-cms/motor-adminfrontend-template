@@ -399,7 +399,7 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
                     :model-value="state[field.key]"
                     :options="selectOptions?.[field.key] ?? field.staticOptions"
                     :options-loading="selectOptionsLoading?.[field.key]"
-                    :disabled="disabled"
+                    :disabled="disabled || field.disabled"
                     @update:model-value="updateField(field.key, $event)"
                   />
                 </UFormField>
@@ -453,7 +453,7 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
                   :field="field"
                   :model-value="state[field.key]"
                   :options="selectOptions?.[field.key]"
-                  :disabled="disabled"
+                  :disabled="disabled || field.disabled"
                   @update:model-value="updateField(field.key, $event)"
                 />
               </UFormField>
