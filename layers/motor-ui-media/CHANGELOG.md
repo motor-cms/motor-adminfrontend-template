@@ -1,5 +1,14 @@
 # @motor-cms/ui-media
 
+## 4.12.6-rc.4
+
+### Patch Changes
+
+- 82c5bb5: fix(media, search): "copy URL" in the media grid, gallery, lightbox and global search copies the backend /download/<id> link again instead of the storage/CDN URL (EN-2232). The admin's backendBaseUrl is public on production (https://backend-energis-web.energis.de), so the link works outside the VPN.
+- Updated dependencies [82c5bb5]
+- Updated dependencies [f5b738b]
+  - @motor-cms/ui-core@4.12.6-rc.4
+
 ## 4.12.6-rc.3
 
 ### Patch Changes
