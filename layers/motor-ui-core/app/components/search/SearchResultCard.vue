@@ -39,8 +39,7 @@ const downloadUrl = computed(() => {
   return `${backendBaseUrl}/download/${props.fileId}`
 })
 
-// Public storage/CDN URL from the search index (S3/CloudFront on prod) —
-// preferred over the VPN-only backend /download route for sharing/copying
+// Storage/CDN URL from the search index, used for the preview only
 const publicUrl = computed(() => resolveBackendUrl(props.entityMeta?.url as string | undefined))
 
 function navigate() {
@@ -64,7 +63,7 @@ function handleAction(action: SearchAction) {
 }
 
 async function copyUrl() {
-  const url = publicUrl.value ?? downloadUrl.value
+  const url = downloadUrl.value
   if (!url) return
   try {
     await navigator.clipboard.writeText(url)
@@ -207,6 +206,6 @@ async function forceDownload() {
     :src="publicUrl ?? downloadUrl ?? ''"
     :alt="title ?? ''"
     :file-name="title ?? ''"
-    :download-url="publicUrl ?? downloadUrl"
+    :download-url="downloadUrl"
   />
 </template>

@@ -128,14 +128,11 @@ async function handleEmitAction(action: { key: string, emit?: string }, item: Pa
       document.body.removeChild(a)
     }
   } else if (action.emit === 'copy-url') {
-    // Copy the public storage/CDN URL from the search index — the backend
-    // /download route is VPN-only and useless as a shared link
-    const copyValue = item.url ?? downloadUrl
     try {
-      await navigator.clipboard.writeText(copyValue)
+      await navigator.clipboard.writeText(downloadUrl)
     } catch {
       const textarea = document.createElement('textarea')
-      textarea.value = copyValue
+      textarea.value = downloadUrl
       textarea.style.position = 'fixed'
       textarea.style.opacity = '0'
       document.body.appendChild(textarea)
