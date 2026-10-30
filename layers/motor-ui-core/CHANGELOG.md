@@ -1,5 +1,13 @@
 # @motor-cms/ui-core
 
+## 4.12.6-rc.5
+
+### Patch Changes
+
+- 82c5bb5: fix(media, search): "copy URL" in the media grid, gallery, lightbox and global search copies the backend /download/<id> link again instead of the storage/CDN URL (EN-2232). The admin's backendBaseUrl is public on production (https://backend-energis-web.energis.de), so the link works outside the VPN.
+- f5b738b: Remember the grid search per list in a session cookie, so it survives leaving the list (edit, cancel, sidebar) the same way the filters already do (EN-2370)
+- b8f3266: fix(admin): Administration area needs administration.read; roles and permissions read-only for non-SuperAdmins (ZRMDEV-237). The sidebar hides the Administration group and the route guard redirects /motor-admin pages to /no-access without administration.read (e-mail templates keep their own permission, they are also linked from the Builder group). On the user edit form, non-SuperAdmins see roles and permissions read-only with a hint and the fields are no longer sent, so the success message is accurate. Form fields support a per-field `disabled` flag.
+
 ## 4.12.6-rc.4
 
 ### Patch Changes
