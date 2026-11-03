@@ -55,7 +55,8 @@ function applyPreset(preset: PresetGroup) {
 type OptionGroup = PermissionGroup
 
 function translateGroup(key: string): string {
-  const i18nKey = `motor-core.global.perm_group_${key}`
+  // Rechte ohne Gruppe (Name ohne Trenner) landen unter „Sonstige“
+  const i18nKey = `motor-core.global.perm_group_${key || 'other'}`
   if (te(i18nKey)) return t(i18nKey)
   return key.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 }

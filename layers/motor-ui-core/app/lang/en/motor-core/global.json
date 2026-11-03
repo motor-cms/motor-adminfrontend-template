@@ -165,5 +165,8 @@
   "scope": "Scope",
   "headline": "Headline",
   "categories": "Categories",
-  "perm_group_steps": "Steps"
+  "perm_group_steps": "Steps",
+  "perm_group_entity-configurations": "Entity configurations",
+  "perm_group_form-submissions": "Form submissions",
+  "perm_group_other": "Other"
 }
