@@ -7,10 +7,15 @@
  * hover and carry a shadow on their inner edge as scroll hint.
  */
 export function gridTableUi(rowClickable: boolean) {
+  // Nuxt UI setzt data-pinned auch auf ungepinnten Zellen ("false") – deshalb immer mit Wert matchen.
+  // Klassen ausgeschrieben, damit der Tailwind-Scanner sie findet.
   const pinned = [
-    'data-[pinned]:bg-default',
-    'group-hover/row:data-[pinned]:bg-[color-mix(in_oklab,var(--ui-bg-elevated)_50%,var(--ui-bg))]',
-    'group-data-[selected=true]/row:data-[pinned]:bg-[color-mix(in_oklab,var(--ui-bg-elevated)_50%,var(--ui-bg))]',
+    'data-[pinned=left]:bg-default',
+    'group-hover/row:data-[pinned=left]:bg-[color-mix(in_oklab,var(--ui-bg-elevated)_50%,var(--ui-bg))]',
+    'group-data-[selected=true]/row:data-[pinned=left]:bg-[color-mix(in_oklab,var(--ui-bg-elevated)_50%,var(--ui-bg))]',
+    'data-[pinned=right]:bg-default',
+    'group-hover/row:data-[pinned=right]:bg-[color-mix(in_oklab,var(--ui-bg-elevated)_50%,var(--ui-bg))]',
+    'group-data-[selected=true]/row:data-[pinned=right]:bg-[color-mix(in_oklab,var(--ui-bg-elevated)_50%,var(--ui-bg))]',
     'data-[pinned=right]:shadow-[-6px_0_6px_-6px_rgb(0_0_0/0.15)]',
     'data-[pinned=left]:shadow-[6px_0_6px_-6px_rgb(0_0_0/0.15)]'
   ].join(' ')
