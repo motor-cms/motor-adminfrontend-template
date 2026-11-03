@@ -8,12 +8,8 @@ provide('sidebar-collapsed', collapsed)
 const { navigation, pluginNavigation, activeGroups } = useAdminNavigation()
 const { can } = usePermissions()
 
-// Track which nav groups are open; ensure groups with active routes stay open
-const openNavGroups = ref<string[]>([])
-
-watch(activeGroups, (groups) => {
-  openNavGroups.value = mergeOpenNavGroups(openNavGroups.value, groups)
-}, { immediate: true })
+// Track which nav groups are open; groups with active routes open (SSR-safe, see useOpenNavGroups)
+const openNavGroups = useOpenNavGroups(activeGroups)
 
 // Resolve ⌘/Ctrl during SSR via User-Agent to avoid hydration glitch
 // (Nuxt UI's useKbd defers this to onMounted, rendering an empty <kbd> on the server)
