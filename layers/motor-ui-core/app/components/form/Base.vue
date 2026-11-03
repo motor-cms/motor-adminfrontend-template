@@ -50,8 +50,13 @@ const emit = defineEmits<{
   saveAndNew: [event: FormSubmitEvent<Record<string, unknown>>]
 }>()
 
-const { t } = useI18n()
+const { t, te } = useI18n()
 const router = useRouter()
+
+// Option labels may be i18n keys (e.g. seo-redirect status codes)
+function translateStaticOptions(options: SelectOption[] | undefined): SelectOption[] | undefined {
+  return options?.map(o => (typeof o.label === 'string' && te(o.label) ? { ...o, label: t(o.label) } : o))
+}
 const { warning } = useNotify()
 const { can } = usePermissions()
 
@@ -397,7 +402,7 @@ const saveMenuItems = computed<DropdownMenuItem[]>(() => {
                     v-if="resolveInput(field.input)"
                     :field="field"
                     :model-value="state[field.key]"
-                    :options="selectOptions?.[field.key] ?? field.staticOptions"
+                    :options="translateStaticOptions(selectOptions?.[field.key] ?? field.staticOptions)"
                     :options-loading="selectOptionsLoading?.[field.key]"
                     :disabled="disabled || field.disabled"
                     @update:model-value="updateField(field.key, $event)"

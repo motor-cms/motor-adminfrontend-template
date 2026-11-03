@@ -155,5 +155,15 @@
   "perm_group_clickpaths": "Clickpaths",
   "perm_group_analytics": "Analytics",
   "perm_desc_analytics": "Access website analytics and visitor statistics",
-  "plugins": "Plugins"
+  "plugins": "Plugins",
+  "http_status_301": "301 - Permanent Redirect",
+  "http_status_302": "302 - Temporary Redirect",
+  "http_status_307": "307 - Temporary Redirect",
+  "http_status_410": "410 - Gone",
+  "redirect_type_redirect": "Redirect",
+  "redirect_type_short_link": "Short Link",
+  "scope": "Scope",
+  "headline": "Headline",
+  "categories": "Categories",
+  "perm_group_steps": "Steps"
 }

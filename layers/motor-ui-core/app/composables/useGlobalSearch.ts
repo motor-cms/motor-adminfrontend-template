@@ -90,7 +90,9 @@ const MODULE_LABEL_KEYS: Record<string, string> = {
   'motor-admin': 'motor-core.global.administration',
   'motor-media': 'motor-media.global.media',
   'motor-builder': 'motor-builder.global.builder',
-  'motor-scoring': 'motor-scoring.global.scoring'
+  'motor-scoring': 'motor-scoring.global.scoring',
+  'motor-content-type': 'motor-content-type.global.content_type',
+  'motor-assistant': 'motor-assistant.global.assistant'
 }
 
 // ============================================
@@ -166,8 +168,11 @@ export function resolveIndexLabel(module: string, index: string, t: TFunc): stri
 
 export function resolveModuleLabel(module: string, t: TFunc): string {
   const key = MODULE_LABEL_KEYS[module]
-  if (key) return t(key)
-  return module.replace(/^motor-/, '').replace(/^\w/, c => c.toUpperCase())
+  if (key) {
+    const translated = t(key)
+    if (translated && translated !== key) return translated
+  }
+  return module.replace(/^motor-/, '').split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
 }
 
 // ============================================
