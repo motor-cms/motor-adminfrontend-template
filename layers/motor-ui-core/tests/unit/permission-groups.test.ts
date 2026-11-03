@@ -3,6 +3,7 @@ import {
   buildPermissionGroups,
   normalizePermissionAction,
   normalizePermissionGroupKey,
+  permissionLabel,
   PERMISSION_ACTION_ORDER
 } from '../../app/utils/permission-groups'
 
@@ -55,5 +56,17 @@ describe('buildPermissionGroups', () => {
 
   it('exposes a fixed column order for the standard actions', () => {
     expect(PERMISSION_ACTION_ORDER).toEqual(['read', 'write', 'delete', 'publish'])
+  })
+})
+
+// The role list showed raw permission names such as `builder_pages.publisher`.
+describe('permissionLabel', () => {
+  it('reads a permission name as "group: action" with the matrix labels', () => {
+    expect(permissionLabel('builder_pages.publisher', tGroup, tAction)).toBe('Seiten: Veröffentlichen')
+    expect(permissionLabel('email-templates.read', tGroup, tAction)).toBe('E-Mail-Vorlagen: Lesen')
+  })
+
+  it('keeps permissions without a group as the action label', () => {
+    expect(permissionLabel('publish', tGroup, tAction)).toBe('Veröffentlichen')
   })
 })

@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { FormInputProps, FormInputValue } from '@motor-cms/ui-core/app/types/form'
+import { usePermissionLabels } from '../../../composables/usePermissionLabels'
 import { buildPermissionGroups, PERMISSION_ACTION_ORDER, type PermissionActionOption, type PermissionGroup } from '../../../utils/permission-groups'
 
 const props = defineProps<FormInputProps>()
 const emit = defineEmits<{ 'update:modelValue': [value: FormInputValue] }>()
 
 const { t, te } = useI18n({ useScope: 'global' })
+const { translateGroup, translateAction } = usePermissionLabels()
 
 const separator = (props.field.inputProps?.separator as string) ?? '.'
 const presetsEndpoint = props.field.inputProps?.presetsEndpoint as string | undefined
@@ -54,22 +56,9 @@ function applyPreset(preset: PresetGroup) {
 
 type OptionGroup = PermissionGroup
 
-function translateGroup(key: string): string {
-  // Rechte ohne Gruppe (Name ohne Trenner) landen unter „Sonstige“
-  const i18nKey = `motor-core.global.perm_group_${key || 'other'}`
-  if (te(i18nKey)) return t(i18nKey)
-  return key.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-}
-
 function groupDescription(key: string): string | null {
   const i18nKey = `motor-core.global.perm_desc_${key}`
   return te(i18nKey) ? t(i18nKey) : null
-}
-
-function translateAction(action: string): string {
-  const i18nKey = `motor-core.global.${action}`
-  if (te(i18nKey)) return t(i18nKey)
-  return action.charAt(0).toUpperCase() + action.slice(1)
 }
 
 const groups = computed<OptionGroup[]>(() =>
