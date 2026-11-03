@@ -8,11 +8,19 @@ definePageMeta({ permission: 'roles.read' })
 type Role = components['schemas']['RoleResource']
 
 const { t } = useI18n()
+const { permissionLabel } = usePermissionLabels()
 
 const columns = columnsFromMeta<Role>(roleMeta, t, {
   pick: ['name', 'guard_name', 'permissions'],
   overrides: {
-    guard_name: { renderer: 'badge' }
+    guard_name: { renderer: 'badge' },
+    // Same labels as the permission matrix ("Seiten: Veröffentlichen" instead of builder_pages.publisher)
+    permissions: {
+      rendererProps: {
+        itemKey: 'name',
+        format: item => permissionLabel(String((item as { name?: unknown } | null)?.name ?? item ?? ''))
+      }
+    }
   }
 })
 

@@ -70,3 +70,19 @@ export function buildPermissionGroups(
     )
   }))
 }
+
+/**
+ * One permission name as "group: action" with the labels of the permission matrix, e.g.
+ * `builder_pages.publisher` → "Seiten: Veröffentlichen" (role list).
+ */
+export function permissionLabel(
+  name: string,
+  translateGroup: (key: string) => string,
+  translateAction: (action: string) => string,
+  separator = '.'
+): string {
+  const sepIdx = name.lastIndexOf(separator)
+  const action = translateAction(normalizePermissionAction(sepIdx > -1 ? name.substring(sepIdx + 1) : name))
+  if (sepIdx === -1) return action
+  return `${translateGroup(normalizePermissionGroupKey(name.substring(0, sepIdx)))}: ${action}`
+}
