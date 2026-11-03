@@ -2,9 +2,9 @@
   "mode": "pre",
   "tag": "rc",
   "initialVersions": {
-    "@motor-cms/ui-admin": "4.12.6-rc.6",
-    "@motor-cms/ui-core": "4.12.6-rc.6",
-    "@motor-cms/ui-media": "4.12.6-rc.6"
+    "@motor-cms/ui-admin": "4.12.6-rc.8",
+    "@motor-cms/ui-core": "4.12.6-rc.8",
+    "@motor-cms/ui-media": "4.12.6-rc.8"
   },
   "changesets": [
     "en-2232-copy-download-url",
@@ -12,6 +12,7 @@
     "grid-search-route-scope",
     "grid-search-session-cookie",
     "i18n-sammelfix",
+    "perm-group-labels",
     "permission-matrix-import",
     "permission-matrix",
     "sidebar-active-group",
