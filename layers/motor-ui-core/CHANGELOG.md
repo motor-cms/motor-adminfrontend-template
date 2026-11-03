@@ -1,5 +1,11 @@
 # @motor-cms/ui-core
 
+## 4.12.6-rc.8
+
+### Patch Changes
+
+- 582b2b2: Sidebar: the active group is open after a hard load. The open groups live in useState and are only extended on the client after mount, so hydration matches the server HTML. Grid: only really pinned cells get the opaque background (Nuxt UI marks the others with data-pinned="false").
+
 ## 4.12.6-rc.7
 
 ### Patch Changes
