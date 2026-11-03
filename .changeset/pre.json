@@ -2,9 +2,9 @@
   "mode": "pre",
   "tag": "rc",
   "initialVersions": {
-    "@motor-cms/ui-admin": "4.12.6-rc.8",
-    "@motor-cms/ui-core": "4.12.6-rc.8",
-    "@motor-cms/ui-media": "4.12.6-rc.8"
+    "@motor-cms/ui-admin": "4.12.6-rc.9",
+    "@motor-cms/ui-core": "4.12.6-rc.9",
+    "@motor-cms/ui-media": "4.12.6-rc.9"
   },
   "changesets": [
     "en-2232-copy-download-url",
@@ -15,6 +15,7 @@
     "perm-group-labels",
     "permission-matrix-import",
     "permission-matrix",
+    "roles-breadcrumb-labels",
     "sidebar-active-group",
     "sidebar-hydration",
     "ui-admin-no-remote-fonts",
