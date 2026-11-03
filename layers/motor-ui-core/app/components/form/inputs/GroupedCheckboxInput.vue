@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormInputProps, FormInputValue } from '@motor-cms/ui-core/app/types/form'
-import { buildPermissionGroups, PERMISSION_ACTION_ORDER, type PermissionActionOption, type PermissionGroup } from '@motor-cms/ui-core/app/utils/permission-groups'
+import { buildPermissionGroups, PERMISSION_ACTION_ORDER, type PermissionActionOption, type PermissionGroup } from '../../../utils/permission-groups'
 
 const props = defineProps<FormInputProps>()
 const emit = defineEmits<{ 'update:modelValue': [value: FormInputValue] }>()
