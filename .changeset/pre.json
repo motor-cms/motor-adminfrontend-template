@@ -15,6 +15,7 @@
     "permission-matrix-import",
     "permission-matrix",
     "sidebar-active-group",
+    "sidebar-hydration",
     "ui-admin-no-remote-fonts",
     "ui-admin-theme-preview-local-fonts",
     "zrmdev-237-admin-gating"
