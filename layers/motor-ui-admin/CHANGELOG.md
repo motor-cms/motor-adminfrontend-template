@@ -1,5 +1,23 @@
 # @motor-cms/ui-admin
 
+## 4.12.6-rc.6
+
+### Patch Changes
+
+- c4c8c2e: i18n: German labels for HTTP status codes and redirect types, scope/headline/categories columns, the "steps" permission group, content-type and assistant chips in the global search (chips wrap instead of scrolling invisibly), and the permission-groups breadcrumb. Option labels of form selects may now be i18n keys.
+- 6464888: Disable the remote @nuxt/fonts providers in the ui-admin layer so admin builds no longer fetch Google fonts at build time (the theme-preview page and its docs name families that are not shipped locally; CI fetches were flaky)
+- 8705ee9: Serve the theme-preview fonts from the layer instead of Google Fonts, so opening the page no longer sends the visitor's IP to Google (GDPR); the six runtime `@import`s are replaced by local Fontsource woff2 files and `@font-face` rules
+- b8f3266: fix(admin): Administration area needs administration.read; roles and permissions read-only for non-SuperAdmins (ZRMDEV-237). The sidebar hides the Administration group and the route guard redirects /motor-admin pages to /no-access without administration.read (e-mail templates keep their own permission, they are also linked from the Builder group). On the user edit form, non-SuperAdmins see roles and permissions read-only with a hint and the fields are no longer sent, so the success message is accurate. Form fields support a per-field `disabled` flag.
+- Updated dependencies [82c5bb5]
+- Updated dependencies [5389312]
+- Updated dependencies [e137ca6]
+- Updated dependencies [f5b738b]
+- Updated dependencies [c4c8c2e]
+- Updated dependencies [e1ef710]
+- Updated dependencies [1dc64f7]
+- Updated dependencies [b8f3266]
+  - @motor-cms/ui-core@4.12.6-rc.6
+
 ## 4.12.6-rc.5
 
 ### Patch Changes
