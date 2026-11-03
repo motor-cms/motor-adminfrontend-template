@@ -12,11 +12,7 @@ const { can } = usePermissions()
 const openNavGroups = ref<string[]>([])
 
 watch(activeGroups, (groups) => {
-  for (const group of groups) {
-    if (!openNavGroups.value.includes(group)) {
-      openNavGroups.value.push(group)
-    }
-  }
+  openNavGroups.value = mergeOpenNavGroups(openNavGroups.value, groups)
 }, { immediate: true })
 
 // Resolve ⌘/Ctrl during SSR via User-Agent to avoid hydration glitch

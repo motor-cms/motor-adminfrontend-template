@@ -162,5 +162,15 @@
   "perm_group_clickpaths": "Klickpfade",
   "perm_group_analytics": "Analytik",
   "perm_desc_analytics": "Zugriff auf Webseitenanalyse und Besucherstatistiken",
-  "plugins": "Erweiterungen"
+  "plugins": "Erweiterungen",
+  "http_status_301": "301 – Dauerhafte Weiterleitung",
+  "http_status_302": "302 – Temporäre Weiterleitung",
+  "http_status_307": "307 – Temporäre Weiterleitung (Methode bleibt)",
+  "http_status_410": "410 – Dauerhaft entfernt",
+  "redirect_type_redirect": "Weiterleitung",
+  "redirect_type_short_link": "Kurzlink",
+  "scope": "Bereich",
+  "headline": "Überschrift",
+  "categories": "Kategorien",
+  "perm_group_steps": "Schritte"
 }

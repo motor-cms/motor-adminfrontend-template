@@ -6,15 +6,16 @@ export const seoRedirectSelectOptionConfigs: Record<string, SelectOptionConfig> 
 }
 
 export const seoRedirectHttpStatusOptions = [
-  { label: '301 - Permanent Redirect', value: 301 },
-  { label: '302 - Temporary Redirect', value: 302 },
-  { label: '307 - Temporary Redirect', value: 307 },
-  { label: '410 - Gone', value: 410 }
+  // Labels are i18n keys, translated by the select input (form/Base.vue)
+  { label: 'motor-core.global.http_status_301', value: 301 },
+  { label: 'motor-core.global.http_status_302', value: 302 },
+  { label: 'motor-core.global.http_status_307', value: 307 },
+  { label: 'motor-core.global.http_status_410', value: 410 }
 ]
 
 export const seoRedirectTypeOptions = [
-  { label: 'Redirect', value: 'redirect' },
-  { label: 'Short Link', value: 'short_link' }
+  { label: 'motor-core.global.redirect_type_redirect', value: 'redirect' },
+  { label: 'motor-core.global.redirect_type_short_link', value: 'short_link' }
 ]
 
 export const seoRedirectFormConfig: FormFieldsFromMetaOptions = {

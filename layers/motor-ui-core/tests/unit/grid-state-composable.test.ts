@@ -66,6 +66,18 @@ describe('useGridState', () => {
     expect(state.search).toBe('wärme')
   })
 
+  it('scopes the search cookie to the route params, so one navigation tree does not leak into another', () => {
+    vi.stubGlobal('useRoute', () => ({ query: {}, params: { id: '100012388958723' } }))
+    const names: string[] = []
+    vi.stubGlobal('useCookie', (name: string, opts?: { default?: () => unknown }) => {
+      names.push(name)
+      return ref(name === 'grid-search-navigation-items-grid' ? 'Komponententest' : opts?.default?.() ?? null)
+    })
+    const { state } = useGridState({ gridId: 'navigation-items-grid' })
+    expect(names).toContain('grid-search-navigation-items-grid-100012388958723')
+    expect(state.search).toBe('')
+  })
+
   it('prefers the URL search over the session cookie', () => {
     vi.stubGlobal('useRoute', () => ({ query: { search: 'strom' } }))
     vi.stubGlobal('useCookie', (name: string, opts?: { default?: () => unknown }) =>
