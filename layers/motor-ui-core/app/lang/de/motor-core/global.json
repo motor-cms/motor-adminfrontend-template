@@ -172,5 +172,8 @@
   "scope": "Bereich",
   "headline": "Überschrift",
   "categories": "Kategorien",
-  "perm_group_steps": "Schritte"
+  "perm_group_steps": "Schritte",
+  "perm_group_entity-configurations": "Entitätskonfigurationen",
+  "perm_group_form-submissions": "Formulareingänge",
+  "perm_group_other": "Sonstige"
 }
