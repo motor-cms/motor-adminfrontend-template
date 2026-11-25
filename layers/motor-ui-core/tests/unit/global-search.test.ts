@@ -190,6 +190,20 @@ describe('useGlobalSearch', () => {
       expect(resolveModuleLabel('motor-builder', t)).toBe('Builder')
     })
 
+    it('knows content-type and assistant modules', () => {
+      const t = vi.fn((key: string) => ({
+        'motor-content-type.global.content_type': 'Formulare',
+        'motor-assistant.global.assistant': 'Digitaler Assistent'
+      } as Record<string, string>)[key] ?? key)
+      expect(resolveModuleLabel('motor-content-type', t)).toBe('Formulare')
+      expect(resolveModuleLabel('motor-assistant', t)).toBe('Digitaler Assistent')
+    })
+
+    it('falls back to a readable name when the module key is not translated', () => {
+      const t = vi.fn((key: string) => key)
+      expect(resolveModuleLabel('motor-content-type', t)).toBe('Content Type')
+    })
+
     it('returns fallback for unknown module with motor- prefix', () => {
       const t = vi.fn()
       const result = resolveModuleLabel('motor-custom', t)

@@ -70,3 +70,26 @@ export function userEditExtraFields(t: (key: string) => string): FormFieldConfig
     }
   ]
 }
+
+/** Fields that grant privileges; only SuperAdmins may change them (ZRMDEV-237). */
+export const userAccessFieldKeys = ['roles', 'permissions'] as const
+
+/**
+ * Shows roles and permissions read-only for non-SuperAdmins. The backend
+ * ignores these fields for them, so editing them would only look successful.
+ */
+export function restrictUserAccessFields(fields: FormFieldConfig[], isSuperAdmin: boolean, hint: string): void {
+  if (isSuperAdmin) return
+  for (const field of fields) {
+    if ((userAccessFieldKeys as readonly string[]).includes(field.key)) {
+      field.disabled = true
+      field.description = hint
+    }
+  }
+}
+
+/** Drops roles and permissions from the save payload of a non-SuperAdmin. */
+export function stripUserAccessFields(data: Record<string, unknown>, isSuperAdmin: boolean): void {
+  if (isSuperAdmin) return
+  for (const key of userAccessFieldKeys) delete data[key]
+}

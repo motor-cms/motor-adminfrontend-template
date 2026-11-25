@@ -40,6 +40,12 @@ const lightboxOpen = ref(false)
 
 const media = computed(() => props.item.file)
 
+const sizeHuman = computed(() =>
+  typeof media.value?.size === 'number' ? formatFileSize(media.value.size) : ''
+)
+
+const metaLine = computed(() => [createdAt.value, sizeHuman.value].filter(Boolean).join(' · '))
+
 const runtimeConfig = useRuntimeConfig()
 const backendBaseUrl = runtimeConfig.public.backendBaseUrl as string
 
@@ -75,9 +81,7 @@ const downloadUrl = computed(() => {
 })
 
 async function copyUrl() {
-  // Copy the storage/CDN URL from the API (public S3/CloudFront on prod) —
-  // the backend /download route is VPN-only and useless as a shared link
-  const url = media.value?.url ?? downloadUrl.value
+  const url = downloadUrl.value
   if (!url) return
   try {
     await navigator.clipboard.writeText(url)
@@ -252,22 +256,22 @@ function onCheckboxChange(checked: boolean | 'indeterminate') {
           {{ item.description || media?.file_name || '-' }}
         </NuxtLink>
         <span
-          v-if="createdAt"
+          v-if="metaLine"
           class="text-xs text-[var(--ui-text-muted)]"
         >
-          {{ createdAt }}
+          {{ metaLine }}
         </span>
       </div>
     </div>
 
-    <!-- Prefer the public storage/CDN URL — the lightbox copy button shares it -->
+    <!-- Preview from the storage/CDN URL; copy and download use the /download route -->
     <MediaLightbox
       v-if="isImage"
       v-model:open="lightboxOpen"
       :src="media?.url ?? downloadUrl ?? ''"
       :alt="item.description || media?.file_name"
       :file-name="media?.file_name"
-      :download-url="media?.url ?? downloadUrl"
+      :download-url="downloadUrl"
     />
   </div>
 </template>

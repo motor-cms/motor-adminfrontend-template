@@ -21,6 +21,14 @@ const { data: treeRes } = useAsyncData(
 )
 const treeName = computed(() => (treeRes.value?.data.name as string) ?? `#${treeId}`)
 
+// The route-based breadcrumb skips the id and ends at the tree list; name the tree instead
+const breadcrumbs = computed(() => [
+  { label: t('motor-core.global.dashboard'), to: '/' },
+  { label: t('motor-core.global.administration') },
+  { label: t('motor-admin.category_trees.title'), to: '/motor-admin/category-trees' },
+  { label: treeName.value }
+])
+
 const columns = columnsFromMeta<Category>(categoryMeta, t, {
   pick: ['name']
 })
@@ -63,6 +71,7 @@ const fetchCategories = useGridFetch<Category>(`/api/v2/category-trees/${treeId}
     :add-label="t('motor-admin.categories.add')"
     back-route="/motor-admin/category-trees"
     :back-label="t('motor-admin.category_trees.title')"
+    :breadcrumbs="breadcrumbs"
     write-permission="categories.write"
   >
     <GridBase

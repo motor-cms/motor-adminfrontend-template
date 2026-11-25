@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import type { FormInputProps, FormInputValue, SelectOption } from '@motor-cms/ui-core/app/types/form'
+import type { FormInputProps, FormInputValue } from '@motor-cms/ui-core/app/types/form'
+import { usePermissionLabels } from '../../../composables/usePermissionLabels'
+import { buildPermissionGroups, PERMISSION_ACTION_ORDER, type PermissionActionOption, type PermissionGroup } from '../../../utils/permission-groups'
 
 const props = defineProps<FormInputProps>()
 const emit = defineEmits<{ 'update:modelValue': [value: FormInputValue] }>()
 
 const { t, te } = useI18n({ useScope: 'global' })
+const { translateGroup, translateAction } = usePermissionLabels()
 
 const separator = (props.field.inputProps?.separator as string) ?? '.'
 const presetsEndpoint = props.field.inputProps?.presetsEndpoint as string | undefined
@@ -51,49 +54,25 @@ function applyPreset(preset: PresetGroup) {
   selected.value = Array.from(current)
 }
 
-interface OptionGroup {
-  key: string
-  label: string
-  options: (SelectOption & { action: string, actionLabel: string })[]
-}
-
-function translateGroup(key: string): string {
-  const i18nKey = `motor-core.global.perm_group_${key}`
-  if (te(i18nKey)) return t(i18nKey)
-  return key.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-}
+type OptionGroup = PermissionGroup
 
 function groupDescription(key: string): string | null {
   const i18nKey = `motor-core.global.perm_desc_${key}`
   return te(i18nKey) ? t(i18nKey) : null
 }
 
-function translateAction(action: string): string {
-  const i18nKey = `motor-core.global.${action}`
-  if (te(i18nKey)) return t(i18nKey)
-  return action.charAt(0).toUpperCase() + action.slice(1)
+const groups = computed<OptionGroup[]>(() =>
+  buildPermissionGroups(props.options ?? [], separator, translateGroup, translateAction)
+)
+
+/** Standard actions get fixed columns (legend order); others follow after. */
+function standardCell(group: OptionGroup, action: string): PermissionActionOption | undefined {
+  return group.options.find(o => o.action === action)
 }
 
-const groups = computed<OptionGroup[]>(() => {
-  const map = new Map<string, (SelectOption & { action: string, actionLabel: string })[]>()
-
-  for (const opt of (props.options ?? [])) {
-    const sepIdx = opt.label.lastIndexOf(separator)
-    const groupKey = sepIdx > -1 ? opt.label.substring(0, sepIdx) : ''
-    const action = sepIdx > -1 ? opt.label.substring(sepIdx + 1) : opt.label
-
-    if (!map.has(groupKey)) {
-      map.set(groupKey, [])
-    }
-    map.get(groupKey)!.push({ ...opt, action, actionLabel: translateAction(action) })
-  }
-
-  return Array.from(map.entries()).map(([key, options]) => ({
-    key,
-    label: translateGroup(key),
-    options: options.sort((a, b) => a.action.localeCompare(b.action))
-  }))
-})
+function extraOptions(group: OptionGroup): PermissionActionOption[] {
+  return group.options.filter(o => !(PERMISSION_ACTION_ORDER as readonly string[]).includes(o.action))
+}
 
 const filteredGroups = computed(() => {
   if (!searchQuery.value) return groups.value
@@ -107,33 +86,41 @@ function isSelected(value: string | number): boolean {
   return selected.value.includes(value)
 }
 
-function toggle(value: string | number) {
+function isOptionSelected(option: PermissionActionOption): boolean {
+  return option.values.every(v => isSelected(v))
+}
+
+function toggleOption(option: PermissionActionOption) {
   const current = selected.value
-  if (current.includes(value)) {
-    selected.value = current.filter(v => v !== value)
+  if (isOptionSelected(option)) {
+    const values = new Set(option.values)
+    selected.value = current.filter(v => !values.has(v))
   } else {
-    selected.value = [...current, value]
+    selected.value = [...current, ...option.values.filter(v => !current.includes(v))]
   }
 }
 
+function groupValues(group: OptionGroup): (string | number)[] {
+  return group.options.flatMap(o => o.values)
+}
+
 function isGroupFullySelected(group: OptionGroup): boolean {
-  return group.options.every(o => isSelected(o.value))
+  return groupValues(group).every(v => isSelected(v))
 }
 
 function isGroupPartiallySelected(group: OptionGroup): boolean {
-  const some = group.options.some(o => isSelected(o.value))
-  const all = group.options.every(o => isSelected(o.value))
-  return some && !all
+  const values = groupValues(group)
+  return values.some(v => isSelected(v)) && !values.every(v => isSelected(v))
 }
 
 function toggleGroup(group: OptionGroup) {
   const current = selected.value
+  const values = groupValues(group)
   if (isGroupFullySelected(group)) {
-    const groupValues = new Set(group.options.map(o => o.value))
-    selected.value = current.filter(v => !groupValues.has(v))
+    const set = new Set(values)
+    selected.value = current.filter(v => !set.has(v))
   } else {
-    const missing = group.options.filter(o => !current.includes(o.value)).map(o => o.value)
-    selected.value = [...current, ...missing]
+    selected.value = [...current, ...values.filter(v => !current.includes(v))]
   }
 }
 
@@ -211,15 +198,15 @@ const selectedCount = computed(() => selected.value.length)
         :key="group.key"
         class="flex items-center gap-4 px-3 py-2"
       >
-        <!-- Group toggle + label (fixed width) -->
-        <label class="flex items-center gap-2 cursor-pointer select-none shrink-0 w-48">
+        <!-- Group toggle + label (fixed width, wraps instead of truncating) -->
+        <label class="flex items-center gap-2 cursor-pointer select-none shrink-0 w-56">
           <UCheckbox
             :model-value="isGroupFullySelected(group)"
             :indeterminate="isGroupPartiallySelected(group)"
             :disabled="disabled"
             @update:model-value="toggleGroup(group)"
           />
-          <span class="text-sm font-medium truncate">{{ group.label }}</span>
+          <span class="text-sm font-medium break-words min-w-0">{{ group.label }}</span>
           <UTooltip
             v-if="groupDescription(group.key)"
             :text="groupDescription(group.key)!"
@@ -228,17 +215,44 @@ const selectedCount = computed(() => selected.value.length)
           </UTooltip>
         </label>
 
-        <!-- Action checkboxes spread across remaining space -->
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-1 flex-1">
+        <!-- Fixed columns read / write / delete / publish (same order as the legend) -->
+        <div class="grid grid-cols-4 gap-x-5 gap-y-1 w-[30rem] shrink-0">
+          <template
+            v-for="action in PERMISSION_ACTION_ORDER"
+            :key="action"
+          >
+            <label
+              v-if="standardCell(group, action)"
+              class="flex items-center gap-1.5 cursor-pointer"
+            >
+              <UCheckbox
+                :model-value="isOptionSelected(standardCell(group, action)!)"
+                :disabled="disabled"
+                @update:model-value="toggleOption(standardCell(group, action)!)"
+              />
+              <span class="text-sm">{{ standardCell(group, action)!.actionLabel }}</span>
+            </label>
+            <span
+              v-else
+              aria-hidden="true"
+            />
+          </template>
+        </div>
+
+        <!-- Non-standard actions -->
+        <div
+          v-if="extraOptions(group).length"
+          class="flex flex-wrap items-center gap-x-5 gap-y-1 flex-1"
+        >
           <label
-            v-for="option in group.options"
-            :key="option.value"
+            v-for="option in extraOptions(group)"
+            :key="option.action"
             class="flex items-center gap-1.5 cursor-pointer"
           >
             <UCheckbox
-              :model-value="isSelected(option.value)"
+              :model-value="isOptionSelected(option)"
               :disabled="disabled"
-              @update:model-value="toggle(option.value)"
+              @update:model-value="toggleOption(option)"
             />
             <span class="text-sm">{{ option.actionLabel }}</span>
           </label>

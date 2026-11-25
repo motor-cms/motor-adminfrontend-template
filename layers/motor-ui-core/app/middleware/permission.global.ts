@@ -1,8 +1,11 @@
 import type { User } from '../types/auth'
+import { ADMINISTRATION_PERMISSION, requiresAdministrationAccess } from '../utils/administration-access'
 
 export default defineNuxtRouteMiddleware((to) => {
   const permission = to.meta.permission as string | undefined
-  if (!permission) return
+  // Pages of the Administration area also need administration.read (ZRMDEV-237).
+  const needsAdministration = requiresAdministrationAccess(to.path)
+  if (!permission && !needsAdministration) return
 
   const { user } = useSanctumAuth<User>()
 
@@ -11,7 +14,9 @@ export default defineNuxtRouteMiddleware((to) => {
   if (!user.value) return
 
   const { can } = usePermissions()
-  if (!can(permission)) {
+  const allowed = (!permission || can(permission))
+    && (!needsAdministration || can(ADMINISTRATION_PERMISSION))
+  if (!allowed) {
     // Don't throw: a thrown error renders the layout-less error page (no sidebar,
     // no logout), leaving the user stuck. Send them to an in-layout no-access
     // page where the permission-filtered sidebar and the user menu (logout)

@@ -19,5 +19,6 @@
   "password_confirmation": "Passwort bestätigen",
   "password_mismatch": "Passwörter stimmen nicht überein",
   "group_security": "Sicherheit",
-  "group_access": "Zugriff"
+  "group_access": "Zugriff",
+  "access_superadmin_only": "Nur SuperAdmins können Rollen und Berechtigungen ändern."
 }

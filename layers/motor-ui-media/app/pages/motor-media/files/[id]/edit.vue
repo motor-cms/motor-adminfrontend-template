@@ -71,9 +71,13 @@ const { data: fileRecord } = useNuxtData<{ data: Record<string, unknown> }>(
 )
 
 const currentFile = computed(() => {
-  const file = fileRecord.value?.data?.file as { url?: string, file_name?: string, mime_type?: string } | null
+  const file = fileRecord.value?.data?.file as { url?: string, file_name?: string, mime_type?: string, size?: number } | null
   return file ?? null
 })
+
+const currentSizeHuman = computed(() =>
+  typeof currentFile.value?.size === 'number' ? formatFileSize(currentFile.value.size) : ''
+)
 
 const selectedCategories = ref<number[]>([])
 
@@ -224,15 +228,21 @@ async function onSaveAndContinue(event: { data: Record<string, unknown> }) {
                   :alt="currentFile.file_name ?? ''"
                   class="max-h-40 rounded object-contain"
                 >
-                <div
+                <UIcon
                   v-else
-                  class="flex items-center gap-2"
-                >
-                  <UIcon
-                    name="i-lucide-file"
-                    class="size-8 text-muted"
-                  />
-                  <span class="text-sm">{{ currentFile.file_name }}</span>
+                  name="i-lucide-file"
+                  class="size-8 text-muted shrink-0"
+                />
+                <div class="min-w-0">
+                  <p class="truncate text-sm font-medium">
+                    {{ currentFile.file_name }}
+                  </p>
+                  <p
+                    v-if="currentFile.mime_type || currentSizeHuman"
+                    class="text-xs text-muted"
+                  >
+                    {{ [currentFile.mime_type, currentSizeHuman].filter(Boolean).join(' · ') }}
+                  </p>
                 </div>
                 <UButton
                   icon="i-lucide-download"

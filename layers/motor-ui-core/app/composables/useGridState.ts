@@ -30,7 +30,15 @@ export function useGridState(options: UseGridStateOptions) {
 
   // Search lives in a session cookie (SSR-safe, ends with the browser session),
   // so it survives leaving the list via edit/cancel/sidebar like the filters do.
-  const searchCookie = useCookie<string | null>(`grid-search-${gridId}`, {
+  // The cookie is scoped to the route params: nested grids (navigation items of
+  // tree A vs. tree B) share a gridId, and a search typed in one tree must not
+  // make another tree look empty.
+  const routeScope = Object.values(route.params ?? {})
+    .flat()
+    .filter(v => v !== undefined && v !== null && v !== '')
+    .map(v => String(v).replace(/[^\w-]/g, '_'))
+    .join('-')
+  const searchCookie = useCookie<string | null>(`grid-search-${gridId}${routeScope ? `-${routeScope}` : ''}`, {
     default: () => null,
     sameSite: 'lax'
   })

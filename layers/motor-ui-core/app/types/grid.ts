@@ -42,6 +42,8 @@ export interface BadgeRendererProps {
 export interface ListRendererProps {
   itemKey?: string
   max?: number
+  /** Label per item instead of the raw `itemKey` value (e.g. translated permission names) */
+  format?: (item: unknown) => string
 }
 
 /**

@@ -482,7 +482,7 @@ defineExpose({
       :loading="loading"
       sticky
       manual-sorting
-      :ui="{ root: 'overflow-x-auto', base: 'w-full', tr: rowClickTo ? 'cursor-pointer' : '' }"
+      :ui="gridTableUi(!!rowClickTo)"
       class="w-full flex-1 min-h-0"
       @update:model-value="onSelectionUpdate"
       @update:sorting="onSortingUpdate"
@@ -546,7 +546,7 @@ defineExpose({
             <UButton
               v-if="resolvedAddRoute && (!writePermission || can(writePermission))"
               :to="resolvedAddRoute"
-              :label="addLabel ?? t('motor-core.grid.no_records')"
+              :label="addLabel ?? t('motor-core.global.create')"
               icon="i-lucide-plus"
               size="sm"
             />

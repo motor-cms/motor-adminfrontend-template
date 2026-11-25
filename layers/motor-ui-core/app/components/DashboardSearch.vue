@@ -128,14 +128,11 @@ async function handleEmitAction(action: { key: string, emit?: string }, item: Pa
       document.body.removeChild(a)
     }
   } else if (action.emit === 'copy-url') {
-    // Copy the public storage/CDN URL from the search index — the backend
-    // /download route is VPN-only and useless as a shared link
-    const copyValue = item.url ?? downloadUrl
     try {
-      await navigator.clipboard.writeText(copyValue)
+      await navigator.clipboard.writeText(downloadUrl)
     } catch {
       const textarea = document.createElement('textarea')
-      textarea.value = copyValue
+      textarea.value = downloadUrl
       textarea.style.position = 'fixed'
       textarea.style.opacity = '0'
       document.body.appendChild(textarea)
@@ -234,7 +231,7 @@ function showAllResults(moduleKey?: string) {
       <div class="border-b border-[var(--ui-border)] px-3 py-1.5 flex items-center gap-2">
         <div
           v-if="totalResults > 0"
-          class="flex items-center gap-1.5 flex-1 min-w-0 overflow-x-auto"
+          class="flex flex-wrap items-center gap-1.5 flex-1 min-w-0"
         >
           <UBadge
             :label="`${totalResults}`"

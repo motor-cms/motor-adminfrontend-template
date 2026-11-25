@@ -44,9 +44,7 @@ const mimeIcon = computed(() => {
 })
 
 async function copyUrl() {
-  // Copy the storage/CDN URL from the API (public S3/CloudFront on prod) —
-  // the backend /download route is VPN-only and useless as a shared link
-  const url = props.value?.url ?? downloadUrl.value
+  const url = downloadUrl.value
   if (!url) return
   try {
     await navigator.clipboard.writeText(url)
@@ -161,14 +159,14 @@ async function forceDownload() {
       </div>
     </div>
 
-    <!-- Prefer the public storage/CDN URL — the lightbox copy button shares it -->
+    <!-- Preview from the storage/CDN URL; copy and download use the /download route -->
     <MediaLightbox
       v-if="isImage"
       v-model:open="lightboxOpen"
       :src="value.url ?? downloadUrl ?? ''"
       :alt="value.file_name"
       :file-name="value.file_name"
-      :download-url="value.url ?? downloadUrl"
+      :download-url="downloadUrl"
     />
   </div>
   <span

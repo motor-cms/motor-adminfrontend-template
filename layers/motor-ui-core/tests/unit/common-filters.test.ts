@@ -151,6 +151,11 @@ describe('useCommonFilters', () => {
     expect(opts.map(o => o.value)).toEqual([301, 302, 307, 410])
   })
 
+  it('useHttpStatusCodeFilter translates the status labels', () => {
+    const opts = useHttpStatusCodeFilter().options as Array<{ label: string, value: number }>
+    expect(opts[0]!.label).toBe('motor-core.global.http_status_301')
+  })
+
   it('filters accept overrides', () => {
     const filter = useClientFilter({ key: 'custom_key', type: 'text' })
     expect(filter.key).toBe('custom_key')

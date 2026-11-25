@@ -199,12 +199,7 @@ export function useHttpStatusCodeFilter(overrides?: Partial<FilterDef>): FilterD
     label: t('motor-core.grid.filter_http_status'),
     type: 'select',
     placeholder: t('motor-core.grid.filter_all_http_statuses'),
-    options: [
-      { label: '301 - Permanent Redirect', value: 301 },
-      { label: '302 - Temporary Redirect', value: 302 },
-      { label: '307 - Temporary Redirect', value: 307 },
-      { label: '410 - Gone', value: 410 }
-    ],
+    options: [301, 302, 307, 410].map(code => ({ label: t(`motor-core.global.http_status_${code}`), value: code })),
     ...overrides
   }
 }

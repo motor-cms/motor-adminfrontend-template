@@ -24,6 +24,7 @@ const remainingCount = computed(() => {
 })
 
 function getLabel(item: unknown): string {
+  if (rp.value?.format) return rp.value.format(item)
   if (typeof item === 'string') return item
   if (typeof item === 'object' && item !== null) {
     return (item as Record<string, unknown>)[itemKey.value] as string ?? ''
